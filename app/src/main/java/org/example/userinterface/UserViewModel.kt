@@ -1,9 +1,8 @@
 package org.example.userinterface
 
 import androidx.compose.runtime.mutableStateOf
-import org.example.model.UserModel
 
-class UserViewModel(val model: UserModel) : ISubscriber {
+class UserViewModel(val model: User) : ISubscriber {
     var firstname = mutableStateOf("")
     var lastname = mutableStateOf("")
 
