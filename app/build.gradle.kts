@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
 
+    implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("io.realm.kotlin:library-base:1.11.0")
     implementation("io.realm.kotlin:library-sync:1.11.0") // If using Device Sync
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0") // If using coroutines with the SDK
