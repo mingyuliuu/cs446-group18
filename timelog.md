@@ -6,5 +6,7 @@
 | 2024/01/24 | 0.5    | 0.5   | 0.5     | 0.5     | 0.5   | 0.5   | Finalize features and split work for the proposal |
 | 2024/01/24 | 2      | 0     | 0       | 0       | 0     | 0     | Draw draft UI on Figma                            |
 | 2024/01/25 | 1.5    | 0     | 0       | 0       | 0     | 0     | Complete UI for first stage                       |
+| 2024/01/26 | 3      | 3     | 3       | 3       | 3     | 3     | Proposal work                                     |
 | 2024/02/10 | 2      | 2     | 0       | 0       | 0     | 0     | Draw db schema and setup realm in project         |
+| 2024/02/11 | 0      | 0     | 1.5     | 1.5     | 0     | 0     | Buddy team evaluation                             |
 | 2024/02/12 | 0      | 0     | 0       | 5       | 0     | 0     | Skeleton UI and Frontend navigation support       |
