@@ -20,14 +20,14 @@ import androidx.navigation.compose.rememberNavController
 import org.example.R
 import org.example.userinterface.components.ScaffoldBottom
 import org.example.userinterface.components.ScaffoldTop
-import org.example.userinterface.views.MapView
-import org.example.userinterface.views.ProfileView
+import org.example.userinterface.screens.MapScreen
+import org.example.userinterface.screens.ProfileScreen
 
 
 /**
  * enum values that represent the screens in the app
  */
-enum class View(@StringRes val title: Int) {
+enum class Screen(@StringRes val title: Int) {
     Map(title = R.string.home_name),
     Profile(title = R.string.profile_name)
 }
@@ -52,49 +52,49 @@ fun UserView(
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
-    val currentScreen = View.valueOf(
+    val currentScreen = Screen.valueOf(
         // default should probably be login once that's made
-        backStackEntry?.destination?.route ?: View.Map.name
+        backStackEntry?.destination?.route ?: Screen.Map.name
     )
 
     Scaffold(
         topBar = {
             ScaffoldTop(
                 // may be good to wrap the home/default in a val
-                navigateHome = { navController.navigate(View.Map.name) }
+                navigateHome = { navController.navigate(Screen.Map.name) }
             )
         },
         bottomBar = {
             ScaffoldBottom(
-                currentView = currentScreen,
-                navigateHome = { navController.navigate(View.Map.name) },
-                navigateProfile = { navController.navigate(View.Profile.name) }
+                currentScreen = currentScreen,
+                navigateHome = { navController.navigate(Screen.Map.name) },
+                navigateProfile = { navController.navigate(Screen.Profile.name) }
             )
         },
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = View.Map.name,
+            startDestination = Screen.Map.name,
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
             // add routes here
-            composable(route = View.Map.name) {
-                MapView(
+            composable(route = Screen.Map.name) {
+                MapScreen(
                     onNextButtonClicked = {
                         controller.invoke(ViewEvent.UppercaseEvent, it) // just an example
-                        navController.navigate(View.Profile.name)
+                        navController.navigate(Screen.Profile.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
             }
-            composable(route = View.Profile.name) {
-                ProfileView(
+            composable(route = Screen.Profile.name) {
+                ProfileScreen(
                     onNextButtonClicked = {
                         controller.invoke(ViewEvent.UppercaseEvent, it)
-                        navController.navigate(View.Map.name)
+                        navController.navigate(Screen.Map.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )

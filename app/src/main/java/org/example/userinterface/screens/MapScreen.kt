@@ -1,4 +1,4 @@
-package org.example.userinterface.views
+package org.example.userinterface.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,11 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 /**
- * Composable for the profile view that expects [onNextButtonClicked] lambda that expects
+ * Composable for the map view that expects [onNextButtonClicked] lambda that expects
  * the selected quantity to save and triggers the navigation to next screen
  */
 @Composable
-fun ProfileView(
+fun MapScreen(
     onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -28,12 +28,13 @@ fun ProfileView(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("you are profile")
+            Text("you are map")
+
             Button(
                 onClick = { onNextButtonClicked(0) },
                 modifier = modifier.widthIn(min = 250.dp)
             ) {
-                Text("go to map")
+                Text("go to profile")
             }
         }
     }

@@ -10,17 +10,17 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import org.example.userinterface.View
+import org.example.userinterface.Screen
 
 @Composable
 fun ScaffoldBottom(
-    currentView: View,
+    currentScreen: Screen,
     navigateHome: () -> Unit,
     navigateProfile: () -> Unit,
 ) {
-    // red = currentView
-    val homeBackground = if (currentView === View.Map) Color.Red else Color.Blue
-    val profileBackground = if (currentView === View.Profile) Color.Red else Color.Blue
+    // red = currentScreen
+    val homeBackground = if (currentScreen === Screen.Map) Color.Red else Color.Blue
+    val profileBackground = if (currentScreen === Screen.Profile) Color.Red else Color.Blue
 
     BottomAppBar(
         actions = {
