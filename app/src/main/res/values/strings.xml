@@ -1,6 +1,3 @@
 <resources>
     <string name="app_name">clean-desktop-ui</string>
-    <string name="home_name">Home</string>
-    <string name="profile_name">Profile</string>
-    <string name="home_button">Home Button</string>
 </resources>
