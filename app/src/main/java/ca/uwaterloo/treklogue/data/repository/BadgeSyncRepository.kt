@@ -1,7 +1,8 @@
 package ca.uwaterloo.treklogue.data.repository
 
-import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.app
+import ca.uwaterloo.treklogue.data.model.Badge
+import ca.uwaterloo.treklogue.data.model.Landmark
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.User
@@ -13,6 +14,7 @@ import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmQuery
 import io.realm.kotlin.query.Sort
+import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,30 +24,35 @@ import kotlin.time.Duration.Companion.seconds
 /**
  * Repository for accessing Realm Sync.
  */
-interface LandmarkSyncRepository : BaseSyncRepository {
+interface BadgeSyncRepository : BaseSyncRepository {
 
     /**
-     * Returns a flow with the landmarks for the current subscription.
+     * Returns a flow with the badges for the current subscription.
      */
-    fun getLandmarkList(): Flow<ResultsChange<Landmark>>
+    fun getBadgeList(): Flow<ResultsChange<Badge>>
 
     /**
-     * Adds a landmark that belongs to the current user using the specified [name] and [location].
+     * Returns a badge with the given name
      */
-    suspend fun addLandmark(name: String, location: String)
+    fun getBadgeByName(name: String): RealmQuery<Badge>
 
     /**
-     * Deletes a given landmark.
+     * Adds a badge that belongs to the current user using the specified [name] and [landmarks].
      */
-    suspend fun deleteLandmark(landmark: Landmark)
+    suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?)
+
+    /**
+     * Deletes a given badge.
+     */
+    suspend fun deleteBadge(badge: Badge)
 }
 
 /**
  * Repo implementation used in runtime.
  */
-class LandmarkRealmSyncRepository(
+class BadgeRealmSyncRepository(
     onSyncError: (session: SyncSession, error: SyncException) -> Unit
-) : LandmarkSyncRepository {
+) : BadgeSyncRepository {
 
     private val realm: Realm
     private val config: SyncConfiguration
@@ -53,9 +60,9 @@ class LandmarkRealmSyncRepository(
         get() = app.currentUser!!
 
     init {
-        config = SyncConfiguration.Builder(currentUser, setOf(Landmark::class))
+        config = SyncConfiguration.Builder(currentUser, setOf(Badge::class))
             .initialSubscriptions { realm ->
-                // Subscribe to all landmarks
+                // Subscribe to all badges that belong to the current user
                 add(getAllQuery(realm))
             }
             .errorHandler { session: SyncSession, error: SyncException ->
@@ -72,25 +79,30 @@ class LandmarkRealmSyncRepository(
         }
     }
 
-    override fun getLandmarkList(): Flow<ResultsChange<Landmark>> {
-        return realm.query<Landmark>()
+    override fun getBadgeList(): Flow<ResultsChange<Badge>> {
+        return realm.query<Badge>()
             .sort(Pair("_id", Sort.ASCENDING))
             .asFlow()
     }
 
-    override suspend fun addLandmark(name: String, location: String) {
-        val landmark = Landmark().apply {
+    override fun getBadgeByName(name: String): RealmQuery<Badge> {
+        return realm.query<Badge>("name == $0", name)
+    }
+
+    override suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?) {
+        val badge = Badge().apply {
+            this.ownerId = currentUser.id
             this.name = name
-            this.location = location
+            this.landmarks = landmarks
         }
         realm.write {
-            copyToRealm(landmark)
+            copyToRealm(badge)
         }
     }
 
-    override suspend fun deleteLandmark(landmark: Landmark) {
+    override suspend fun deleteBadge(badge: Badge) {
         realm.write {
-            delete(findLatest(landmark)!!)
+            delete(findLatest(badge)!!)
         }
         realm.subscriptions.waitForSynchronization(10.seconds)
     }
@@ -105,7 +117,7 @@ class LandmarkRealmSyncRepository(
 
     override fun close() = realm.close()
 
-    private fun getAllQuery(realm: Realm): RealmQuery<Landmark> =
-        realm.query()
+    private fun getAllQuery(realm: Realm): RealmQuery<Badge> =
+        realm.query("ownerId == $0", currentUser.id)
 
 }
