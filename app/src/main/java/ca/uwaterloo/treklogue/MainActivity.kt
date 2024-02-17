@@ -11,6 +11,7 @@ import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.data.repository.BadgeRealmSyncRepository
+import ca.uwaterloo.treklogue.data.repository.JournalEntryRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
@@ -39,9 +40,20 @@ class MainActivity : ComponentActivity() {
     }
 
     private val badgeRepository = BadgeRealmSyncRepository { _, error ->
-        // Sync errors come from a background thread so route the Toast through the UI thread
         lifecycleScope.launch {
-            // TODO the SDK does not have an enum for this type of error yet so make sure to update this once it has been added
+            if (error.message?.contains("CompensatingWrite") == true) {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.permissions_error),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+    }
+
+    private val journalEntryRepository = JournalEntryRealmSyncRepository { _, error ->
+        lifecycleScope.launch {
             if (error.message?.contains("CompensatingWrite") == true) {
                 Toast.makeText(
                     this@MainActivity,
@@ -87,5 +99,6 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         landmarkRepository.close()
         badgeRepository.close()
+        journalEntryRepository.close()
     }
 }

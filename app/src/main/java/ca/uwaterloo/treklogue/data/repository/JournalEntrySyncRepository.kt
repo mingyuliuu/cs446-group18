@@ -1,7 +1,7 @@
 package ca.uwaterloo.treklogue.data.repository
 
 import ca.uwaterloo.treklogue.app
-import ca.uwaterloo.treklogue.data.model.Badge
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.data.model.Landmark
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
@@ -19,40 +19,50 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import org.mongodb.kbson.ObjectId
 import kotlin.time.Duration.Companion.seconds
 
 /**
  * Repository for accessing Realm Sync.
  */
-interface BadgeSyncRepository : BaseSyncRepository {
+interface JournalEntrySyncRepository : BaseSyncRepository {
 
     /**
-     * Returns a flow with the badges for the current subscription.
+     * Returns a flow with the journal entries for the current user.
      */
-    fun getBadgeList(): Flow<ResultsChange<Badge>>
+    fun getJournalEntryList(): Flow<ResultsChange<JournalEntry>>
 
     /**
-     * Returns a badge with the given name.
+     * Adds a journal entry that belongs to the current user using the specified [landmark], [visitedAt] date, list of [photos], and [description].
      */
-    fun getBadgeByName(name: String): RealmQuery<Badge>
+    suspend fun addJournalEntry(
+        landmark: Landmark,
+        visitedAt: String?,
+        photos: RealmList<String>,
+        description: String?
+    )
 
     /**
-     * Adds a badge that belongs to the current user using the specified [name] and [landmarks].
+     * Updates a journal entry using new list of [photos] and [description].
      */
-    suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?)
+    suspend fun updateJournalEntry(
+        id: ObjectId,
+        photos: RealmList<String>,
+        description: String?
+    )
 
     /**
-     * Deletes a given badge.
+     * Deletes a given journal entry.
      */
-    suspend fun deleteBadge(badge: Badge)
+    suspend fun deleteJournalEntry(journalEntry: JournalEntry)
 }
 
 /**
  * Repo implementation used in runtime.
  */
-class BadgeRealmSyncRepository(
+class JournalEntryRealmSyncRepository(
     onSyncError: (session: SyncSession, error: SyncException) -> Unit
-) : BadgeSyncRepository {
+) : JournalEntrySyncRepository {
 
     private val realm: Realm
     private val config: SyncConfiguration
@@ -60,9 +70,9 @@ class BadgeRealmSyncRepository(
         get() = app.currentUser!!
 
     init {
-        config = SyncConfiguration.Builder(currentUser, setOf(Badge::class))
+        config = SyncConfiguration.Builder(currentUser, setOf(JournalEntry::class))
             .initialSubscriptions { realm ->
-                // Subscribe to all badges that belong to the current user
+                // Subscribe to all journal entries that belong to the current user
                 add(getAllQuery(realm))
             }
             .errorHandler { session: SyncSession, error: SyncException ->
@@ -79,30 +89,45 @@ class BadgeRealmSyncRepository(
         }
     }
 
-    override fun getBadgeList(): Flow<ResultsChange<Badge>> {
-        return realm.query<Badge>()
+    override fun getJournalEntryList(): Flow<ResultsChange<JournalEntry>> {
+        return realm.query<JournalEntry>("ownerId == $0", currentUser.id)
             .sort(Pair("_id", Sort.ASCENDING))
             .asFlow()
     }
 
-    override fun getBadgeByName(name: String): RealmQuery<Badge> {
-        return realm.query<Badge>("name == $0", name)
-    }
-
-    override suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?) {
-        val badge = Badge().apply {
+    override suspend fun addJournalEntry(
+        landmark: Landmark,
+        visitedAt: String?,
+        photos: RealmList<String>,
+        description: String?
+    ) {
+        val journalEntry = JournalEntry().apply {
             this.ownerId = currentUser.id
-            this.name = name
-            this.landmarks = landmarks
+            this.landmark = landmark
+            this.visitedAt = visitedAt
+            this.photos = photos
+            this.description = description
         }
         realm.write {
-            copyToRealm(badge)
+            copyToRealm(journalEntry)
         }
     }
 
-    override suspend fun deleteBadge(badge: Badge) {
+    override suspend fun updateJournalEntry(
+        id: ObjectId,
+        photos: RealmList<String>,
+        description: String?
+    ) {
         realm.write {
-            delete(findLatest(badge)!!)
+            val journalEntry = query<JournalEntry>("_id == $0", id).find().first()
+            journalEntry.photos = photos
+            journalEntry.description = description
+        }
+    }
+
+    override suspend fun deleteJournalEntry(journalEntry: JournalEntry) {
+        realm.write {
+            delete(findLatest(journalEntry)!!)
         }
         realm.subscriptions.waitForSynchronization(10.seconds)
     }
@@ -117,7 +142,7 @@ class BadgeRealmSyncRepository(
 
     override fun close() = realm.close()
 
-    private fun getAllQuery(realm: Realm): RealmQuery<Badge> =
+    private fun getAllQuery(realm: Realm): RealmQuery<JournalEntry> =
         realm.query("ownerId == $0", currentUser.id)
 
 }
