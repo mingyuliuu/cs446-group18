@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
+import ca.uwaterloo.treklogue.ui.login.LoginViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
@@ -33,6 +34,7 @@ enum class Screen(@StringRes val title: Int) {
 
 @Composable
 fun Router(
+    loginViewModel: LoginViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     // Get current back stack entry
@@ -82,7 +84,8 @@ fun Router(
                     onNextButtonClicked = {
                         navController.navigate(Screen.Settings.name)
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    loginViewModel
                 )
             }
             composable(route = Screen.Settings.name) {

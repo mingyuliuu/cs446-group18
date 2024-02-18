@@ -23,6 +23,7 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.v(null, "Login Activity: " + app.currentUser)
         // Fast-track task list screen if we are logged in
         if (app.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))

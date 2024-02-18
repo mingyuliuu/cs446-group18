@@ -41,24 +41,5 @@ class MainApplication : Application() {
             TAG(),
             "To see your data in Atlas, follow this link:" + getString(R.string.realm_data_explorer_link)
         )
-
-        runBlocking {
-            val user = app.login(Credentials.anonymous())
-            val config = SyncConfiguration.Builder(user, setOf(Landmark::class, Badge::class, JournalEntry::class, User::class))
-                .initialSubscriptions { realm ->
-                    add(
-                        realm.query<Landmark>(
-                            "location == $0",
-                            "example"
-                        ), "get all nearby landmarks"
-                    )
-                }
-                .build()
-
-            // Open the realm with the configuration object
-            val realm = Realm.open(config)
-            Log.v(TAG(),"Successfully opened realm: ${realm.configuration.name}")
-            realm.close()
-        }
     }
 }

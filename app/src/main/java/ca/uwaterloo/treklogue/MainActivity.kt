@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.data.repository.BadgeRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.JournalEntryRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
+import ca.uwaterloo.treklogue.data.repository.UserRealmSyncRepository
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
 import ca.uwaterloo.treklogue.ui.login.LoginEvent
@@ -65,6 +66,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val userRepository = UserRealmSyncRepository { _, error ->
+        lifecycleScope.launch {
+            if (error.message?.contains("CompensatingWrite") == true) {
+                Toast.makeText(
+                    this@MainActivity,
+                    getString(R.string.permissions_error),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
+            }
+        }
+    }
+
     private val loginViewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,7 +104,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                Router()
+                Router(loginViewModel)
             }
         }
     }
@@ -100,5 +114,6 @@ class MainActivity : ComponentActivity() {
         landmarkRepository.close()
         badgeRepository.close()
         journalEntryRepository.close()
+        userRepository.close()
     }
 }
