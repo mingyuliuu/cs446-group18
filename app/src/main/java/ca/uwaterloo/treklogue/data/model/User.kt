@@ -9,7 +9,7 @@ import org.mongodb.kbson.ObjectId
 class User : RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
-    var name: String = ""
+    var name: String? = ""
     var email: String = ""
     var emailVerified: String? = null // TODO: Use proper Date object
     var avatar: String? = null

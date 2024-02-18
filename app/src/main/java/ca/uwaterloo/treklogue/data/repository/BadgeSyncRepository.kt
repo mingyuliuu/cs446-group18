@@ -60,7 +60,7 @@ class BadgeRealmSyncRepository(
         get() = app.currentUser!!
 
     init {
-        config = SyncConfiguration.Builder(currentUser, setOf(Badge::class))
+        config = SyncConfiguration.Builder(currentUser, setOf(Landmark::class, Badge::class))
             .initialSubscriptions { realm ->
                 // Subscribe to all badges that belong to the current user
                 add(getAllQuery(realm))

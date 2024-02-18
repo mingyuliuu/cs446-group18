@@ -70,7 +70,7 @@ class JournalEntryRealmSyncRepository(
         get() = app.currentUser!!
 
     init {
-        config = SyncConfiguration.Builder(currentUser, setOf(JournalEntry::class))
+        config = SyncConfiguration.Builder(currentUser, setOf(Landmark::class, JournalEntry::class))
             .initialSubscriptions { realm ->
                 // Subscribe to all journal entries that belong to the current user
                 add(getAllQuery(realm))
