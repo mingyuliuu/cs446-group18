@@ -15,6 +15,10 @@ import ca.uwaterloo.treklogue.ui.login.LoginEvent
 import ca.uwaterloo.treklogue.ui.login.LoginViewModel
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
+import ca.uwaterloo.treklogue.controller.UserController
+import ca.uwaterloo.treklogue.data.model.User
+import ca.uwaterloo.treklogue.data.model.UserModel
+import ca.uwaterloo.treklogue.ui.UserViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -40,9 +44,17 @@ class MainActivity : ComponentActivity() {
                 }
         }
 
+        // TODO: fix this, just mock right now
+        val userModel = UserModel(
+            User(),
+            // app.currentUser
+        )
+        val userViewModel = UserViewModel(userModel)
+        val userController = UserController(userModel)
+
         setContent {
             MyApplicationTheme {
-                Router()
+                Router(userViewModel, userController)
             }
         }
     }

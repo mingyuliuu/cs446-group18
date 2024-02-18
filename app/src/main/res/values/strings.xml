@@ -29,4 +29,7 @@
     <string name="unable_to_switch">Switching subscriptions does not affect Realm data when Sync is offline</string>
     <string name="permissions_warning">You can only modify or remove tasks that belong to you.</string>
     <string name="settings_name">Settings</string>
+    <string name="settings_group_profile">Profile</string>
+    <string name="settings_group_notifications">Notifications</string>
+    <string name="settings_toggle_notifications">Enable nearby landmark notifications</string>
 </resources>
