@@ -39,7 +39,7 @@ fun ProfileScreen(
                 onClick = { onNextButtonClicked(0) },
                 modifier = modifier.widthIn(min = 250.dp)
             ) {
-                Text("go to map")
+                Text("go to settings")
             }
         }
     }

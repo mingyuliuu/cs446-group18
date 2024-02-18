@@ -19,13 +19,16 @@ import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
+import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 
 /**
  * enum values that represent the screens in the app
+ * maybe move this into data?
  */
 enum class Screen(@StringRes val title: Int) {
     Map(title = R.string.home_name),
-    Profile(title = R.string.profile_name)
+    Profile(title = R.string.profile_name),
+    Settings(title = R.string.settings_name),
 }
 
 @Composable
@@ -44,14 +47,16 @@ fun Router(
         topBar = {
             ScaffoldTop(
                 // may be good to wrap the home/default in a val
-                navigateHome = { navController.navigate(Screen.Map.name) }
+                navigateHome = { navController.navigate(Screen.Map.name) },
+                navigateUp = { navController.navigateUp() },
+                canNavigateBack = currentScreen == Screen.Settings
             )
         },
         bottomBar = {
             ScaffoldBottom(
                 currentScreen = currentScreen,
                 navigateHome = { navController.navigate(Screen.Map.name) },
-                navigateProfile = { navController.navigate(Screen.Profile.name) }
+                navigateProfile = { navController.navigate(Screen.Profile.name) },
             )
         },
     ) { innerPadding ->
@@ -75,8 +80,13 @@ fun Router(
             composable(route = Screen.Profile.name) {
                 ProfileScreen(
                     onNextButtonClicked = {
-                        navController.navigate(Screen.Map.name)
+                        navController.navigate(Screen.Settings.name)
                     },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            composable(route = Screen.Settings.name) {
+                SettingsScreen(
                     modifier = Modifier.fillMaxSize()
                 )
             }

@@ -28,8 +28,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun ScaffoldTop(
     navigateHome: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier,
+    canNavigateBack: Boolean,
+    ) {
     TopAppBar(
         // I think the nav logo is sufficient
         title = { "" },
@@ -46,24 +48,38 @@ fun ScaffoldTop(
                 )
             }
         }, actions = {
-            IconButton(
-                onClick = {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        runCatching {
-                            app.currentUser?.logOut()
-                        }.onSuccess {
-//                            viewModel.logOut() // TODO: Fix login view model
-                        }.onFailure {
-                            // TODO: log error
-                        }
-                    }
-                },
-                colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_logout_24_white),
-                    contentDescription = null
-                )
+
+            if (canNavigateBack) {
+                IconButton(
+                    onClick = navigateUp,
+                    colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_logout_24_white),
+                        contentDescription = null
+                    )
+                }
+                // i don't think we need a logout button on screen at all times
+                // maybe copy how IG and other apps do it: logout from settings
+//            IconButton(
+//                onClick = {
+//                    CoroutineScope(Dispatchers.IO).launch {
+//                        runCatching {
+//                            app.currentUser?.logOut()
+//                        }.onSuccess {
+////                            viewModel.logOut() // TODO: Fix login view model
+//                        }.onFailure {
+//                            // TODO: log error
+//                        }
+//                    }
+//                },
+//                colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
+//            ) {
+//                Icon(
+//                    painter = painterResource(id = R.drawable.ic_baseline_logout_24_white),
+//                    contentDescription = null
+//                )
+//            }
             }
         }
     )

@@ -11,3 +11,4 @@
 | 2024/02/11 | 0      | 0     | 1.5     | 1.5     | 0     | 0     | Buddy team evaluation                                      |
 | 2024/02/12 | 0      | 0     | 0       | 5       | 0     | 0     | Skeleton UI and Frontend navigation support                |
 | 2024/02/13 | 5      | 0     | 0       | 0       | 0     | 0     | Integration of realm app template and basic login services |
+| 2024/02/15 | 0      | 0     | 0       | 1.5     | 0     | 0     | Basic profile + settings and back button                   |
