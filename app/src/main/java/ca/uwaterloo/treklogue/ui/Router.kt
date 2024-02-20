@@ -35,6 +35,7 @@ enum class Screen(@StringRes val title: Int) {
 fun Router(
     navController: NavHostController = rememberNavController()
 ) {
+
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
@@ -65,7 +66,9 @@ fun Router(
             startDestination = Screen.Map.name,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+
+                // this line messes up google maps scrolling
+                //.verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
             // add routes here

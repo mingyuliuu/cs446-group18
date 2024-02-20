@@ -7,12 +7,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
 import ca.uwaterloo.treklogue.ui.login.LoginEvent
 import ca.uwaterloo.treklogue.ui.login.LoginViewModel
+import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -45,5 +48,13 @@ class MainActivity : ComponentActivity() {
                 Router()
             }
         }
+        /*setContent {
+            MapScreen(
+                /*onNextButtonClicked = {
+                navController.navigate(Screen.Profile.name)
+            },*/
+                modifier = Modifier.fillMaxSize()
+            )
+        }*/
     }
 }
