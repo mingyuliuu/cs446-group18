@@ -37,9 +37,9 @@ interface JournalEntrySyncRepository : BaseSyncRepository {
      */
     suspend fun addJournalEntry(
         landmark: Landmark,
-        visitedAt: String?,
+        visitedAt: String,
         photos: RealmList<String>,
-        description: String?
+        description: String
     )
 
     /**
@@ -48,7 +48,7 @@ interface JournalEntrySyncRepository : BaseSyncRepository {
     suspend fun updateJournalEntry(
         id: ObjectId,
         photos: RealmList<String>,
-        description: String?
+        description: String
     )
 
     /**
@@ -97,9 +97,9 @@ class JournalEntryRealmSyncRepository(
 
     override suspend fun addJournalEntry(
         landmark: Landmark,
-        visitedAt: String?,
+        visitedAt: String,
         photos: RealmList<String>,
-        description: String?
+        description: String
     ) {
         val journalEntry = JournalEntry().apply {
             this.ownerId = currentUser.id
@@ -116,7 +116,7 @@ class JournalEntryRealmSyncRepository(
     override suspend fun updateJournalEntry(
         id: ObjectId,
         photos: RealmList<String>,
-        description: String?
+        description: String
     ) {
         realm.write {
             val journalEntry = query<JournalEntry>("_id == $0", id).find().first()
