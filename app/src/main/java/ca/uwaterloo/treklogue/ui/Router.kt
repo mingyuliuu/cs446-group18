@@ -3,8 +3,6 @@ package ca.uwaterloo.treklogue.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +18,7 @@ import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.controller.UserController
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
+import ca.uwaterloo.treklogue.ui.login.LoginViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
@@ -43,6 +42,7 @@ enum class ViewEvent {
 
 @Composable
 fun Router(
+    loginViewModel: LoginViewModel,
     userViewModel: UserViewModel,
     userController: UserController
 ) {
@@ -58,7 +58,6 @@ fun Router(
     // move this somewhere more easily accessible?
     val viewModel by remember { mutableStateOf(userViewModel) }
     val controller by remember { mutableStateOf(userController) }
-
 
     Scaffold(
         topBar = {
@@ -94,6 +93,7 @@ fun Router(
                     onNextButtonClicked = {
                         navController.navigate(Screen.Profile.name)
                     },
+                    modifier = Modifier.fillMaxSize()
                 )
             }
             composable(route = Screen.Profile.name) {
@@ -101,6 +101,8 @@ fun Router(
                     onNextButtonClicked = {
                         navController.navigate(Screen.Settings.name)
                     },
+                    modifier = Modifier.fillMaxSize(),
+                    loginViewModel
                 )
             }
             composable(route = Screen.Settings.name) {

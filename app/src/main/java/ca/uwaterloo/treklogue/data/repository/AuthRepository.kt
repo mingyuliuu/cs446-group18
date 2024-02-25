@@ -21,7 +21,7 @@ interface AuthRepository {
 /**
  * [AuthRepository] for authenticating with MongoDB.
  */
-object RealmAuthRepository : AuthRepository {
+object AuthRealmRepository : AuthRepository {
     override suspend fun createAccount(email: String, password: String) {
         app.emailPasswordAuth.registerUser(email, password)
     }
