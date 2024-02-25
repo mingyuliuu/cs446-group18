@@ -1,21 +1,71 @@
 package ca.uwaterloo.treklogue.ui
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import ca.uwaterloo.treklogue.data.model.UserModel
-import ca.uwaterloo.treklogue.util.ISubscriber
+import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
-// I see there's a VM thing in the android library but I'm not sure if that counts for the course reqs
-class UserViewModel(val model: UserModel) : ISubscriber {
-    var name = mutableStateOf("")
-    var toggleChecked = mutableStateOf(false)
-    init {
-        model.subscribe(this)
+/**
+ * Types of UX events triggered by user actions.
+ */
+sealed class UserEvent(val severity: EventSeverity, val message: String) {
+    class ToggleNotificationSetting(severity: EventSeverity, message: String) :
+        UserEvent(severity, message)
+
+}
+
+/**
+ * Severity of the event.
+ */
+enum class EventSeverity {
+    INFO, ERROR
+}
+
+/**
+ * UI representation of a screen state.
+ */
+data class UserState(
+    val notificationEnabled: Boolean
+) {
+    companion object {
+        val initialState = UserState(notificationEnabled = false)
     }
+}
 
-    // TODO: event parameter
-    override fun update() {
-        // TODO: fix with real data
-//        name.value = model.user.name
-        toggleChecked.value = model.toggleChecked
+class UserViewModel : ViewModel() {
+
+    private val _state: MutableState<UserState> = mutableStateOf(UserState.initialState)
+    val state: State<UserState>
+        get() = _state
+
+    private val _event: MutableSharedFlow<UserEvent> = MutableSharedFlow()
+
+    fun toggleNotificationSetting(enabled: Boolean) {
+        _state.value = state.value.copy(notificationEnabled = enabled)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            runCatching {
+                // TODO: update notification behavior
+            }.onSuccess {
+                _event.emit(
+                    UserEvent.ToggleNotificationSetting(
+                        EventSeverity.INFO,
+                        "Notification settings updated"
+                    )
+                )
+            }.onFailure {
+                _state.value = state.value.copy(notificationEnabled = !enabled)
+                _event.emit(
+                    UserEvent.ToggleNotificationSetting(
+                        EventSeverity.ERROR,
+                        "Failed to update notification settings"
+                    )
+                )
+            }
+        }
     }
 }

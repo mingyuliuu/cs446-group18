@@ -10,18 +10,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.lifecycleScope
-import ca.uwaterloo.treklogue.controller.UserController
-import ca.uwaterloo.treklogue.data.model.User
-import ca.uwaterloo.treklogue.data.model.UserModel
 import ca.uwaterloo.treklogue.data.repository.BadgeRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.JournalEntryRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.UserRealmSyncRepository
 import ca.uwaterloo.treklogue.ui.Router
-import ca.uwaterloo.treklogue.ui.UserViewModel
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
 import ca.uwaterloo.treklogue.ui.login.LoginEvent
 import ca.uwaterloo.treklogue.ui.login.LoginViewModel
+import ca.uwaterloo.treklogue.ui.UserViewModel
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -84,6 +81,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private val loginViewModel: LoginViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,17 +104,9 @@ class MainActivity : ComponentActivity() {
                 }
         }
 
-        // TODO: fix this, just mock right now
-        val userModel = UserModel(
-            User(),
-            // app.currentUser
-        )
-        val userViewModel = UserViewModel(userModel)
-        val userController = UserController(userModel)
-
         setContent {
             MyApplicationTheme {
-                Router(loginViewModel, userViewModel, userController)
+                Router(loginViewModel, userViewModel)
             }
         }
     }

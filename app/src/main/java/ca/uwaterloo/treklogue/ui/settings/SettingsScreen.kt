@@ -1,15 +1,18 @@
 package ca.uwaterloo.treklogue.ui.settings
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.controller.UserController
 import ca.uwaterloo.treklogue.ui.UserViewModel
-import ca.uwaterloo.treklogue.ui.ViewEvent
 
 /**
  * Composable for the settings screen
@@ -18,10 +21,8 @@ import ca.uwaterloo.treklogue.ui.ViewEvent
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel,
-    userController: UserController
 ) {
     val viewModel by remember { mutableStateOf(userViewModel) }
-    val controller by remember { mutableStateOf(userController) }
 
     Column(
         modifier = modifier.padding(6.dp),
@@ -45,25 +46,25 @@ fun SettingsScreen(
                     {
                         SettingsToggle(
                             name = R.string.settings_toggle_notifications,
-                            state = viewModel.toggleChecked
+                            state = viewModel.state.value.notificationEnabled
                         ) {
-                            controller.invoke(ViewEvent.ToggleEvent, it)
+                            viewModel.toggleNotificationSetting(it)
                         }
                     },
                     {
                         SettingsToggle(
                             name = R.string.settings_toggle_notifications,
-                            state = viewModel.toggleChecked
+                            state = viewModel.state.value.notificationEnabled
                         ) {
-                            controller.invoke(ViewEvent.ToggleEvent, it)
+                            viewModel.toggleNotificationSetting(it)
                         }
                     },
                     {
                         SettingsToggle(
                             name = R.string.settings_toggle_notifications,
-                            state = viewModel.toggleChecked
+                            state = viewModel.state.value.notificationEnabled
                         ) {
-                            controller.invoke(ViewEvent.ToggleEvent, it)
+                            viewModel.toggleNotificationSetting(it)
                         }
                     },
                 )

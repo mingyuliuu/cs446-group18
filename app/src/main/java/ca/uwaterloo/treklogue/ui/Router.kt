@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -15,7 +13,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.controller.UserController
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
 import ca.uwaterloo.treklogue.ui.login.LoginViewModel
@@ -44,7 +41,6 @@ enum class ViewEvent {
 fun Router(
     loginViewModel: LoginViewModel,
     userViewModel: UserViewModel,
-    userController: UserController
 ) {
     val navController: NavHostController = rememberNavController()
     // Get current back stack entry
@@ -54,10 +50,6 @@ fun Router(
         // default should probably be login once that's made
         backStackEntry?.destination?.route ?: Screen.Map.name
     )
-
-    // move this somewhere more easily accessible?
-    val viewModel by remember { mutableStateOf(userViewModel) }
-    val controller by remember { mutableStateOf(userController) }
 
     Scaffold(
         topBar = {
@@ -107,7 +99,7 @@ fun Router(
             }
             composable(route = Screen.Settings.name) {
                 SettingsScreen(
-                    Modifier, viewModel, controller
+                    Modifier, userViewModel
                 )
             }
         }
