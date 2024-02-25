@@ -17,10 +17,12 @@ fun ScaffoldBottom(
     currentScreen: Screen,
     navigateHome: () -> Unit,
     navigateProfile: () -> Unit,
+    navigateList: () -> Unit,
 ) {
     // red = currentScreen
     val homeBackground = if (currentScreen === Screen.Map) Color.Red else Color.Blue
     val profileBackground = if (currentScreen === Screen.Profile) Color.Red else Color.Blue
+    val listBackground = if (currentScreen === Screen.List) Color.Red else Color.Blue
 
     BottomAppBar(
         actions = {
@@ -33,6 +35,15 @@ fun ScaffoldBottom(
             IconButton(
                 onClick = navigateProfile,
                 modifier = Modifier.background(profileBackground)
+            ) {
+                Icon(
+                    Icons.Filled.Edit,
+                    contentDescription = "Localized description",
+                )
+            }
+            IconButton(
+                onClick = navigateList,
+                modifier = Modifier.background(listBackground)
             ) {
                 Icon(
                     Icons.Filled.Edit,

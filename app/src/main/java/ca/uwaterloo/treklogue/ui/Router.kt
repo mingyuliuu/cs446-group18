@@ -19,13 +19,15 @@ import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
+import ca.uwaterloo.treklogue.ui.list.ListScreen
 
 /**
  * enum values that represent the screens in the app
  */
 enum class Screen(@StringRes val title: Int) {
     Map(title = R.string.home_name),
-    Profile(title = R.string.profile_name)
+    Profile(title = R.string.profile_name),
+    List(title = R.string.list_name),
 }
 
 @Composable
@@ -51,7 +53,8 @@ fun Router(
             ScaffoldBottom(
                 currentScreen = currentScreen,
                 navigateHome = { navController.navigate(Screen.Map.name) },
-                navigateProfile = { navController.navigate(Screen.Profile.name) }
+                navigateProfile = { navController.navigate(Screen.Profile.name) },
+                navigateList = { navController.navigate(Screen.List.name) }
             )
         },
     ) { innerPadding ->
@@ -74,8 +77,19 @@ fun Router(
             }
             composable(route = Screen.Profile.name) {
                 ProfileScreen(
-                    onNextButtonClicked = {
+                    onNavigateToMap = {
                         navController.navigate(Screen.Map.name)
+                    },
+                    onNavigateToList = {
+                        navController.navigate(Screen.List.name)
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            composable(route = Screen.List.name) {
+                ListScreen(
+                    onNextButtonClicked = {
+                        navController.navigate(Screen.Profile.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )

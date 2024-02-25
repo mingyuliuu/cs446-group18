@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.profile
+package ca.uwaterloo.treklogue.ui.list
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,17 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ca.uwaterloo.treklogue.app
 
 /**
- * Composable for the profile view that expects [onNextButtonClicked] lambda that expects
+ * Composable for the list view that expects [onNextButtonClicked] lambda that expects
  * the selected quantity to save and triggers the navigation to next screen
  */
 @Composable
-fun ProfileScreen(
-//    onNextButtonClicked: (Int) -> Unit,
-    onNavigateToMap: (Int) -> Unit,
-    onNavigateToList: (Int) -> Unit,
+fun ListScreen(
+    onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -31,23 +28,13 @@ fun ProfileScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("you are profile")
-            if (app.currentUser != null) {
-                Text(app.currentUser.toString())
-            } else {
-                Text("Logged out")
-            }
+            Text("you are list")
+
             Button(
-                onClick = { onNavigateToMap(0) },
+                onClick = { onNextButtonClicked(0) },
                 modifier = modifier.widthIn(min = 250.dp)
             ) {
-                Text("go to map")
-            }
-            Button(
-                onClick = { onNavigateToList(0) },
-                modifier = modifier.widthIn(min = 250.dp)
-            ) {
-                Text("go to list")
+                Text("go to profile")
             }
         }
     }
