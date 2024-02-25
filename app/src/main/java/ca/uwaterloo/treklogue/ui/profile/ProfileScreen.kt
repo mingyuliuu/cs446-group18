@@ -20,7 +20,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.ui.login.LoginViewModel
+import ca.uwaterloo.treklogue.ui.UserEvent
+import ca.uwaterloo.treklogue.ui.UserViewModel
 
 /**
  * Composable for the profile view that expects [onNextButtonClicked] lambda that expects
@@ -30,7 +31,7 @@ import ca.uwaterloo.treklogue.ui.login.LoginViewModel
 fun ProfileScreen(
     onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel
+    userViewModel: UserViewModel
 ) {
     Column(
         modifier = modifier,
@@ -52,9 +53,9 @@ fun ProfileScreen(
                         runCatching {
                             app.currentUser?.logOut()
                         }.onSuccess {
-                            loginViewModel.logOut() // TODO: Fix login view model
+                            userViewModel.logOut()
                         }.onFailure {
-                            // TODO: log error
+                            userViewModel.error(UserEvent.Error("Log out failed", it))
                         }
                     }
                 },

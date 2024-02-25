@@ -15,7 +15,6 @@ import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
-import ca.uwaterloo.treklogue.ui.login.LoginViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
@@ -39,7 +38,6 @@ enum class ViewEvent {
 
 @Composable
 fun Router(
-    loginViewModel: LoginViewModel,
     userViewModel: UserViewModel,
 ) {
     val navController: NavHostController = rememberNavController()
@@ -94,7 +92,7 @@ fun Router(
                         navController.navigate(Screen.Settings.name)
                     },
                     modifier = Modifier.fillMaxSize(),
-                    loginViewModel
+                    userViewModel
                 )
             }
             composable(route = Screen.Settings.name) {

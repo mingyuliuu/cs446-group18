@@ -7,9 +7,6 @@ import androidx.lifecycle.ViewModel
 import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.data.repository.AuthRealmRepository
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
-import ca.uwaterloo.treklogue.data.repository.UserRealmSyncRepository
-import ca.uwaterloo.treklogue.data.repository.UserSyncRepository
-import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
@@ -26,7 +23,6 @@ import kotlinx.coroutines.launch
 sealed class LoginEvent(val severity: EventSeverity, val message: String) {
     class GoToMap(severity: EventSeverity, message: String) : LoginEvent(severity, message)
     class ShowMessage(severity: EventSeverity, message: String) : LoginEvent(severity, message)
-    class LogOutAndExit(severity: EventSeverity, message: String) : LoginEvent(severity, message)
 
 }
 
@@ -132,25 +128,4 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun logOut() {
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                app.currentUser?.logOut()
-            }.onSuccess {
-                _event.emit(
-                    LoginEvent.LogOutAndExit(
-                        EventSeverity.INFO,
-                        "User logged out successfully."
-                    )
-                )
-            }.onFailure {
-                _event.emit(
-                    LoginEvent.LogOutAndExit(
-                        EventSeverity.ERROR,
-                        "User failed to log out."
-                    )
-                )
-            }
-        }
-    }
 }

@@ -6,6 +6,7 @@ import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.data.model.Landmark
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.exceptions.SyncException
 import io.realm.kotlin.mongodb.subscriptions
@@ -29,21 +30,21 @@ interface UserSyncRepository : BaseSyncRepository {
      * Adds a user with all corresponding information.
      */
     suspend fun addUser(
-        name: String?,
-        email: String,
-        avatar: String?,
-        journalEntries: RealmList<JournalEntry>?,
-        badges: RealmList<Badge>?
+        name: String = "",
+        email: String = "",
+        avatar: String = "",
+        journalEntries: RealmList<JournalEntry> = realmListOf(),
+        badges: RealmList<Badge> = realmListOf()
     )
 
     /**
-     * Updates a user using new [name], [avatar], [journalEntries] or [badges].
+     * Updates a user using new [name], [avatar], [journalEntries] and [badges].
      */
     suspend fun updateUser(
-        name: String?,
-        avatar: String?,
-        journalEntries: RealmList<JournalEntry>?,
-        badges: RealmList<Badge>?
+        name: String,
+        avatar: String,
+        journalEntries: RealmList<JournalEntry>,
+        badges: RealmList<Badge>
     )
 
     /**
@@ -87,11 +88,11 @@ class UserRealmSyncRepository(
     }
 
     override suspend fun addUser(
-        name: String?,
+        name: String,
         email: String,
-        avatar: String?,
-        journalEntries: RealmList<JournalEntry>?,
-        badges: RealmList<Badge>?
+        avatar: String,
+        journalEntries: RealmList<JournalEntry>,
+        badges: RealmList<Badge>
     ) {
         val user = AppUser().apply {
             this.name = name
@@ -106,10 +107,10 @@ class UserRealmSyncRepository(
     }
 
     override suspend fun updateUser(
-        name: String?,
-        avatar: String?,
-        journalEntries: RealmList<JournalEntry>?,
-        badges: RealmList<Badge>?
+        name: String,
+        avatar: String,
+        journalEntries: RealmList<JournalEntry>,
+        badges: RealmList<Badge>
     ) {
         realm.write {
             val user = query<AppUser>("_id == $0", currentUser.id).find().first()

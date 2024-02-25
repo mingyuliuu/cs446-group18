@@ -4,25 +4,21 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 /**
  * Types of UX events triggered by user actions.
  */
-sealed class UserEvent(val severity: EventSeverity, val message: String) {
-    class ToggleNotificationSetting(severity: EventSeverity, message: String) :
-        UserEvent(severity, message)
+sealed class UserEvent {
+    object LogOut : UserEvent()
+    class Info(val message: String) : UserEvent()
+    class Error(val message: String, val throwable: Throwable) : UserEvent()
 
-}
-
-/**
- * Severity of the event.
- */
-enum class EventSeverity {
-    INFO, ERROR
 }
 
 /**
@@ -43,29 +39,26 @@ class UserViewModel : ViewModel() {
         get() = _state
 
     private val _event: MutableSharedFlow<UserEvent> = MutableSharedFlow()
+    val event: Flow<UserEvent>
+        get() = _event
 
     fun toggleNotificationSetting(enabled: Boolean) {
         _state.value = state.value.copy(notificationEnabled = enabled)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                // TODO: update notification behavior
-            }.onSuccess {
-                _event.emit(
-                    UserEvent.ToggleNotificationSetting(
-                        EventSeverity.INFO,
-                        "Notification settings updated"
-                    )
-                )
-            }.onFailure {
-                _state.value = state.value.copy(notificationEnabled = !enabled)
-                _event.emit(
-                    UserEvent.ToggleNotificationSetting(
-                        EventSeverity.ERROR,
-                        "Failed to update notification settings"
-                    )
-                )
-            }
+        viewModelScope.launch {
+            _event.emit(UserEvent.Info("Notification settings updated"))
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            _event.emit(UserEvent.LogOut)
+        }
+    }
+
+    fun error(errorEvent: UserEvent.Error) {
+        viewModelScope.launch {
+            _event.emit(errorEvent)
         }
     }
 }
