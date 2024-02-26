@@ -4,9 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import ca.uwaterloo.treklogue.data.repository.AuthRepository
-import ca.uwaterloo.treklogue.data.repository.RealmAuthRepository
 import ca.uwaterloo.treklogue.app
+import ca.uwaterloo.treklogue.data.repository.AuthRealmRepository
+import ca.uwaterloo.treklogue.data.repository.AuthRepository
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 sealed class LoginEvent(val severity: EventSeverity, val message: String) {
     class GoToMap(severity: EventSeverity, message: String) : LoginEvent(severity, message)
     class ShowMessage(severity: EventSeverity, message: String) : LoginEvent(severity, message)
-    class LogOutAndExit(severity: EventSeverity, message: String) : LoginEvent(severity, message)
 
 }
 
@@ -68,7 +67,7 @@ class LoginViewModel : ViewModel() {
     val event: Flow<LoginEvent>
         get() = _event
 
-    private val authRepository: AuthRepository = RealmAuthRepository
+    private val authRepository: AuthRepository = AuthRealmRepository
 
     fun switchToAction(loginAction: LoginAction) {
         _state.value = state.value.copy(action = loginAction)
@@ -89,7 +88,12 @@ class LoginViewModel : ViewModel() {
             runCatching {
                 authRepository.createAccount(email, password)
             }.onSuccess {
-                _event.emit(LoginEvent.ShowMessage(EventSeverity.INFO, "User created successfully."))
+                _event.emit(
+                    LoginEvent.ShowMessage(
+                        EventSeverity.INFO,
+                        "User created successfully."
+                    )
+                )
                 login(email, password)
             }.onFailure { ex: Throwable ->
                 _state.value = state.value.copy(enabled = true)
@@ -124,15 +128,4 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun logOut() {
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                app.currentUser?.logOut()
-            }.onSuccess {
-                _event.emit(LoginEvent.LogOutAndExit(EventSeverity.INFO, "User logged out successfully."))
-            }.onFailure {
-                _event.emit(LoginEvent.LogOutAndExit(EventSeverity.ERROR, "User failed to log out."))
-            }
-        }
-    }
 }

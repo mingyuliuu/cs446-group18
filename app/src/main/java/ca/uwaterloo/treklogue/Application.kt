@@ -2,12 +2,6 @@ package ca.uwaterloo.treklogue
 
 import android.app.Application
 import android.util.Log
-import ca.uwaterloo.treklogue.data.model.Badge
-import ca.uwaterloo.treklogue.data.model.JournalEntry
-import ca.uwaterloo.treklogue.data.model.Landmark
-import ca.uwaterloo.treklogue.data.model.User
-import io.realm.kotlin.Realm
-import io.realm.kotlin.RealmConfiguration
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.AppConfiguration
 
@@ -23,15 +17,6 @@ inline fun <reified T> T.TAG(): String = T::class.java.simpleName
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-
-        // Creates a realm with default configuration values
-        val config = RealmConfiguration.create(
-            schema = setOf(Badge::class, JournalEntry::class, Landmark::class, User::class)
-        )
-
-        // Open the realm with the configuration object
-        val realm = Realm.open(config)
-        Log.v(null, "Successfully opened realm: ${realm.configuration.name}")
 
         app = App.create(
             AppConfiguration.Builder(getString(R.string.realm_app_id))
