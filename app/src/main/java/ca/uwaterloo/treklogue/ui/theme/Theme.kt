@@ -5,7 +5,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val LightColorPalette = lightColorScheme(
-    primary = Purple500,
+    primary = BtnBlue,
     inversePrimary = Purple700,
     secondary = Teal200
 )
