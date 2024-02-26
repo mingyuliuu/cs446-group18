@@ -73,7 +73,7 @@ fun ProfileScreen(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_baseline_logout_24_white),
-                        contentDescription = null,
+                        contentDescription = "Log out",
                         modifier = Modifier
                             .size(24.dp)
                     )
@@ -97,7 +97,7 @@ fun ProfileScreen(
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_settings),
-                        contentDescription = null,
+                        contentDescription = "Settings",
                         modifier = Modifier
                             .size(24.dp)
                     )
