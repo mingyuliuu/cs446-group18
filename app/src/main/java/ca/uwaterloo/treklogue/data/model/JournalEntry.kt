@@ -11,14 +11,14 @@ class JournalEntry() : RealmObject {
     var _id: ObjectId = ObjectId()
     var ownerId: String = ""
     var landmark: Landmark? = null
-    var visitedAt: String? = null // TODO: Use proper Date object
+    var visitedAt: String = "" // TODO: Use proper Date object
     var photos: RealmList<String> = realmListOf()
-    var description: String? = ""
+    var description: String = ""
 
     constructor(
         ownerId: String = "",
         landmark: Landmark? = null,
-        visitedAt: String? = null
+        visitedAt: String = ""
     ) : this() {
         this.ownerId = ownerId
         this.landmark = landmark

@@ -11,7 +11,7 @@ class Badge() : RealmObject {
     var _id: ObjectId = ObjectId()
     var ownerId: String = ""
     var name: String = ""
-    var landmarks: RealmList<Landmark>? = realmListOf()
+    var landmarks: RealmList<Landmark> = realmListOf()
 
     constructor(name: String = "", ownerId: String = "") : this() {
         this.name = name

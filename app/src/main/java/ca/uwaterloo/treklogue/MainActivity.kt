@@ -4,24 +4,21 @@ package ca.uwaterloo.treklogue
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.lifecycleScope
-import ca.uwaterloo.treklogue.controller.UserController
-import ca.uwaterloo.treklogue.data.model.User
-import ca.uwaterloo.treklogue.data.model.UserModel
 import ca.uwaterloo.treklogue.data.repository.BadgeRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.JournalEntryRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
 import ca.uwaterloo.treklogue.data.repository.UserRealmSyncRepository
 import ca.uwaterloo.treklogue.ui.Router
-import ca.uwaterloo.treklogue.ui.UserViewModel
+import ca.uwaterloo.treklogue.ui.UserEvent
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
-import ca.uwaterloo.treklogue.ui.login.LoginEvent
-import ca.uwaterloo.treklogue.ui.login.LoginViewModel
+import ca.uwaterloo.treklogue.ui.UserViewModel
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -83,40 +80,30 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            // Subscribe to navigation and message-logging events
-            loginViewModel.event
-                .collect { event ->
-                    when (event) {
-                        is LoginEvent.LogOutAndExit -> {
-                            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                            startActivity(intent)
+            userViewModel.event
+                .collect { userEvent ->
+                    when (userEvent) {
+                        UserEvent.LogOut -> {
+                            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                             finish()
                         }
-
-                        else -> {
-                            // SKIP
-                        }
+                        is UserEvent.Info ->
+                            Log.e(TAG(), userEvent.message)
+                        is UserEvent.Error ->
+                            Log.e(TAG(), "${userEvent.message}: ${userEvent.throwable.message}")
                     }
                 }
         }
 
-        // TODO: fix this, just mock right now
-        val userModel = UserModel(
-            User(),
-            // app.currentUser
-        )
-        val userViewModel = UserViewModel(userModel)
-        val userController = UserController(userModel)
-
         setContent {
             MyApplicationTheme {
-                Router(loginViewModel, userViewModel, userController)
+                Router(userViewModel)
             }
         }
     }

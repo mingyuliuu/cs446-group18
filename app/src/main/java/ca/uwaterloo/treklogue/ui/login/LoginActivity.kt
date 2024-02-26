@@ -7,8 +7,6 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.MainActivity
 import ca.uwaterloo.treklogue.TAG
@@ -23,7 +21,6 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Log.v(null, "Login Activity: " + app.currentUser)
         // Fast-track task list screen if we are logged in
         if (app.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
@@ -44,11 +41,6 @@ class LoginActivity : ComponentActivity() {
                             finish()
                         }
                         is LoginEvent.ShowMessage -> event.process()
-                        is LoginEvent.LogOutAndExit -> {
-                            val intent = Intent(this@LoginActivity, LoginActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
                     }
                 }
         }
@@ -69,18 +61,5 @@ class LoginActivity : ComponentActivity() {
                     .show()
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginActivityPreview() {
-    MyApplicationTheme {
-        val viewModel = LoginViewModel().also {
-            it.switchToAction(LoginAction.LOGIN)
-            it.setEmail("test@test.com")
-            it.setPassword("123456")
-        }
-        LoginScaffold(viewModel)
     }
 }

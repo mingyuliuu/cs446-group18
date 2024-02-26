@@ -2,17 +2,8 @@ package ca.uwaterloo.treklogue
 
 import android.app.Application
 import android.util.Log
-import ca.uwaterloo.treklogue.data.model.Badge
-import ca.uwaterloo.treklogue.data.model.JournalEntry
-import ca.uwaterloo.treklogue.data.model.Landmark
-import ca.uwaterloo.treklogue.data.model.User
-import io.realm.kotlin.Realm
-import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.AppConfiguration
-import io.realm.kotlin.mongodb.Credentials
-import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import kotlinx.coroutines.runBlocking
 
 lateinit var app: App
 

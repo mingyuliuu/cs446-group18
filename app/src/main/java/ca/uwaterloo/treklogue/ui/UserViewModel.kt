@@ -1,21 +1,64 @@
 package ca.uwaterloo.treklogue.ui
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import ca.uwaterloo.treklogue.data.model.UserModel
-import ca.uwaterloo.treklogue.util.ISubscriber
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.launch
 
-// I see there's a VM thing in the android library but I'm not sure if that counts for the course reqs
-class UserViewModel(val model: UserModel) : ISubscriber {
-    var name = mutableStateOf("")
-    var toggleChecked = mutableStateOf(false)
-    init {
-        model.subscribe(this)
+/**
+ * Types of UX events triggered by user actions.
+ */
+sealed class UserEvent {
+    object LogOut : UserEvent()
+    class Info(val message: String) : UserEvent()
+    class Error(val message: String, val throwable: Throwable) : UserEvent()
+
+}
+
+/**
+ * UI representation of a screen state.
+ */
+data class UserState(
+    val notificationEnabled: Boolean
+) {
+    companion object {
+        val initialState = UserState(notificationEnabled = false)
+    }
+}
+
+class UserViewModel : ViewModel() {
+
+    private val _state: MutableState<UserState> = mutableStateOf(UserState.initialState)
+    val state: State<UserState>
+        get() = _state
+
+    private val _event: MutableSharedFlow<UserEvent> = MutableSharedFlow()
+    val event: Flow<UserEvent>
+        get() = _event
+
+    fun toggleNotificationSetting(enabled: Boolean) {
+        _state.value = state.value.copy(notificationEnabled = enabled)
+
+        viewModelScope.launch {
+            _event.emit(UserEvent.Info("Notification settings updated"))
+        }
     }
 
-    // TODO: event parameter
-    override fun update() {
-        // TODO: fix with real data
-//        name.value = model.user.name
-        toggleChecked.value = model.toggleChecked
+    fun logOut() {
+        viewModelScope.launch {
+            _event.emit(UserEvent.LogOut)
+        }
+    }
+
+    fun error(errorEvent: UserEvent.Error) {
+        viewModelScope.launch {
+            _event.emit(errorEvent)
+        }
     }
 }

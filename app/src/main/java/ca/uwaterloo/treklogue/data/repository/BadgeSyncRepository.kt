@@ -39,7 +39,7 @@ interface BadgeSyncRepository : BaseSyncRepository {
     /**
      * Adds a badge that belongs to the current user using the specified [name] and [landmarks].
      */
-    suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?)
+    suspend fun addBadge(name: String, landmarks: RealmList<Landmark>)
 
     /**
      * Deletes a given badge.
@@ -89,7 +89,7 @@ class BadgeRealmSyncRepository(
         return realm.query<Badge>("name == $0", name)
     }
 
-    override suspend fun addBadge(name: String, landmarks: RealmList<Landmark>?) {
+    override suspend fun addBadge(name: String, landmarks: RealmList<Landmark>) {
         val badge = Badge().apply {
             this.ownerId = currentUser.id
             this.name = name
