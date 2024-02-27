@@ -2,10 +2,12 @@ package ca.uwaterloo.treklogue.ui.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -37,6 +39,7 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.R
 
 
 // Data model for a landmark
@@ -44,7 +47,7 @@ data class Landmark(
     val name: String,
     val dateVisited: String,
     val notes: String,
-//    val imageRes: Int // Drawable resource ID
+    val imageRes: Int // Drawable resource ID
 )
 
 /**
@@ -69,7 +72,10 @@ fun ListScreen(
 
         // List of landmarks
         val landmarks = listOf(
-            Landmark("Eiffel Tower", "10th August 2024", "Some notes about the visit."),
+            Landmark("Eiffel Tower", "10th August 2024", "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ", R.drawable.eiffel_tower),
+            Landmark("Eiffel Tower", "10th August 2024", "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ", R.drawable.eiffel_tower),
+            Landmark("Eiffel Tower", "10th August 2024", "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ", R.drawable.eiffel_tower),
+
             // Add more landmarks here
         )
         landmarks.forEach { landmark ->
@@ -85,20 +91,19 @@ fun LandmarkItem(landmark: Landmark) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-//        elevation = 4.dp
+            .padding(8.dp)
     ) {
         Column {
             Text(landmark.name, style = MaterialTheme.typography.headlineSmall)
             Text(landmark.dateVisited, style = MaterialTheme.typography.bodyMedium)
-//            Image(
-//                painter = painterResource(id = landmark.imageRes),
-//                contentDescription = null, // Provide appropriate content description
-//                modifier = Modifier
-//                    .height(150.dp)
-//                    .fillMaxWidth(),
-//                contentScale = ContentScale.Crop
-//            )
+            Image(
+                painter = painterResource(id = landmark.imageRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .height(250.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Fit
+            )
             Text(landmark.notes, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
         }
     }
