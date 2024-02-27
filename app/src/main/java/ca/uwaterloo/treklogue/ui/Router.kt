@@ -20,6 +20,7 @@ import ca.uwaterloo.treklogue.ui.composables.ScaffoldTop
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.list.ListScreen
+import ca.uwaterloo.treklogue.ui.list.LandmarkDetail
 
 /**
  * enum values that represent the screens in the app
@@ -28,6 +29,7 @@ enum class Screen(@StringRes val title: Int) {
     Map(title = R.string.home_name),
     Profile(title = R.string.profile_name),
     List(title = R.string.list_name),
+    Landmark(title = R.string.landmark_name),
 }
 
 @Composable
@@ -90,6 +92,9 @@ fun Router(
                 ListScreen(
                     onNextButtonClicked = {
                         navController.navigate(Screen.Profile.name)
+                    },
+                    onDetailClicked = {
+                        navController.navigate(Screen.Landmark.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
