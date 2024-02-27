@@ -45,9 +45,9 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .paint(
-                // Replace with your image id
-                painterResource(id = R.drawable.login_background),
-                contentScale = ContentScale.FillBounds),
+                painterResource(R.drawable.login_background),
+                contentScale = ContentScale.FillBounds
+            ),
         color = Color.Transparent // Set transparent color as the background is set using Modifier.background
     ) {
         Column(
@@ -56,12 +56,14 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
                 .fillMaxWidth()
         ) {
             Spacer(modifier = Modifier.weight(1f))
-            Text (
-                text = "Treklogue",
+            Text(
+                text = stringResource(R.string.app_name),
                 fontSize = 40.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
-                modifier = Modifier.align(Alignment.CenterHorizontally).border(BorderStroke(2.dp, BtnBlue))
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .border(BorderStroke(2.dp, BtnBlue))
             )
             Spacer(modifier = Modifier.weight(3f))
         }
@@ -120,6 +122,7 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
                                 state.email,
                                 state.password
                             )
+
                             LoginAction.CREATE_ACCOUNT -> loginViewModel.createAccount(
                                 state.email,
                                 state.password
