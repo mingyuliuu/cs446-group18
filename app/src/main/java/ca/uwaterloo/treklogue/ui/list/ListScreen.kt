@@ -62,6 +62,7 @@ val landmarks = listOf(
 fun ListScreen(
     onNextButtonClicked: (Int) -> Unit,
     onDetailClicked: (landmark: Landmark) -> Unit,
+//    viewModel: ListViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -73,14 +74,18 @@ fun ListScreen(
 
         landmarks.forEach { landmark ->
             LandmarkItem(landmark, onDetailClicked)
-
+//            LandmarkItem(landmark, viewModel, onDetailClicked)
         }
     }
 }
 
 
 @Composable
-fun LandmarkItem(landmark: Landmark, onDetailClicked: (landmark: Landmark) -> Unit) {
+fun LandmarkItem(
+    landmark: Landmark,
+//    viewModel: ListViewModel,
+    onDetailClicked: (landmark: Landmark) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -101,6 +106,7 @@ fun LandmarkItem(landmark: Landmark, onDetailClicked: (landmark: Landmark) -> Un
                     }
                     Button(
                         onClick = { onDetailClicked(landmark) },
+//                        onClick = { viewModel.selectLandmark(landmark) },
                         modifier = Modifier.widthIn(min = 80.dp)
                     ) {
                         Text("Details")

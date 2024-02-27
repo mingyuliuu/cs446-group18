@@ -9,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +22,7 @@ import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.list.ListScreen
 import ca.uwaterloo.treklogue.ui.list.LandmarkDetail
+import ca.uwaterloo.treklogue.ui.list.ListViewModel
 
 /**
  * enum values that represent the screens in the app
@@ -89,12 +91,18 @@ fun Router(
                 )
             }
             composable(route = Screen.List.name) {
+                val listViewModel: ListViewModel = viewModel()
                 ListScreen(
                     onNextButtonClicked = {
                         navController.navigate(Screen.Profile.name)
                     },
-                    onDetailClicked = {
-                        navController.navigate(Screen.Landmark.name)
+//                    onDetailClicked = {
+//                        navController.navigate(Screen.Landmark.name)
+//                    },
+                    onDetailClicked = { landmark ->
+                        listViewModel.selectLandmark(landmark)
+                        // TODO: change the route to landmark detail
+                        navController.navigate(Screen.Map.name)
                     },
                     modifier = Modifier.fillMaxSize()
                 )
