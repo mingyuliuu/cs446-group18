@@ -15,3 +15,4 @@
 | 2024/02/15 | 0      | 0     | 0       | 5       | 0     | 0     | MVC for settings, create settings page composables + design |
 | 2024/02/18 | 6      | 0     | 0       | 0       | 0     | 0     | Setup Atlas app service, add data repositories for syncing  |
 | 2024/02/25 | 4      | 0     | 0       | 0       | 0     | 0     | Code refactoring + user view model + profile page update    |
+| 2024/02/25 | 0      | 0     | 0       | 0       | 5     | 0     | Login UI implementation + theme color adjustment            |
