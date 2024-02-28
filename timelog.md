@@ -21,3 +21,4 @@
 | 2024/02/26 | 0      | 0     | 0       | 0       | 0     | 2       | List scrolling implementation                               |
 | 2024/02/27 | 0      | 5     | 0       | 0       | 0     | 0       | Changing Navigation Bar UI                                  |
 | 2024/02/27 | 0      | 0     | 0       | 0       | 0     | 5.5     | Finish on List UI + navigation from list to detail entry    |
+| 2024/02/27 | 1.5    | 0     | 0       | 0       | 0     | 0       | Review 3 PRs, code clean up and refactoring                 |
