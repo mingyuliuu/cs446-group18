@@ -4,9 +4,14 @@ import io.realm.kotlin.types.RealmObject
 import io.realm.kotlin.types.annotations.PrimaryKey
 import org.mongodb.kbson.ObjectId
 
-class Landmark : RealmObject {
+class Landmark() : RealmObject {
     @PrimaryKey
     var _id: ObjectId = ObjectId()
     var name: String = ""
     var location: String = "" // Can be modified to be a real geographical location object later
+
+    constructor(name: String = "", location: String = "") : this() {
+        this.name = name
+        this.location = location
+    }
 }

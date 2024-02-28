@@ -2,14 +2,15 @@ package ca.uwaterloo.treklogue.ui.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+/*
 import ca.uwaterloo.treklogue.ui.Screen
 
 @Composable
@@ -20,9 +21,14 @@ fun ScaffoldBottom(
     navigateList: () -> Unit,
 ) {
     // red = currentScreen
+    // fix this so it isn't so hard-coded
     val homeBackground = if (currentScreen === Screen.Map) Color.Red else Color.Blue
+<<<<<<< HEAD
     val profileBackground = if (currentScreen === Screen.Profile) Color.Red else Color.Blue
     val listBackground = if (currentScreen === Screen.List) Color.Red else Color.Blue
+=======
+    val profileBackground = if (currentScreen === Screen.Profile || currentScreen === Screen.Settings) Color.Red else Color.Blue
+>>>>>>> origin/main
 
     BottomAppBar(
         actions = {
@@ -37,7 +43,7 @@ fun ScaffoldBottom(
                 modifier = Modifier.background(profileBackground)
             ) {
                 Icon(
-                    Icons.Filled.Edit,
+                    Icons.Filled.AccountCircle,
                     contentDescription = "Localized description",
                 )
             }
@@ -53,3 +59,5 @@ fun ScaffoldBottom(
         },
     )
 }
+
+ */

@@ -70,7 +70,7 @@ fun ListScreen(
             .size(100.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Header(onNextButtonClicked)
+//        Header(onNextButtonClicked)
 
         landmarks.forEach { landmark ->
             LandmarkItem(landmark, onDetailClicked)
