@@ -2,6 +2,8 @@
     <string name="app_name">Treklogue</string>
     <string name="home_name">Home</string>
     <string name="profile_name">Profile</string>
+    <string name="list_name">List</string>
+    <string name="landmark_name">Landmark</string>
     <string name="home_button">Home Button</string>
 
     <!-- Strings related to login -->
@@ -18,4 +20,7 @@
     <string name="settings_group_profile">Profile</string>
     <string name="settings_group_notifications">Notifications</string>
     <string name="settings_toggle_notifications">Enable nearby landmark notifications</string>
+
+    <!-- Strings related to list view -->
+    <string name="details">Details</string>
 </resources>
