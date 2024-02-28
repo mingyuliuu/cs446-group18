@@ -29,8 +29,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
 /**
- * Composable for the map view that expects [onNextButtonClicked] lambda that expects
- * the selected quantity to save and triggers the navigation to next screen
+ * Composable for the map view
  */
 
 val waterlooLocation = LatLng(
@@ -41,7 +40,6 @@ val defaultCameraPosition = CameraPosition.fromLatLngZoom(waterlooLocation, 8f)
 
 @Composable
 fun MapScreen(
-    onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val cameraPositionState = rememberCameraPositionState {
