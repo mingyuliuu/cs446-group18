@@ -20,58 +20,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 
-
-// Data model for a landmark
-data class Landmark(
-    val name: String,
-    val dateVisited: String,
-    val notes: String,
-    val imageRes: Int // Drawable resource ID
-)
-
-// List of landmarks
+// Mock: List of landmarks
 val landmarks = listOf(
-    Landmark(
+    MockLandmark(
         "Eiffel Tower",
         "10th August 2024",
         "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.eiffel_tower
+        R.drawable.img_eiffel_tower
     ),
-    Landmark(
+    MockLandmark(
         "Eiffel Tower",
         "10th August 2024",
         "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.eiffel_tower
+        R.drawable.img_eiffel_tower
     ),
-    Landmark(
+    MockLandmark(
         "Eiffel Tower",
         "10th August 2024",
         "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.eiffel_tower
+        R.drawable.img_eiffel_tower
     )
 )
 
 /**
- * Composable for the list view that expects [onNextButtonClicked] lambda that expects
- * the selected quantity to save and triggers the navigation to next screen
+ * Composable for the list view
  */
 @Composable
 fun ListScreen(
-    onNextButtonClicked: (Int) -> Unit,
-    onDetailClicked: (landmark: Landmark) -> Unit,
+    onDetailClicked: (landmark: MockLandmark) -> Unit,
 //    viewModel: ListViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .size(100.dp)
             .verticalScroll(rememberScrollState())
     ) {
-//        Header(onNextButtonClicked)
-
         landmarks.forEach { landmark ->
             LandmarkItem(landmark, onDetailClicked)
 //            LandmarkItem(landmark, viewModel, onDetailClicked)
@@ -79,12 +68,11 @@ fun ListScreen(
     }
 }
 
-
 @Composable
 fun LandmarkItem(
-    landmark: Landmark,
+    landmark: MockLandmark,
 //    viewModel: ListViewModel,
-    onDetailClicked: (landmark: Landmark) -> Unit
+    onDetailClicked: (landmark: MockLandmark) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -109,7 +97,7 @@ fun LandmarkItem(
 //                        onClick = { viewModel.selectLandmark(landmark) },
                         modifier = Modifier.widthIn(min = 80.dp)
                     ) {
-                        Text("Details")
+                        Text(stringResource(R.string.details))
                     }
                 }
                 Image(
@@ -122,23 +110,6 @@ fun LandmarkItem(
                 )
                 Text(landmark.notes, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
             }
-        }
-
-    }
-}
-
-@Composable
-fun Header(onNextButtonClicked: (Int) -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("You are on the list screen")
-        Button(
-            onClick = { onNextButtonClicked(0) },
-            modifier = Modifier.widthIn(min = 250.dp)
-        ) {
-            Text("Go to profile")
         }
     }
 }

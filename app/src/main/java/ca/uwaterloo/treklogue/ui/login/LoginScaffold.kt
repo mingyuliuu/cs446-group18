@@ -45,7 +45,7 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .paint(
-                painterResource(R.drawable.login_background),
+                painterResource(R.drawable.img_login_bg),
                 contentScale = ContentScale.FillBounds
             ),
         color = Color.Transparent // Set transparent color as the background is set using Modifier.background
