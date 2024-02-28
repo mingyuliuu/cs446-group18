@@ -32,12 +32,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /**
- * Composable for the profile view that expects [onNextButtonClicked] lambda that expects
- * the selected quantity to save and triggers the navigation to next screen
+ * Composable for the profile view
  */
 @Composable
 fun ProfileScreen(
-    onNextButtonClicked: (Int) -> Unit,
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel
 ) {
@@ -91,9 +89,10 @@ fun ProfileScreen(
 
                 Divider(modifier = Modifier.padding(vertical = 4.dp))
 
+                // TODO: Setting will be removed from the profile tab, we can put other actions here
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.clickable(onClick = { onNextButtonClicked(0) })
+                    modifier = Modifier.clickable(onClick = { })
                 ) {
                     Icon(
                         painterResource(id = R.drawable.ic_settings),
