@@ -1,7 +1,8 @@
 package ca.uwaterloo.treklogue.data.repository
 
-import ca.uwaterloo.treklogue.data.model.Landmark
+import android.util.Log
 import ca.uwaterloo.treklogue.app
+import ca.uwaterloo.treklogue.data.model.Landmark
 import io.realm.kotlin.Realm
 import io.realm.kotlin.ext.query
 import io.realm.kotlin.mongodb.User
@@ -12,6 +13,7 @@ import io.realm.kotlin.mongodb.sync.SyncSession
 import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmQuery
+import io.realm.kotlin.query.RealmResults
 import io.realm.kotlin.query.Sort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,9 +32,9 @@ interface LandmarkSyncRepository : BaseSyncRepository {
     fun getLandmarkList(): Flow<ResultsChange<Landmark>>
 
     /**
-     * Adds a landmark that belongs to the current user using the specified [name] and [location].
+     * Adds a landmark that belongs to the current user using the specified [name], [latitude] and [longitude].
      */
-    suspend fun addLandmark(name: String, location: String)
+    suspend fun addLandmark(name: String, latitude: Double, longitude: Double)
 
     /**
      * Deletes a given landmark.
@@ -66,9 +68,29 @@ class LandmarkRealmSyncRepository(
 
         realm = Realm.open(config)
 
+        // Can write to database like this:
+        /* CoroutineScope(Dispatchers.IO).launch {
+            runCatching {
+                realm.write {
+                    val newLandmark = Landmark().apply {
+                        name = "Niagara Falls"
+                        latitude = 43.107565
+                        longitude = -79.060331
+                    }
+                    copyToRealm(newLandmark)
+                }
+            }.onSuccess {
+                Log.v(null, "Successfully added landmark.")
+            }.onFailure { ex: Throwable ->
+                Log.v(null, "Failed to add landmark: " + ex.message)
+            }
+        }
+         */
+
         // Mutable states must be updated on the UI thread
         CoroutineScope(Dispatchers.Main).launch {
             realm.subscriptions.waitForSynchronization()
+            Log.v(null, "Successfully opened realm: ${realm.configuration}")
         }
     }
 
@@ -78,10 +100,11 @@ class LandmarkRealmSyncRepository(
             .asFlow()
     }
 
-    override suspend fun addLandmark(name: String, location: String) {
+    override suspend fun addLandmark(name: String, latitude: Double, longitude: Double) {
         val landmark = Landmark().apply {
             this.name = name
-            this.location = location
+            this.latitude = latitude
+            this.longitude = longitude
         }
         realm.write {
             copyToRealm(landmark)
@@ -106,6 +129,6 @@ class LandmarkRealmSyncRepository(
     override fun close() = realm.close()
 
     private fun getAllQuery(realm: Realm): RealmQuery<Landmark> =
-        realm.query()
+        realm.query<Landmark>()
 
 }

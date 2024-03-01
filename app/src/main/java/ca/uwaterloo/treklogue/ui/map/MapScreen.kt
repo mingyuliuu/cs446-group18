@@ -1,5 +1,6 @@
 package ca.uwaterloo.treklogue.ui.map
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,10 +41,15 @@ val defaultCameraPosition = CameraPosition.fromLatLngZoom(waterlooLocation, 8f)
 
 @Composable
 fun MapScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mapViewModel: MapViewModel
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
+    }
+
+    for (landmark in mapViewModel.state.value.landmarks) {
+        Log.v(null, "LANDMARK: " + landmark.name + " " + landmark.latitude + " " + landmark.longitude)
     }
 
     Box(modifier) {
