@@ -1,2 +1,3 @@
 * Clean Architecture starter code: https://git.uwaterloo.ca/cs346/public/1241/slides/-/tree/main/06-04-ui-patterns/clean-android-ui
 * Template app provided by MongoDB Atlas: https://www.mongodb.com/docs/atlas/app-services/reference/template-apps/#std-label-template-apps
+* Maps Compose Library: https://developers.google.com/maps/documentation/android-sdk/maps-compose

@@ -13,11 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.model.Landmark
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -48,16 +51,13 @@ fun MapScreen(
         position = defaultCameraPosition
     }
 
-    for (landmark in mapViewModel.state.value.landmarks) {
-        Log.v(null, "LANDMARK: " + landmark.name + " " + landmark.latitude + " " + landmark.longitude)
-    }
-
     Box(modifier) {
         GoogleMapView(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
             cameraPositionState = cameraPositionState,
+            landmarks = mapViewModel.state.value.landmarks,
             //onMapLoaded = {}
         )
         FloatingActionButton(
@@ -80,6 +80,7 @@ fun MapScreen(
 fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
+    landmarks: SnapshotStateList<Landmark>
     //onMapLoaded: () -> Unit
 ) {
     val mapUiSettings by remember {
@@ -94,6 +95,13 @@ fun GoogleMapView(
         position = waterlooLocation
     )
 
+    for (landmark in landmarks) {
+        Log.v(
+            null,
+            "LANDMARK: " + landmark.name + " " + landmark.latitude + " " + landmark.longitude
+        )
+    }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
@@ -104,5 +112,19 @@ fun GoogleMapView(
             state = locationState,
             draggable = true
         )
+        for (landmark in landmarks) {
+            LandmarkMarker(LatLng(landmark.latitude, landmark.longitude), landmark.name)
+        }
     }
+}
+
+@Composable
+fun LandmarkMarker(position: LatLng, title: String) {
+    val markerState = rememberMarkerState(null, position)
+    Marker(
+        state = markerState,
+        title = title,
+        snippet = title, // TODO: Can include landmark description in the future
+        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+    )
 }
