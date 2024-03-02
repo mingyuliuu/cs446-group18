@@ -53,8 +53,8 @@ val landmarks = listOf(
 @Composable
 fun ListScreen(
     onDetailClicked: (landmark: MockLandmark) -> Unit,
-//    viewModel: ListViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listViewModel: ListViewModel
 ) {
     Column(
         modifier = modifier
@@ -62,8 +62,8 @@ fun ListScreen(
             .verticalScroll(rememberScrollState())
     ) {
         landmarks.forEach { landmark ->
-            LandmarkItem(landmark, onDetailClicked)
-//            LandmarkItem(landmark, viewModel, onDetailClicked)
+//            LandmarkItem(landmark, onDetailClicked)
+            LandmarkItem(landmark, listViewModel, onDetailClicked)
         }
     }
 }
@@ -71,7 +71,7 @@ fun ListScreen(
 @Composable
 fun LandmarkItem(
     landmark: MockLandmark,
-//    viewModel: ListViewModel,
+    listViewModel: ListViewModel,
     onDetailClicked: (landmark: MockLandmark) -> Unit
 ) {
     Card(

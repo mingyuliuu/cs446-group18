@@ -25,7 +25,8 @@ import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 @Composable
 fun Router(
     userViewModel: UserViewModel,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    listViewModel: ListViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -65,17 +66,17 @@ fun Router(
             }
 
             composable(route = Screens.List.screen) {
-                val listViewModel: ListViewModel = viewModel()
                 ListScreen(
-//                    onDetailClicked = {
-//                        navController.navigate(Screen.Landmark.name)
-//                    },
-                    onDetailClicked = { _ ->
-//                        listViewModel.selectLandmark(landmark)
-                        // TODO: change the route to landmark detail
+                    onDetailClicked = {
                         navigationController.navigate(Screens.Map.screen)
                     },
-                    modifier = Modifier.fillMaxSize()
+//                    onDetailClicked = { _ ->
+////                        listViewModel.selectLandmark(landmark)
+//                        // TODO: change the route to landmark detail
+//                        navigationController.navigate(Screens.Map.screen)
+//                    },
+                    modifier = Modifier.fillMaxSize(),
+                    listViewModel
                 )
             }
 
