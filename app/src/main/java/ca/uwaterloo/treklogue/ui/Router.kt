@@ -18,12 +18,14 @@ import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
 import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
+import ca.uwaterloo.treklogue.ui.map.MapViewModel
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 
 @Composable
 fun Router(
     userViewModel: UserViewModel,
+    mapViewModel: MapViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -57,7 +59,8 @@ fun Router(
         ) {
             composable(route = Screens.Map.screen) {
                 MapScreen(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    mapViewModel
                 )
             }
 
