@@ -23,3 +23,5 @@
 | 2024/02/27 | 0      | 0     | 0       | 0       | 0     | 5.5     | Finish on List UI + navigation from list to detail entry    |
 | 2024/02/27 | 1.5    | 0     | 0       | 0       | 0     | 0       | Review 3 PRs, code clean up and refactoring                 |
 | 2024/03/02 | 3      | 0     | 0       | 0       | 0     | 0       | Add landmarks to db and map screen UI                       |
+| 2024/03/03 | 0      | 0     | 0       | 0       | 4     | 0       | Add Journal Entry UI                                        |
+| 2024/03/02 | 0      | 0     | 0       | 0       | 2     | 0       | Navigation between screens, Journal Entry and Map view      |
