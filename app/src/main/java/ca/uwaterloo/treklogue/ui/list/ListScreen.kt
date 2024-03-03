@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,28 +24,6 @@ import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 
-// Mock: List of landmarks
-val landmarks = listOf(
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    ),
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    ),
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    )
-)
-
 /**
  * Composable for the list view
  */
@@ -60,7 +37,7 @@ fun ListScreen(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
-        landmarks.forEach { landmark ->
+        listViewModel.landmarks.forEach { landmark ->
             LandmarkItem(landmark, listViewModel, onDetailClicked)
         }
     }
