@@ -78,6 +78,9 @@ fun Router(
 
             composable(route = Screens.LandmarkDetail.screen) {
                 LandmarkDetail(
+                    onBackClicked = {
+                        navigationController.navigate(Screens.List.screen)
+                    },
                     modifier = Modifier.fillMaxSize(),
                     listViewModel
                 )

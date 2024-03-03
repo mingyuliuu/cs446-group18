@@ -35,6 +35,7 @@ import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 
 @Composable
 fun LandmarkDetail(
+    onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
     listViewModel: ListViewModel
 ) {
@@ -44,7 +45,7 @@ fun LandmarkDetail(
     if (landmark != null) {
         Column(modifier = Modifier.fillMaxSize()) {
             // Top bar section
-            TopBar()
+            TopBar(onBackClicked)
 
             // Content section
             ContentSection(landmark)
@@ -53,7 +54,7 @@ fun LandmarkDetail(
 }
 
 @Composable
-fun TopBar() {
+fun TopBar(onBackClicked: () -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -61,7 +62,7 @@ fun TopBar() {
             .padding(8.dp)
     ) {
         IconButton(
-            onClick = { /* TODO: Handle back press */ },
+            onClick = { onBackClicked() },
         ) {
             Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
         }
@@ -131,5 +132,6 @@ fun ContentSection(landmark: MockLandmark) {
                 Icon(Icons.Filled.Add, contentDescription = "Add")
             }
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
