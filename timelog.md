@@ -27,6 +27,6 @@
 | 2024/03/02 | 0      | 0     | 0       | 9.5     | 0     | 0       | Location permissions + User tracking on map view                          |
 | 2024/03/02 | 0      | 0     | 0       | 0       | 0     | 4       | Implement UI for Journal detail page                                      |
 | 2024/03/02 | 0      | 0     | 1.5     | 0       | 0     | 0       | Prototype Document                                                        |
-| 2024/03/03 | 0      | 0     | 0       | 0       | 4     | 0       | Add Journal Entry UI                                                      |
 | 2024/03/02 | 0      | 0     | 0       | 0       | 3     | 0       | Navigation between screens, Journal Entry and Map view                    |
-| 2024/03/02 | 2      | 2     | 2       | 2       | 2     | 2       | Prepare for project demo, discuss outstanding bugs                        |
+| 2024/03/03 | 0      | 0     | 0       | 0       | 4     | 0       | Add Journal Entry UI                                                      |
+| 2024/03/03 | 2      | 2     | 2       | 2       | 2     | 2       | Prepare for project demo, discuss outstanding bugs                        |
