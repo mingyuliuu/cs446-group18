@@ -38,6 +38,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
 import com.google.android.gms.location.*
 
+
 /**
  * Composable for the map view
  */
@@ -45,7 +46,8 @@ import com.google.android.gms.location.*
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    onDetailClicked: (Any?) -> Unit,
 ) {
     val waterlooLocation = LatLng(
         43.4822734, -80.5879188
@@ -144,7 +146,7 @@ fun MapScreen(
                 .padding(16.dp),
             shape = RoundedCornerShape(12),
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            onClick = { /* TODO: Handle add new journal entry */ },
+            onClick = { onDetailClicked("") },
         ) {
             Icon(
                 painterResource(id = R.drawable.ic_add),
