@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
+import ca.uwaterloo.treklogue.ui.list.JournalDetail
 import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
@@ -25,7 +26,8 @@ import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 @Composable
 fun Router(
     userViewModel: UserViewModel,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    listViewModel: ListViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -65,17 +67,22 @@ fun Router(
             }
 
             composable(route = Screens.List.screen) {
-                val listViewModel: ListViewModel = viewModel()
                 ListScreen(
-//                    onDetailClicked = {
-//                        navController.navigate(Screen.Landmark.name)
-//                    },
-                    onDetailClicked = { _ ->
-//                        listViewModel.selectLandmark(landmark)
-                        // TODO: change the route to landmark detail
-                        navigationController.navigate(Screens.Map.screen)
+                    onDetailClicked = {
+                        navigationController.navigate(Screens.JournalDetail.screen)
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    listViewModel
+                )
+            }
+
+            composable(route = Screens.JournalDetail.screen) {
+                JournalDetail(
+                    onBackClicked = {
+                        navigationController.navigate(Screens.List.screen)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    listViewModel
                 )
             }
 

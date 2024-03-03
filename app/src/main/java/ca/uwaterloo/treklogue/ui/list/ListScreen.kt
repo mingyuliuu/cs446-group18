@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -25,45 +24,21 @@ import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 
-// Mock: List of landmarks
-val landmarks = listOf(
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    ),
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    ),
-    MockLandmark(
-        "Eiffel Tower",
-        "10th August 2024",
-        "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
-        R.drawable.img_eiffel_tower
-    )
-)
-
 /**
  * Composable for the list view
  */
 @Composable
 fun ListScreen(
     onDetailClicked: (landmark: MockLandmark) -> Unit,
-//    viewModel: ListViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listViewModel: ListViewModel
 ) {
     Column(
         modifier = modifier
-            .size(100.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        landmarks.forEach { landmark ->
-            LandmarkItem(landmark, onDetailClicked)
-//            LandmarkItem(landmark, viewModel, onDetailClicked)
+        listViewModel.landmarks.forEach { landmark ->
+            LandmarkItem(landmark, listViewModel, onDetailClicked)
         }
     }
 }
@@ -71,7 +46,7 @@ fun ListScreen(
 @Composable
 fun LandmarkItem(
     landmark: MockLandmark,
-//    viewModel: ListViewModel,
+    listViewModel: ListViewModel,
     onDetailClicked: (landmark: MockLandmark) -> Unit
 ) {
     Card(
@@ -79,22 +54,26 @@ fun LandmarkItem(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
             Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
-                        modifier = Modifier
-                            .weight(1f) // This makes the Column fill the available space, pushing the Button to the end
+                        modifier = Modifier.weight(1f)
                     ) {
                         Text(landmark.name, style = MaterialTheme.typography.headlineSmall)
                         Text(landmark.dateVisited, style = MaterialTheme.typography.bodyMedium)
                     }
                     Button(
-                        onClick = { onDetailClicked(landmark) },
-//                        onClick = { viewModel.selectLandmark(landmark) },
+                        onClick = {
+                            listViewModel.selectLandmark(landmark)
+                            onDetailClicked(landmark) },
                         modifier = Modifier.widthIn(min = 80.dp)
                     ) {
                         Text(stringResource(R.string.details))
@@ -105,6 +84,7 @@ fun LandmarkItem(
                     contentDescription = null,
                     modifier = Modifier
                         .height(250.dp)
+                        .padding(8.dp)
                         .fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
