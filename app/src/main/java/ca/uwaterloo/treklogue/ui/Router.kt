@@ -80,9 +80,6 @@ fun Router(
             // add routes here
             composable(route = Screen.Map.name) {
                 MapScreen(
-                    onNextButtonClicked = {
-                        navController.navigate(Screen.Profile.name)
-                    },
                     modifier = Modifier.fillMaxSize()
                 )
             }
