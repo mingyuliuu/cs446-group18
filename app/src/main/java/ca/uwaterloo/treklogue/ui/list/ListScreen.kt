@@ -22,14 +22,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 
 /**
  * Composable for the list view
  */
 @Composable
 fun ListScreen(
-    onDetailClicked: (landmark: MockLandmark) -> Unit,
+    onDetailClicked: (landmark: MockJournalEntry) -> Unit,
     modifier: Modifier = Modifier,
     listViewModel: ListViewModel
 ) {
@@ -37,17 +37,17 @@ fun ListScreen(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
-        listViewModel.landmarks.forEach { landmark ->
-            LandmarkItem(landmark, listViewModel, onDetailClicked)
+        listViewModel.journalEntries.forEach { journalEntry ->
+            JournalEntryItem(journalEntry, listViewModel, onDetailClicked)
         }
     }
 }
 
 @Composable
-fun LandmarkItem(
-    landmark: MockLandmark,
+fun JournalEntryItem(
+    journalEntry: MockJournalEntry,
     listViewModel: ListViewModel,
-    onDetailClicked: (landmark: MockLandmark) -> Unit
+    onDetailClicked: (landmark: MockJournalEntry) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -67,20 +67,21 @@ fun LandmarkItem(
                     Column(
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text(landmark.name, style = MaterialTheme.typography.headlineSmall)
-                        Text(landmark.dateVisited, style = MaterialTheme.typography.bodyMedium)
+                        Text(journalEntry.name, style = MaterialTheme.typography.headlineSmall)
+                        Text(journalEntry.dateVisited, style = MaterialTheme.typography.bodyMedium)
                     }
                     Button(
                         onClick = {
-                            listViewModel.selectLandmark(landmark)
-                            onDetailClicked(landmark) },
+                            listViewModel.selectJournalEntry(journalEntry)
+                            onDetailClicked(journalEntry)
+                        },
                         modifier = Modifier.widthIn(min = 80.dp)
                     ) {
                         Text(stringResource(R.string.details))
                     }
                 }
                 Image(
-                    painter = painterResource(id = landmark.imageRes),
+                    painter = painterResource(id = journalEntry.imageRes),
                     contentDescription = null,
                     modifier = Modifier
                         .height(250.dp)
@@ -88,7 +89,7 @@ fun LandmarkItem(
                         .fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
-                Text(landmark.notes, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
+                Text(journalEntry.notes, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
             }
         }
     }

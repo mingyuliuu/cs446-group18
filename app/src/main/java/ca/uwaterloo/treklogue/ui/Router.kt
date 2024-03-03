@@ -9,14 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.list.JournalDetail
+import ca.uwaterloo.treklogue.ui.list.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
@@ -77,7 +76,7 @@ fun Router(
             }
 
             composable(route = Screens.JournalDetail.screen) {
-                JournalDetail(
+                JournalEntryDetail(
                     onBackClicked = {
                         navigationController.navigate(Screens.List.screen)
                     },

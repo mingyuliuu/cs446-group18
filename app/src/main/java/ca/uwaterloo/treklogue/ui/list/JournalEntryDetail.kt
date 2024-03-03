@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,27 +27,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
-
+import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 
 @Composable
-fun JournalDetail(
+fun JournalEntryDetail(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
     listViewModel: ListViewModel
 ) {
 
-    val landmark = listViewModel.selectedLandmark.observeAsState().value
+    val journalEntry = listViewModel.selectedJournalEntry.observeAsState().value
 
-    if (landmark != null) {
-        Column(modifier = Modifier.fillMaxSize()) {
+    if (journalEntry != null) {
+        Column(modifier) {
             // Top bar section
             TopBar(onBackClicked)
 
             // Content section
-            ContentSection(landmark)
+            ContentSection(journalEntry)
         }
     }
 }
@@ -68,40 +68,40 @@ fun TopBar(onBackClicked: () -> Unit) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Button(onClick = {/* TODO: handle save */ }) {
-            Text("Save")
+            Text(stringResource(R.string.save))
         }
     }
 }
 
 @Composable
-fun ContentSection(landmark: MockLandmark) {
+fun ContentSection(journalEntry: MockJournalEntry) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
     ) {
         OutlinedTextField(
-            value = TextFieldValue(landmark.name),
+            value = TextFieldValue(journalEntry.name),
             onValueChange = { /* TODO: handle text change */ },
-            label = { Text("Name of Landmark") },
+            label = { Text(stringResource(R.string.name_of_landmark)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = TextFieldValue(landmark.dateVisited),
+            value = TextFieldValue(journalEntry.dateVisited),
             onValueChange = { /* TODO: handle text change */ },
-            label = { Text("Date of Visit") },
+            label = { Text(stringResource(R.string.date_of_visit)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = TextFieldValue(landmark.notes),
+            value = TextFieldValue(journalEntry.notes),
             onValueChange = { /* TODO: handle text change */ },
-            label = { Text("Personal Note") },
+            label = { Text(stringResource(R.string.personal_note)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
@@ -118,7 +118,7 @@ fun ContentSection(landmark: MockLandmark) {
                 .weight(1f)
         ) {
             Image(
-                painter = painterResource(id = landmark.imageRes),
+                painter = painterResource(id = journalEntry.imageRes),
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Fit
