@@ -16,10 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,11 +31,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.*
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import androidx.compose.runtime.remember
 import com.google.android.gms.location.*
 
 /**
@@ -175,10 +171,6 @@ fun GoogleMapView(
     val mapProperties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
-
-    val locationState = rememberMarkerState(
-        position = waterlooLocation
-    )
 
     for (landmark in landmarks) {
         Log.v(
