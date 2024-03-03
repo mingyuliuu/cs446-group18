@@ -67,6 +67,7 @@ fun MapScreen(
         position = defaultCameraPosition
     }
 
+    // TODO: handle coarse location access as well
     val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
     val context = LocalContext.current
@@ -83,7 +84,6 @@ fun MapScreen(
         override fun onLocationResult(p0: LocationResult) {
             for (location in p0.locations){
                 latLng.value = LatLng(location.latitude, location.longitude)
-                cameraPositionState.move(CameraUpdateFactory.newLatLng(latLng.value))
             }
         }
     }
@@ -164,10 +164,7 @@ fun GoogleMapView(
     landmarks: SnapshotStateList<Landmark>
 ) {
     val mapUiSettings by remember {
-        mutableStateOf(MapUiSettings(
-            scrollGesturesEnabled = false,
-            scrollGesturesEnabledDuringRotateOrZoom = false))
-
+        mutableStateOf(MapUiSettings())
     }
 
     val mapProperties by remember {
