@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -17,6 +16,7 @@ import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
+import ca.uwaterloo.treklogue.ui.list.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
@@ -26,7 +26,8 @@ import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 @Composable
 fun Router(
     userViewModel: UserViewModel,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    listViewModel: ListViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -69,17 +70,22 @@ fun Router(
             }
 
             composable(route = Screens.List.screen) {
-                val listViewModel: ListViewModel = viewModel()
                 ListScreen(
-//                    onDetailClicked = {
-//                        navController.navigate(Screen.Landmark.name)
-//                    },
-                    onDetailClicked = { _ ->
-//                        listViewModel.selectLandmark(landmark)
-                        // TODO: change the route to landmark detail
-                        navigationController.navigate(Screens.Map.screen)
+                    onDetailClicked = {
+                        navigationController.navigate(Screens.JournalDetail.screen)
                     },
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
+                    listViewModel
+                )
+            }
+
+            composable(route = Screens.JournalDetail.screen) {
+                JournalEntryDetail(
+                    onBackClicked = {
+                        navigationController.navigate(Screens.List.screen)
+                    },
+                    modifier = Modifier.fillMaxSize(),
+                    listViewModel
                 )
             }
 

@@ -1,6 +1,6 @@
 package ca.uwaterloo.treklogue.data.mockModel
 
-data class MockLandmark(
+data class MockJournalEntry(
     val name: String,
     val dateVisited: String,
     val notes: String,

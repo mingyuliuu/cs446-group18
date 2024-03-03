@@ -23,4 +23,10 @@
 
     <!-- Strings related to list view -->
     <string name="details">Details</string>
+
+    <!-- Strings related to journal entry details -->
+    <string name="name_of_landmark">Name of Landmark</string>
+    <string name="date_of_visit">Date of Visit</string>
+    <string name="personal_note">Personal Note</string>
+    <string name="save">Save</string>
 </resources>
