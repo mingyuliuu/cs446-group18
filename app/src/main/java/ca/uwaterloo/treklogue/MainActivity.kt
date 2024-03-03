@@ -19,6 +19,7 @@ import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.UserEvent
 import ca.uwaterloo.treklogue.ui.UserViewModel
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
+import ca.uwaterloo.treklogue.ui.map.MapViewModel
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -81,6 +82,9 @@ class MainActivity : ComponentActivity() {
     }
 
     private val userViewModel: UserViewModel by viewModels()
+    private val mapViewModel: MapViewModel by viewModels {
+        MapViewModel.factory(landmarkRepository, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,8 +97,10 @@ class MainActivity : ComponentActivity() {
                             startActivity(Intent(this@MainActivity, LoginActivity::class.java))
                             finish()
                         }
+
                         is UserEvent.Info ->
                             Log.e(TAG(), userEvent.message)
+
                         is UserEvent.Error ->
                             Log.e(TAG(), "${userEvent.message}: ${userEvent.throwable.message}")
                     }
@@ -103,7 +109,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                Router(userViewModel)
+                Router(userViewModel, mapViewModel)
             }
         }
     }

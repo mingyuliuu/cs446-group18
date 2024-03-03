@@ -8,11 +8,19 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.model.Landmark
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -38,7 +48,8 @@ import com.google.android.gms.location.*
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun MapScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    mapViewModel: MapViewModel
 ) {
     val waterlooLocation = LatLng(
         43.4822734, -80.5879188
@@ -128,7 +139,8 @@ fun MapScreen(
             modifier = Modifier
                 .fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = latLng.value
+            userLocation = latLng.value,
+            landmarks = mapViewModel.state.value.landmarks,
         )
         FloatingActionButton(
             modifier = Modifier
@@ -151,6 +163,7 @@ fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     userLocation : LatLng,
+    landmarks: SnapshotStateList<Landmark>
 ) {
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings(
@@ -163,6 +176,17 @@ fun GoogleMapView(
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
 
+    val locationState = rememberMarkerState(
+        position = waterlooLocation
+    )
+
+    for (landmark in landmarks) {
+        Log.v(
+            null,
+            "LANDMARK: " + landmark.name + " " + landmark.latitude + " " + landmark.longitude
+        )
+    }
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
@@ -173,5 +197,19 @@ fun GoogleMapView(
             state = MarkerState(position = userLocation),
             title = "User Location",
         )
+        for (landmark in landmarks) {
+            LandmarkMarker(LatLng(landmark.latitude, landmark.longitude), landmark.name)
+        }
     }
+}
+
+@Composable
+fun LandmarkMarker(position: LatLng, title: String) {
+    val markerState = rememberMarkerState(null, position)
+    Marker(
+        state = markerState,
+        title = title,
+        snippet = title, // TODO: Can include landmark description in the future
+        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)
+    )
 }
