@@ -32,6 +32,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
+
 /**
  * Composable for the map view
  */
@@ -45,7 +46,8 @@ val defaultCameraPosition = CameraPosition.fromLatLngZoom(waterlooLocation, 8f)
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    onDetailClicked: (Any?) -> Unit,
 ) {
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
@@ -66,7 +68,7 @@ fun MapScreen(
                 .padding(16.dp),
             shape = RoundedCornerShape(12),
             containerColor = MaterialTheme.colorScheme.primaryContainer,
-            onClick = { /* TODO: Handle add new journal entry */ },
+            onClick = { onDetailClicked("") },
         ) {
             Icon(
                 painterResource(id = R.drawable.ic_add),

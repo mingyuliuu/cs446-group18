@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
@@ -60,7 +61,10 @@ fun Router(
             composable(route = Screens.Map.screen) {
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel
+                    mapViewModel,
+                    onDetailClicked = { _ ->
+                        navigationController.navigate(Screens.JournalEntry.screen)
+                    },
                 )
             }
 
@@ -88,6 +92,13 @@ fun Router(
             composable(route = Screens.Settings.screen) {
                 SettingsScreen(
                     Modifier, userViewModel
+                )
+            }
+            composable(route = Screens.JournalEntry.screen) {
+                JournalEntryUI(
+                    onDetailClicked = { _ ->
+                        navigationController.navigate(Screens.Map.screen)
+                    },
                 )
             }
         }
