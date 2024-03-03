@@ -58,11 +58,9 @@ fun ListScreen(
 ) {
     Column(
         modifier = modifier
-            .size(100.dp)
             .verticalScroll(rememberScrollState())
     ) {
         landmarks.forEach { landmark ->
-//            LandmarkItem(landmark, onDetailClicked)
             LandmarkItem(landmark, listViewModel, onDetailClicked)
         }
     }
@@ -79,15 +77,18 @@ fun LandmarkItem(
             .fillMaxWidth()
             .padding(8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
             Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
-                        modifier = Modifier
-                            .weight(1f) // This makes the Column fill the available space, pushing the Button to the end
+                        modifier = Modifier.weight(1f)
                     ) {
                         Text(landmark.name, style = MaterialTheme.typography.headlineSmall)
                         Text(landmark.dateVisited, style = MaterialTheme.typography.bodyMedium)
@@ -106,6 +107,7 @@ fun LandmarkItem(
                     contentDescription = null,
                     modifier = Modifier
                         .height(250.dp)
+                        .padding(8.dp)
                         .fillMaxWidth(),
                     contentScale = ContentScale.Fit
                 )
