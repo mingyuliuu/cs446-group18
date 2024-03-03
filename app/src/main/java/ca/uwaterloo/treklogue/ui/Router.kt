@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.list.LandmarkDetail
+import ca.uwaterloo.treklogue.ui.list.JournalDetail
 import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
@@ -69,15 +69,15 @@ fun Router(
             composable(route = Screens.List.screen) {
                 ListScreen(
                     onDetailClicked = {
-                        navigationController.navigate(Screens.LandmarkDetail.screen)
+                        navigationController.navigate(Screens.JournalDetail.screen)
                     },
                     modifier = Modifier.fillMaxSize(),
                     listViewModel
                 )
             }
 
-            composable(route = Screens.LandmarkDetail.screen) {
-                LandmarkDetail(
+            composable(route = Screens.JournalDetail.screen) {
+                JournalDetail(
                     onBackClicked = {
                         navigationController.navigate(Screens.List.screen)
                     },

@@ -34,7 +34,7 @@ import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 
 
 @Composable
-fun LandmarkDetail(
+fun JournalDetail(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
     listViewModel: ListViewModel
