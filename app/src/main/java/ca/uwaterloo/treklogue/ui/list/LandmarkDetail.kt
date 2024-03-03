@@ -9,9 +9,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LandmarkDetail(viewModel: ListViewModel) {
+fun LandmarkDetail(
+    modifier: Modifier = Modifier,
+    listViewModel: ListViewModel
+) {
 
-    val landmark = viewModel.selectedLandmark.observeAsState().value
+    val landmark = listViewModel.selectedLandmark.observeAsState().value
 
     Column(
         modifier = Modifier

@@ -93,8 +93,9 @@ fun LandmarkItem(
                         Text(landmark.dateVisited, style = MaterialTheme.typography.bodyMedium)
                     }
                     Button(
-                        onClick = { onDetailClicked(landmark) },
-//                        onClick = { viewModel.selectLandmark(landmark) },
+                        onClick = {
+                            listViewModel.selectLandmark(landmark)
+                            onDetailClicked(landmark) },
                         modifier = Modifier.widthIn(min = 80.dp)
                     ) {
                         Text(stringResource(R.string.details))
