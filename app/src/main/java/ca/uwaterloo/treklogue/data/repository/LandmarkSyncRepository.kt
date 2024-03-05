@@ -90,7 +90,7 @@ class LandmarkRealmSyncRepository(
         // Mutable states must be updated on the UI thread
         CoroutineScope(Dispatchers.Main).launch {
             realm.subscriptions.waitForSynchronization()
-            Log.v(null, "Successfully opened realm: ${realm.configuration}")
+            Log.v(null, "Successfully opened realm: ${realm.configuration} configured for LandmarkSyncRepository")
         }
     }
 

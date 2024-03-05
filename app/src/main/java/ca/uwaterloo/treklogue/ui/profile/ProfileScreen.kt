@@ -44,7 +44,6 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Current user id: " + app.currentUser!!.id)
         Surface(
             color = MaterialTheme.colorScheme.surface,
             modifier = Modifier

@@ -1,9 +1,6 @@
 package ca.uwaterloo.treklogue.ui.map
 
 import android.Manifest
-import android.content.pm.PackageManager
-import android.location.Location
-import android.os.Looper
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,23 +16,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -49,6 +41,8 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * Composable for the map view
@@ -60,122 +54,73 @@ fun MapScreen(
     mapViewModel: MapViewModel,
     onDetailClicked: (Any?) -> Unit,
 ) {
-    val waterlooLocation = LatLng(
+    val defaultLocation = LatLng(
         43.4822734, -80.5879188
-    )
-
-    val defaultCameraPosition = CameraPosition.fromLatLngZoom(waterlooLocation, 8f)
-
-    var lastLocation: Location
-
-    var latLng = remember {
+    ) // Waterloo
+    val currentLocation = remember {
         mutableStateOf(
-            LatLng(
-                40.0, -70.0
-            )
+            defaultLocation
         )
     }
 
+    val defaultCameraPosition = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
     }
 
-    // TODO: handle coarse location access as well
-    val locationPermissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
     val context = LocalContext.current
 
-    val fusedLocationClient: FusedLocationProviderClient = remember(context) {
-        LocationServices.getFusedLocationProviderClient(context)
-    }
-
-    val locationRequest = LocationRequest.Builder(10000)
-        .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-        .build()
-
-    val locationCallback = object : LocationCallback() {
-        override fun onLocationResult(p0: LocationResult) {
-            for (location in p0.locations) {
-                latLng.value = LatLng(location.latitude, location.longitude)
-            }
-        }
-    }
+    // TODO: handle coarse location access as well
+    val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
+    val locationPermissionState = rememberPermissionState(locationPermission)
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            try {
-                // this is just to set an initial location
-                // ideally, i would like to just make the auto-updater run at startup, but idk how
-                fusedLocationClient.lastLocation.addOnCompleteListener(context.mainExecutor) { task ->
-                    if (task.isSuccessful) {
-                        lastLocation = task.result
-                        latLng.value = LatLng(lastLocation.latitude, lastLocation.longitude)
-                        cameraPositionState.move(CameraUpdateFactory.newLatLng(latLng.value))
-                    }
-                }
-
-                fusedLocationClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.getMainLooper()
-                )
-            } catch (e: SecurityException) {
-                // TODO: handle error
-            }
-        } else {
-            // TODO: handle permission denial
-        }
-    }
-
-    LaunchedEffect(locationPermissionState) {
-        if (!locationPermissionState.status.isGranted) {
-            if (locationPermissionState.status.shouldShowRationale) {
-                // show a message
-            }
-            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-        } else {
-            // compiler doesn't recognize locationPermissionState as a way of checking perms and complains about it
-            // so I just used a method it would recognize. Ideally, don't do this
-            when {
-                ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED -> {
-                    fusedLocationClient.requestLocationUpdates(
-                        locationRequest,
-                        locationCallback,
-                        Looper.getMainLooper()
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                // Permission granted, update the location
+                getCurrentLocation(context, { lat, long ->
+                    currentLocation.value = LatLng(lat, long)
+                    cameraPositionState.move(
+                        CameraUpdateFactory.newLatLng(
+                            LatLng(lat, long)
+                        )
                     )
-                }
+                })
+                Log.v(null, "Updating location...")
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
+        // Move this to a separate thread to prevent it from blocking the Main thread
+        withContext(Dispatchers.IO) {
+            if (locationPermissionState.status.isGranted) {
+                // Permission already granted, update the location
+                getCurrentLocation(context, { lat, long ->
+                    currentLocation.value = LatLng(lat, long)
+                    cameraPositionState.move(
+                        CameraUpdateFactory.newLatLng(
+                            LatLng(lat, long)
+                        )
+                    )
+                })
+                Log.v(null, "Permission already granted; current location fetched.")
+            } else {
+                // Request location permission
+                requestPermissionLauncher.launch(locationPermission)
+                Log.v(null, "Permission requested.")
             }
         }
     }
-
-    val mockLandmarks: List<MockLandmark> = listOf(
-        MockLandmark(
-            "University of Waterloo DC library", 43.472403, -80.541979, true
-        ),
-        MockLandmark(
-            "Lazaridis School of Business and Economics", 43.475046, -80.529481, false
-        ),
-        MockLandmark(
-            "Toronto Union Station", 43.644601, -79.380525, false
-        ),
-        MockLandmark(
-            "Stratford Shakespearean Garden", 43.371913, -80.985196, true
-        )
-    )
 
     Box(modifier) {
         GoogleMapView(
             modifier = Modifier
                 .fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = latLng.value,
-//            landmarks = mapViewModel.state.value.landmarks,
-            landmarks = mockLandmarks
+            userLocation = currentLocation.value,
+            landmarks = mapViewModel.state.value.landmarks,
         )
         FloatingActionButton(
             modifier = Modifier
@@ -198,8 +143,7 @@ fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     userLocation: LatLng,
-//    landmarks: SnapshotStateList<Landmark>
-    landmarks: List<MockLandmark>
+    landmarks: SnapshotStateList<Landmark>
 ) {
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
@@ -230,7 +174,7 @@ fun GoogleMapView(
             LandmarkMarker(
                 LatLng(landmark.latitude, landmark.longitude),
                 landmark.name,
-                landmark.hasVisited
+                true
             )
         }
     }
