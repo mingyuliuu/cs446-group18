@@ -23,10 +23,11 @@ sealed class UserEvent {
  * UI representation of a screen state.
  */
 data class UserState(
-    val notificationEnabled: Boolean
+    val notificationEnabled: Boolean,
+    val locationEnabled: Boolean
 ) {
     companion object {
-        val initialState = UserState(notificationEnabled = false)
+        val initialState = UserState(notificationEnabled = false, locationEnabled = false)
     }
 }
 
@@ -45,6 +46,15 @@ class UserViewModel : ViewModel() {
 
         viewModelScope.launch {
             _event.emit(UserEvent.Info("Notification settings updated"))
+        }
+    }
+
+    fun toggleLocationSetting(enabled: Boolean) {
+        // TODO: Should prompt dialog to ask for precise/approximate location again
+        _state.value = state.value.copy(locationEnabled = enabled)
+
+        viewModelScope.launch {
+            _event.emit(UserEvent.Info("Location settings updated"))
         }
     }
 
