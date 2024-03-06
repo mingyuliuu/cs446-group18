@@ -16,9 +16,9 @@ import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.profile.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
@@ -72,6 +72,7 @@ fun Router(
             composable(route = Screens.List.screen) {
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
+                    mapViewModel
                 )
             }
 

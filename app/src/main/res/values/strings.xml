@@ -22,6 +22,10 @@
     <string name="settings_toggle_notifications">Enable nearby landmark notifications</string>
     <string name="settings_toggle_location">Allow Treklogue to access my location</string>
 
+    <!-- Strings related to list view -->
+    <string name="nearby_landmarks">Nearby Landmarks</string>
+    <string name="add_journal_entry">Add Journal</string>
+
     <!-- Strings related to journal entries -->
     <string name="my_journal_entries">My Journal Entries</string>
     <string name="name_of_landmark">Name of Landmark</string>

@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.savedstate.SavedStateRegistryOwner
+import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
 import io.realm.kotlin.notifications.InitialResults
@@ -33,10 +34,18 @@ sealed class MapEvent {
  * UI representation of a screen state.
  */
 data class MapState(
-    val landmarks: SnapshotStateList<Landmark>
+    val landmarks: SnapshotStateList<Landmark>,
+    val mockLandmarks: SnapshotStateList<MockLandmark>
 ) {
     companion object {
-        val initialState = MapState(landmarks = mutableStateListOf())
+        val initialState =
+            MapState(landmarks = mutableStateListOf(), mockLandmarks = mutableStateListOf(
+                MockLandmark("Waterloo DC Library", 43.472403, -80.541979, true),
+                MockLandmark("Lazaridis School of Business and Economics", 43.475046, -80.529481, false),
+                MockLandmark("Toronto Union Station", 43.644601, -79.380525, true),
+                MockLandmark("Stratford Shakespearean Garden", 43.371913, -80.985196, false),
+                MockLandmark("Central Park in Manhattan", 40.78384, -73.965553, true),
+            ))
     }
 }
 
