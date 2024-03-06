@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import ca.uwaterloo.treklogue.ui.theme.Blue
+import ca.uwaterloo.treklogue.ui.theme.Blue400
 
 @Composable
 fun ScaffoldBottom(
@@ -24,7 +24,7 @@ fun ScaffoldBottom(
     navigationController: NavHostController,
 ) {
     BottomAppBar(
-        containerColor = Blue
+        containerColor = Blue400
     ) {
         IconButton(
             onClick = {

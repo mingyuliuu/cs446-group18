@@ -1,74 +1,121 @@
 package ca.uwaterloo.treklogue.ui.profile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.ui.theme.Blue100
+import ca.uwaterloo.treklogue.ui.theme.Gray600
 
 @Composable
 fun JournalEntryItem(
+    modifier: Modifier,
     journalEntry: MockJournalEntry,
     journalEntryViewModel: JournalEntryViewModel,
     showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
+        shape = RoundedCornerShape(12.dp),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 8.dp
+        ),
+        colors = CardDefaults.cardColors(
+            containerColor = Blue100,
+        ),
+        modifier = modifier
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(12.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+            // Title, date and edit button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f)
                 ) {
-                    Column(
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(journalEntry.name, style = MaterialTheme.typography.headlineSmall)
-                        Text(journalEntry.dateVisited, style = MaterialTheme.typography.bodyMedium)
-                    }
-                    Button(
-                        onClick = {
-                            journalEntryViewModel.selectJournalEntry(journalEntry)
-                            showJournalDetail(journalEntry)
-                        },
-                        modifier = Modifier.widthIn(min = 80.dp)
-                    ) {
-                        Text(stringResource(R.string.details))
+                    Text(journalEntry.name, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        journalEntry.dateVisited,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Gray600
+                    )
+                }
+                Button(
+                    contentPadding = PaddingValues(16.dp, 8.dp),
+                    modifier = Modifier
+                        .defaultMinSize(
+                            minWidth = 1.dp,
+                            minHeight = 1.dp
+                        ), // To override default button sizes by Material3
+                    onClick = {
+                        journalEntryViewModel.selectJournalEntry(journalEntry)
+                        showJournalDetail(journalEntry)
+                    },
+                ) {
+                    Text(
+                        stringResource(R.string.edit),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+            }
+
+            // (Optional) Horizontally scrollable list of images
+            if (journalEntry.images.size > 0) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    journalEntry.images.forEach {
+                        Image(
+                            painter = painterResource(id = it),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .height(150.dp)
+                                .clip(RoundedCornerShape(8.dp)),
+                            contentScale = ContentScale.Fit
+                        )
                     }
                 }
-                Image(
-                    painter = painterResource(id = journalEntry.imageRes),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(250.dp)
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    contentScale = ContentScale.Fit
+            }
+
+            // (Optional) description
+            if (journalEntry.description != "") {
+                Text(
+                    journalEntry.description,
+                    style = MaterialTheme.typography.bodySmall,
+//                    maxLines = 3
                 )
-                Text(journalEntry.notes, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
             }
         }
     }

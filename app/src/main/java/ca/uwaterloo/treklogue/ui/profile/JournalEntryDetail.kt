@@ -98,7 +98,7 @@ fun ContentSection(journalEntry: MockJournalEntry) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = TextFieldValue(journalEntry.notes),
+            value = TextFieldValue(journalEntry.description),
             onValueChange = { /* TODO: handle text change */ },
             label = { Text(stringResource(R.string.personal_note)) },
             modifier = Modifier
@@ -116,12 +116,15 @@ fun ContentSection(journalEntry: MockJournalEntry) {
                 .clip(RectangleShape)
                 .weight(1f)
         ) {
-            Image(
-                painter = painterResource(id = journalEntry.imageRes),
-                contentDescription = null,
-                modifier = Modifier.matchParentSize(),
-                contentScale = ContentScale.Fit
-            )
+            journalEntry.images.forEach {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier.matchParentSize(),
+                    contentScale = ContentScale.Fit
+                )
+            }
+
             FloatingActionButton(
                 onClick = { /* TODO: handle add image */ },
                 modifier = Modifier

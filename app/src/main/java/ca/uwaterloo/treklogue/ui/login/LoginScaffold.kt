@@ -32,8 +32,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.ui.theme.Blue
-import ca.uwaterloo.treklogue.ui.theme.BtnBlue
+import ca.uwaterloo.treklogue.ui.theme.Blue400
+import ca.uwaterloo.treklogue.ui.theme.Blue200
 
 private const val USABLE_WIDTH = 0.8F
 
@@ -63,7 +63,7 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
                 color = Color.White,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .border(BorderStroke(2.dp, BtnBlue))
+                    .border(BorderStroke(2.dp, Blue200))
             )
             Spacer(modifier = Modifier.weight(3f))
         }
@@ -113,7 +113,7 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
                 // Login/create account button
                 Button(
                     enabled = loginViewModel.state.value.enabled,
-                    colors = ButtonDefaults.buttonColors(containerColor = BtnBlue),
+                    colors = ButtonDefaults.buttonColors(containerColor = Blue200),
                     modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
                     onClick = {
                         val state = loginViewModel.state.value
@@ -154,7 +154,7 @@ fun LoginScaffold(loginViewModel: LoginViewModel) {
                         text = actionText,
                         modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
                         textAlign = TextAlign.Center,
-                        color = Blue
+                        color = Blue400
                     )
                 }
 

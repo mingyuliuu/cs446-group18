@@ -20,6 +20,7 @@ import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.ui.UserEvent
 import ca.uwaterloo.treklogue.ui.UserViewModel
+import ca.uwaterloo.treklogue.ui.composables.SectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -37,21 +38,10 @@ fun SettingsScreen(
 
     Column(
         modifier = modifier.background(color = Gray100),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // Tab Title
-        // TODO: move title to topbar
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Text(
-                text = stringResource(id = R.string.settings_name),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(0.dp, 12.dp),
-                textAlign = TextAlign.Center
-            )
-        }
+        // Settings Title
+        SectionHeader(R.string.settings_name)
 
         // Settings Content
         Column {

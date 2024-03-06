@@ -1,20 +1,22 @@
 package ca.uwaterloo.treklogue.ui.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.UserViewModel
+import ca.uwaterloo.treklogue.ui.composables.SectionHeader
+import ca.uwaterloo.treklogue.ui.theme.Gray100
 
 /**
  * Composable for the profile view
@@ -27,25 +29,31 @@ fun ProfileScreen(
     showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
 ) {
     Column(
-        modifier,
+        modifier = modifier.background(color = Gray100),
         horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.SpaceBetween
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(4.dp),
-            shape = RoundedCornerShape(6),
+        SectionHeader(R.string.my_badges)
+
+        // TODO: Badges (horizontally scrollable list?)
+        Spacer(modifier = Modifier.height(30.dp))
+
+        SectionHeader(R.string.my_journal_entries)
+
+        Column(
+            modifier = modifier
+                .padding(12.dp, 0.dp)
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // TODO: Journal entries + Badges
-            Column(
-                modifier = modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
-                journalEntryViewModel.journalEntries.forEach { journalEntry ->
-                    JournalEntryItem(journalEntry, journalEntryViewModel, showJournalDetail)
-                }
+            journalEntryViewModel.journalEntries.forEachIndexed { idx, journalEntry ->
+                JournalEntryItem(
+                    Modifier.padding(
+                        top = if (idx == 0) 4.dp else 0.dp,
+                        bottom = if (idx == journalEntryViewModel.journalEntries.size - 1) 12.dp else 0.dp
+                    ),
+                    journalEntry, journalEntryViewModel, showJournalDetail
+                )
             }
         }
     }

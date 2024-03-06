@@ -3,6 +3,6 @@ package ca.uwaterloo.treklogue.data.mockModel
 data class MockJournalEntry(
     val name: String,
     val dateVisited: String,
-    val notes: String,
-    val imageRes: Int // Drawable resource ID
+    val description: String = "", // Optional field
+    val images: MutableList<Int> = mutableListOf() // Drawable resource IDs
 )
