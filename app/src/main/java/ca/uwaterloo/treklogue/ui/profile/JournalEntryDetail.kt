@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.list
+package ca.uwaterloo.treklogue.ui.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -37,10 +37,9 @@ import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 fun JournalEntryDetail(
     onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
-    listViewModel: ListViewModel
+    journalEntryViewModel: JournalEntryViewModel
 ) {
-
-    val journalEntry = listViewModel.selectedJournalEntry.observeAsState().value
+    val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
 
     if (journalEntry != null) {
         Column(modifier) {

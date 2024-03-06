@@ -16,10 +16,10 @@ import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.list.JournalEntryDetail
-import ca.uwaterloo.treklogue.ui.list.ListViewModel
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 
@@ -27,7 +27,7 @@ import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
 fun Router(
     userViewModel: UserViewModel,
     mapViewModel: MapViewModel,
-    listViewModel: ListViewModel
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -71,28 +71,28 @@ fun Router(
 
             composable(route = Screens.List.screen) {
                 ListScreen(
-                    onDetailClicked = {
-                        navigationController.navigate(Screens.JournalDetail.screen)
-                    },
                     modifier = Modifier.fillMaxSize(),
-                    listViewModel
                 )
             }
 
             composable(route = Screens.JournalDetail.screen) {
                 JournalEntryDetail(
                     onBackClicked = {
-                        navigationController.navigate(Screens.List.screen)
+                        navigationController.navigate(Screens.Profile.screen)
                     },
                     modifier = Modifier.fillMaxSize(),
-                    listViewModel
+                    journalEntryViewModel
                 )
             }
 
             composable(route = Screens.Profile.screen) {
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
-                    userViewModel
+                    userViewModel,
+                    journalEntryViewModel,
+                    showJournalDetail = {
+                        navigationController.navigate(Screens.JournalDetail.screen)
+                    },
                 )
             }
             composable(route = Screens.Settings.screen) {

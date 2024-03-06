@@ -18,9 +18,9 @@ import ca.uwaterloo.treklogue.data.repository.UserRealmSyncRepository
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.UserEvent
 import ca.uwaterloo.treklogue.ui.UserViewModel
-import ca.uwaterloo.treklogue.ui.list.ListViewModel
 import ca.uwaterloo.treklogue.ui.login.LoginActivity
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
     private val mapViewModel: MapViewModel by viewModels {
         MapViewModel.factory(landmarkRepository, this)
     }
-    private val listViewModel: ListViewModel by viewModels()
+    private val journalEntryViewModel: JournalEntryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +111,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                Router(userViewModel, mapViewModel, listViewModel)
+                Router(userViewModel, mapViewModel, journalEntryViewModel)
             }
         }
     }

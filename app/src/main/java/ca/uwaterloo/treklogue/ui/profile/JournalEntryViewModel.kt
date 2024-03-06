@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.list
+package ca.uwaterloo.treklogue.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 
-class ListViewModel : ViewModel() {
+class JournalEntryViewModel : ViewModel() {
     private val _selectedJournalEntry = MutableLiveData<MockJournalEntry>()
     val selectedJournalEntry: LiveData<MockJournalEntry> get() = _selectedJournalEntry
 
