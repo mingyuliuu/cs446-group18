@@ -131,12 +131,7 @@ fun GoogleMapView(
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
 
-    for (landmark in landmarks) {
-        Log.v(
-            null,
-            "LANDMARK: " + landmark.name + " " + landmark.latitude + " " + landmark.longitude
-        )
-    }
+    Log.v(null, "# of LANDMARKs fetched from Atlas: ${landmarks.size}")
 
     GoogleMap(
         modifier = modifier,
