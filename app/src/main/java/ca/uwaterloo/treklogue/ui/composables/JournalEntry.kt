@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun JournalEntryUI(
+fun AddJournalEntry(
     onDetailClicked: (Any?) -> Unit,
 ) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }

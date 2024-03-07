@@ -3,24 +3,17 @@ package ca.uwaterloo.treklogue.ui.settings
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.ui.UserEvent
 import ca.uwaterloo.treklogue.ui.UserViewModel
-import ca.uwaterloo.treklogue.ui.composables.SectionHeader
+import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -41,7 +34,7 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         // Settings Title
-        SectionHeader(R.string.settings_name)
+        TabSectionHeader(R.string.settings_name)
 
         // Settings Content
         Column {

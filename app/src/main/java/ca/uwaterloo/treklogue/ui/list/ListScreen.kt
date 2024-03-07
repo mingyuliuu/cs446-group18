@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.ui.composables.SectionHeader
+import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 
@@ -28,7 +28,7 @@ fun ListScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SectionHeader(R.string.nearby_landmarks)
+        TabSectionHeader(R.string.nearby_landmarks)
 
         Column(
             modifier = modifier

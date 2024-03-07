@@ -1,8 +1,9 @@
-package ca.uwaterloo.treklogue.ui.profile
+package ca.uwaterloo.treklogue.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -29,7 +31,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,13 +38,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 
 @Composable
 fun JournalEntryDetail(
-    onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
+    isEditing: Boolean = false,
+    onBackClicked: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
     val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
@@ -54,7 +57,7 @@ fun JournalEntryDetail(
             TopBar(onBackClicked)
 
             // Content section
-            ContentSection(journalEntry)
+            ContentSection(isEditing, journalEntry)
         }
     }
 }
@@ -81,7 +84,7 @@ fun TopBar(onBackClicked: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ContentSection(journalEntry: MockJournalEntry) {
+fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -90,8 +93,8 @@ fun ContentSection(journalEntry: MockJournalEntry) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            readOnly = true,
-            enabled = false,
+            readOnly = isEditing,
+            enabled = !isEditing,
             value = TextFieldValue(journalEntry.name),
             onValueChange = {},
             label = { Text(stringResource(R.string.name_of_landmark)) },
@@ -99,8 +102,8 @@ fun ContentSection(journalEntry: MockJournalEntry) {
         )
 
         OutlinedTextField(
-            readOnly = true,
-            enabled = false,
+            readOnly = isEditing,
+            enabled = !isEditing,
             value = TextFieldValue(journalEntry.dateVisited),
             onValueChange = {},
             label = { Text(stringResource(R.string.date_of_visit)) },
@@ -116,32 +119,49 @@ fun ContentSection(journalEntry: MockJournalEntry) {
                 .height(150.dp),
         )
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        FormSectionHeader(text = R.string.personal_photos)
+        Box(
+            modifier = Modifier
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp))
         ) {
-            journalEntry.images.forEach {
-                Image(
-                    painter = painterResource(id = it),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(150.dp)
-                        .border(1.dp, Color.Gray, RectangleShape),
-                    contentScale = ContentScale.Fit,
-                )
-            }
-
-            FloatingActionButton(
-                onClick = { /* TODO: handle add image */ },
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
-                    .height(75.dp)
-                    .width(75.dp)
-                    .align(Alignment.CenterVertically),
-                containerColor = Blue100,
-                contentColor = Blue200
+                    .fillMaxWidth()
+                    .padding(8.dp),
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
+                journalEntry.images.forEach {
+                    Image(
+                        painter = painterResource(id = it),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .height(150.dp),
+                        contentScale = ContentScale.Fit,
+                    )
+                }
+
+                FloatingActionButton(
+                    onClick = { /* TODO: handle add image */ },
+                    modifier = Modifier
+                        .height(75.dp)
+                        .width(75.dp)
+                        .align(Alignment.CenterVertically),
+                    containerColor = Blue100,
+                    contentColor = Blue200
+                ) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add")
+                }
             }
+        }
+
+        FormSectionHeader(text = R.string.personal_rating)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
+        ) {
+            RatingSlider()
         }
     }
 }

@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SectionHeader(
+fun TabSectionHeader(
     @StringRes text: Int,
 ) {
     Surface(
@@ -28,4 +28,15 @@ fun SectionHeader(
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+fun FormSectionHeader(
+    @StringRes text: Int,
+) {
+    Text(
+        text = stringResource(id = text),
+        style = MaterialTheme.typography.labelMedium,
+        modifier = Modifier.padding(top = 4.dp),
+    )
 }

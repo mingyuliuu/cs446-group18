@@ -31,6 +31,11 @@
     <string name="name_of_landmark">Name of Landmark</string>
     <string name="date_of_visit">Date of Visit</string>
     <string name="personal_note">Personal Note</string>
+    <string name="personal_photos">Personal Photos/Videos</string>
+    <string name="personal_rating">Personal Rating</string>
+    <string name="rating_1">Bad</string>
+    <string name="rating_2">Average</string>
+    <string name="rating_3">Love it!</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
 

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.UserViewModel
-import ca.uwaterloo.treklogue.ui.composables.SectionHeader
+import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 
 /**
@@ -33,12 +33,12 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        SectionHeader(R.string.my_badges)
+        TabSectionHeader(R.string.my_badges)
 
         // TODO: Badges (horizontally scrollable list?)
         Spacer(modifier = Modifier.height(30.dp))
 
-        SectionHeader(R.string.my_journal_entries)
+        TabSectionHeader(R.string.my_journal_entries)
 
         Column(
             modifier = modifier

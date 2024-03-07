@@ -12,13 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
+import ca.uwaterloo.treklogue.ui.composables.AddJournalEntry
+import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
 import ca.uwaterloo.treklogue.ui.list.ListScreen
 import ca.uwaterloo.treklogue.ui.map.MapScreen
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
-import ca.uwaterloo.treklogue.ui.profile.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
 import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
@@ -78,10 +78,11 @@ fun Router(
 
             composable(route = Screens.JournalDetail.screen) {
                 JournalEntryDetail(
+                    modifier = Modifier.fillMaxSize(),
+                    isEditing = true,
                     onBackClicked = {
                         navigationController.navigate(Screens.Profile.screen)
                     },
-                    modifier = Modifier.fillMaxSize(),
                     journalEntryViewModel
                 )
             }
@@ -102,7 +103,7 @@ fun Router(
                 )
             }
             composable(route = Screens.JournalEntry.screen) {
-                JournalEntryUI(
+                AddJournalEntry(
                     onDetailClicked = { _ ->
                         navigationController.navigate(Screens.Map.screen)
                     },

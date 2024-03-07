@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +23,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.ui.theme.Blue100
+import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -127,7 +128,8 @@ fun MapScreen(
                 .align(Alignment.BottomStart)
                 .padding(16.dp),
             shape = RoundedCornerShape(12),
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
+            containerColor = Blue100,
+            contentColor = Blue200,
             onClick = { onDetailClicked("") },
         ) {
             Icon(
