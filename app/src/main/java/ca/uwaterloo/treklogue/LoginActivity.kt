@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.login
+package ca.uwaterloo.treklogue
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,10 +8,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import ca.uwaterloo.treklogue.MainActivity
-import ca.uwaterloo.treklogue.TAG
-import ca.uwaterloo.treklogue.app
+import ca.uwaterloo.treklogue.ui.screens.LoginScreen
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
+import ca.uwaterloo.treklogue.ui.viewModels.EventSeverity
+import ca.uwaterloo.treklogue.ui.viewModels.LoginEvent
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 import kotlinx.coroutines.launch
 
 class LoginActivity : ComponentActivity() {
@@ -47,7 +48,7 @@ class LoginActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                LoginScaffold(loginViewModel)
+                LoginScreen(loginViewModel)
             }
         }
     }

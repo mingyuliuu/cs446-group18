@@ -12,22 +12,22 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ca.uwaterloo.treklogue.ui.composables.JournalEntryUI
+import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
-import ca.uwaterloo.treklogue.ui.composables.Screens
-import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.list.JournalEntryDetail
-import ca.uwaterloo.treklogue.ui.list.ListViewModel
-import ca.uwaterloo.treklogue.ui.map.MapScreen
-import ca.uwaterloo.treklogue.ui.map.MapViewModel
-import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
-import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
+import ca.uwaterloo.treklogue.ui.screens.Screens
+import ca.uwaterloo.treklogue.ui.screens.ListScreen
+import ca.uwaterloo.treklogue.ui.screens.MapScreen
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
+import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
+import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
 fun Router(
     userViewModel: UserViewModel,
     mapViewModel: MapViewModel,
-    listViewModel: ListViewModel
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -63,48 +63,55 @@ fun Router(
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
                     mapViewModel,
-                    onDetailClicked = { _ ->
-                        navigationController.navigate(Screens.JournalEntry.screen)
-                    },
                 )
             }
 
             composable(route = Screens.List.screen) {
                 ListScreen(
-                    onDetailClicked = {
-                        navigationController.navigate(Screens.JournalDetail.screen)
-                    },
                     modifier = Modifier.fillMaxSize(),
-                    listViewModel
-                )
-            }
-
-            composable(route = Screens.JournalDetail.screen) {
-                JournalEntryDetail(
-                    onBackClicked = {
-                        navigationController.navigate(Screens.List.screen)
+                    mapViewModel,
+                    journalEntryViewModel,
+                    onAddJournal = { _ ->
+                        navigationController.navigate(Screens.AddJournal.screen)
                     },
-                    modifier = Modifier.fillMaxSize(),
-                    listViewModel
                 )
             }
 
             composable(route = Screens.Profile.screen) {
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
-                    userViewModel
+                    userViewModel,
+                    journalEntryViewModel,
+                    showJournalDetail = {
+                        navigationController.navigate(Screens.EditJournal.screen)
+                    },
                 )
             }
+
             composable(route = Screens.Settings.screen) {
                 SettingsScreen(
                     Modifier, userViewModel
                 )
             }
-            composable(route = Screens.JournalEntry.screen) {
-                JournalEntryUI(
-                    onDetailClicked = { _ ->
-                        navigationController.navigate(Screens.Map.screen)
+
+            composable(route = Screens.EditJournal.screen) {
+                JournalEntryDetail(
+                    modifier = Modifier.fillMaxSize(),
+                    isEditing = true,
+                    onBackClicked = {
+                        navigationController.navigate(Screens.Profile.screen)
                     },
+                    journalEntryViewModel
+                )
+            }
+
+            composable(route = Screens.AddJournal.screen) {
+                JournalEntryDetail(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClicked = {
+                        navigationController.navigate(Screens.List.screen)
+                    },
+                    journalEntryViewModel = journalEntryViewModel
                 )
             }
         }

@@ -18,15 +18,27 @@
     <string name="account_clarification">Please log in or register with a Device Sync user account. This is separate from your Atlas Cloud login.</string>
     <string name="settings_name">Settings</string>
     <string name="settings_group_profile">Profile</string>
-    <string name="settings_group_notifications">Notifications</string>
+    <string name="settings_group_permissions">Permissions</string>
     <string name="settings_toggle_notifications">Enable nearby landmark notifications</string>
+    <string name="settings_toggle_location">Allow Treklogue to access my location</string>
 
     <!-- Strings related to list view -->
-    <string name="details">Details</string>
+    <string name="nearby_landmarks">Nearby Landmarks</string>
+    <string name="add_journal_entry">Add Journal</string>
 
-    <!-- Strings related to journal entry details -->
+    <!-- Strings related to journal entries -->
+    <string name="my_journal_entries">My Journal Entries</string>
     <string name="name_of_landmark">Name of Landmark</string>
     <string name="date_of_visit">Date of Visit</string>
     <string name="personal_note">Personal Note</string>
+    <string name="personal_photos">Personal Photos/Videos</string>
+    <string name="personal_rating">Personal Rating</string>
+    <string name="rating_1">Bad</string>
+    <string name="rating_2">Average</string>
+    <string name="rating_3">Love it!</string>
+    <string name="edit">Edit</string>
     <string name="save">Save</string>
+
+    <!-- Strings related to badges -->
+    <string name="my_badges">My Badges</string>
 </resources>
