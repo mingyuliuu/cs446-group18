@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.map
+package ca.uwaterloo.treklogue.ui.screens
 
 import android.Manifest
 import android.util.Log
@@ -15,6 +15,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted

@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.list
+package ca.uwaterloo.treklogue.ui.composables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,12 +20,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
-import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
 @Composable
-fun LandmarkItem(
+fun LandmarkListItem(
     modifier: Modifier,
     landmark: MockLandmark,
     journalEntryViewModel: JournalEntryViewModel,

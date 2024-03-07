@@ -1,10 +1,8 @@
-package ca.uwaterloo.treklogue.ui.profile
+package ca.uwaterloo.treklogue.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,32 +11,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
-import ca.uwaterloo.treklogue.ui.UserViewModel
+import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
+import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 
 /**
- * Composable for the profile view
+ * Composable for the list view
  */
 @Composable
-fun ProfileScreen(
+fun ListScreen(
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel,
+    mapViewModel: MapViewModel,
     journalEntryViewModel: JournalEntryViewModel,
-    showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
+    onAddJournal: (landmark: MockLandmark) -> Unit
 ) {
     Column(
         modifier = modifier.background(color = Gray100),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TabSectionHeader(R.string.my_badges)
-
-        // TODO: Badges (horizontally scrollable list?)
-        Spacer(modifier = Modifier.height(30.dp))
-
-        TabSectionHeader(R.string.my_journal_entries)
+        TabSectionHeader(R.string.nearby_landmarks)
 
         Column(
             modifier = modifier
@@ -46,15 +41,18 @@ fun ProfileScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            journalEntryViewModel.journalEntries.forEachIndexed { idx, journalEntry ->
-                JournalEntryItem(
+            mapViewModel.state.value.mockLandmarks.forEachIndexed { idx, landmark ->
+                LandmarkListItem(
                     Modifier.padding(
                         top = if (idx == 0) 4.dp else 0.dp,
-                        bottom = if (idx == journalEntryViewModel.journalEntries.size - 1) 12.dp else 0.dp
+                        bottom = if (idx == mapViewModel.state.value.landmarks.size - 1) 12.dp else 0.dp
                     ),
-                    journalEntry, journalEntryViewModel, showJournalDetail
+                    landmark,
+                    journalEntryViewModel,
+                    onAddJournal
                 )
             }
         }
     }
+
 }

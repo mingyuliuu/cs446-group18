@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
-import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 

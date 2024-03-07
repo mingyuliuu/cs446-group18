@@ -14,13 +14,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
-import ca.uwaterloo.treklogue.ui.composables.Screens
-import ca.uwaterloo.treklogue.ui.list.ListScreen
-import ca.uwaterloo.treklogue.ui.map.MapScreen
-import ca.uwaterloo.treklogue.ui.map.MapViewModel
-import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
-import ca.uwaterloo.treklogue.ui.profile.ProfileScreen
-import ca.uwaterloo.treklogue.ui.settings.SettingsScreen
+import ca.uwaterloo.treklogue.ui.screens.Screens
+import ca.uwaterloo.treklogue.ui.screens.ListScreen
+import ca.uwaterloo.treklogue.ui.screens.MapScreen
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
+import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
+import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
 fun Router(

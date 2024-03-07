@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.profile
+package ca.uwaterloo.treklogue.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
@@ -29,9 +29,10 @@ import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 
 @Composable
-fun JournalEntryItem(
+fun JournalEntryListItem(
     modifier: Modifier,
     journalEntry: MockJournalEntry,
     journalEntryViewModel: JournalEntryViewModel,

@@ -16,6 +16,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.theme.Blue400
 
 @Composable

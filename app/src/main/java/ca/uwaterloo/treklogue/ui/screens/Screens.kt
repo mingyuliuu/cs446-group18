@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.composables
+package ca.uwaterloo.treklogue.ui.screens
 
 sealed class Screens(val screen: String) {
     data object Map : Screens("Map")

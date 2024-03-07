@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.login
+package ca.uwaterloo.treklogue.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -32,15 +31,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.ui.theme.Blue400
 import ca.uwaterloo.treklogue.ui.theme.Blue200
+import ca.uwaterloo.treklogue.ui.theme.Blue400
+import ca.uwaterloo.treklogue.ui.viewModels.LoginAction
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 
 private const val USABLE_WIDTH = 0.8F
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-fun LoginScaffold(loginViewModel: LoginViewModel) {
+fun LoginScreen(loginViewModel: LoginViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxSize()

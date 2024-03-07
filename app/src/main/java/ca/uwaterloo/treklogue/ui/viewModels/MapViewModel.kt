@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.map
+package ca.uwaterloo.treklogue.ui.viewModels
 
 import android.os.Bundle
 import androidx.compose.runtime.MutableState

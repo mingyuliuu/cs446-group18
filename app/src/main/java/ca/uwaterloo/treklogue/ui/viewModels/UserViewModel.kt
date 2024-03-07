@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui
+package ca.uwaterloo.treklogue.ui.viewModels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

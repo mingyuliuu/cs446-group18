@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.settings
+package ca.uwaterloo.treklogue.ui.composables
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column

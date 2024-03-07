@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.profile
+package ca.uwaterloo.treklogue.ui.viewModels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
