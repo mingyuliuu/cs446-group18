@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ca.uwaterloo.treklogue.ui.composables.AddJournalEntry
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.composables.Screens
@@ -63,20 +62,38 @@ fun Router(
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
                     mapViewModel,
-                    onDetailClicked = { _ ->
-                        navigationController.navigate(Screens.JournalEntry.screen)
-                    },
                 )
             }
 
             composable(route = Screens.List.screen) {
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel
+                    mapViewModel,
+                    journalEntryViewModel,
+                    onAddJournal = { _ ->
+                        navigationController.navigate(Screens.AddJournal.screen)
+                    },
                 )
             }
 
-            composable(route = Screens.JournalDetail.screen) {
+            composable(route = Screens.Profile.screen) {
+                ProfileScreen(
+                    modifier = Modifier.fillMaxSize(),
+                    userViewModel,
+                    journalEntryViewModel,
+                    showJournalDetail = {
+                        navigationController.navigate(Screens.EditJournal.screen)
+                    },
+                )
+            }
+
+            composable(route = Screens.Settings.screen) {
+                SettingsScreen(
+                    Modifier, userViewModel
+                )
+            }
+
+            composable(route = Screens.EditJournal.screen) {
                 JournalEntryDetail(
                     modifier = Modifier.fillMaxSize(),
                     isEditing = true,
@@ -87,26 +104,13 @@ fun Router(
                 )
             }
 
-            composable(route = Screens.Profile.screen) {
-                ProfileScreen(
+            composable(route = Screens.AddJournal.screen) {
+                JournalEntryDetail(
                     modifier = Modifier.fillMaxSize(),
-                    userViewModel,
-                    journalEntryViewModel,
-                    showJournalDetail = {
-                        navigationController.navigate(Screens.JournalDetail.screen)
+                    onBackClicked = {
+                        navigationController.navigate(Screens.List.screen)
                     },
-                )
-            }
-            composable(route = Screens.Settings.screen) {
-                SettingsScreen(
-                    Modifier, userViewModel
-                )
-            }
-            composable(route = Screens.JournalEntry.screen) {
-                AddJournalEntry(
-                    onDetailClicked = { _ ->
-                        navigationController.navigate(Screens.Map.screen)
-                    },
+                    journalEntryViewModel = journalEntryViewModel
                 )
             }
         }

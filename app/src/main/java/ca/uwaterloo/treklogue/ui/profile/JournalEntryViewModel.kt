@@ -5,6 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class JournalEntryViewModel : ViewModel() {
     private val _selectedJournalEntry = MutableLiveData<MockJournalEntry>()
@@ -12,6 +18,12 @@ class JournalEntryViewModel : ViewModel() {
 
     fun selectJournalEntry(journalEntry: MockJournalEntry) {
         _selectedJournalEntry.value = journalEntry
+    }
+
+    fun createJournalEntry(landmark: MockLandmark) {
+        val dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        val newJournalEntry = MockJournalEntry (landmark.name, dateString)
+        _selectedJournalEntry.value = newJournalEntry
     }
 
     // Mock: List of journal entries

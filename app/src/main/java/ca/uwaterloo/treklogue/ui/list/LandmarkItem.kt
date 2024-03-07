@@ -20,6 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
@@ -27,6 +28,8 @@ import ca.uwaterloo.treklogue.ui.theme.Gray600
 fun LandmarkItem(
     modifier: Modifier,
     landmark: MockLandmark,
+    journalEntryViewModel: JournalEntryViewModel,
+    onAddJournal: (landmark: MockLandmark) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -64,7 +67,10 @@ fun LandmarkItem(
                         minWidth = 1.dp,
                         minHeight = 1.dp
                     ), // To override default button sizes by Material3
-                onClick = { /* TODO: Show add journal entry page */ },
+                onClick = {
+                    journalEntryViewModel.createJournalEntry(landmark)
+                    onAddJournal(landmark)
+                },
             ) {
                 Text(
                     stringResource(R.string.add_journal_entry),

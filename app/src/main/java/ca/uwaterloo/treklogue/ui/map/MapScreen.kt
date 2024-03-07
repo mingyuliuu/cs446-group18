@@ -6,25 +6,15 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
-import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
-import ca.uwaterloo.treklogue.ui.theme.Blue100
-import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -53,7 +43,6 @@ import kotlinx.coroutines.withContext
 fun MapScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
-    onDetailClicked: (Any?) -> Unit,
 ) {
     val defaultLocation = LatLng(
         43.4822734, -80.5879188
@@ -123,20 +112,6 @@ fun MapScreen(
             userLocation = currentLocation.value,
             landmarks = mapViewModel.state.value.landmarks,
         )
-        FloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomStart)
-                .padding(16.dp),
-            shape = RoundedCornerShape(12),
-            containerColor = Blue100,
-            contentColor = Blue200,
-            onClick = { onDetailClicked("") },
-        ) {
-            Icon(
-                painterResource(id = R.drawable.ic_add),
-                contentDescription = "Add new journal entry"
-            )
-        }
     }
 }
 

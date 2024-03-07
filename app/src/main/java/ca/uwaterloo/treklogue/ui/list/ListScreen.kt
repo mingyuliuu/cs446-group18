@@ -11,8 +11,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.map.MapViewModel
+import ca.uwaterloo.treklogue.ui.profile.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 
 /**
@@ -22,6 +25,8 @@ import ca.uwaterloo.treklogue.ui.theme.Gray100
 fun ListScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
+    journalEntryViewModel: JournalEntryViewModel,
+    onAddJournal: (landmark: MockLandmark) -> Unit
 ) {
     Column(
         modifier = modifier.background(color = Gray100),
@@ -42,7 +47,9 @@ fun ListScreen(
                         top = if (idx == 0) 4.dp else 0.dp,
                         bottom = if (idx == mapViewModel.state.value.landmarks.size - 1) 12.dp else 0.dp
                     ),
-                    landmark
+                    landmark,
+                    journalEntryViewModel,
+                    onAddJournal
                 )
             }
         }
