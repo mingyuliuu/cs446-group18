@@ -8,11 +8,7 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,10 +20,13 @@ import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
+const val MIN_JOURNAL_DISTANCE = 0.5
+
 @Composable
 fun LandmarkListItem(
     modifier: Modifier,
     landmark: MockLandmark,
+    distance: Double,
     journalEntryViewModel: JournalEntryViewModel,
     onAddJournal: (landmark: MockLandmark) -> Unit
 ) {
@@ -54,8 +53,7 @@ fun LandmarkListItem(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(landmark.name, style = MaterialTheme.typography.titleMedium)
-                Text( /* TODO: Show distance from current location */
-                    "(${landmark.latitude}, ${landmark.longitude})",
+                Text( String.format("%.1f", distance),
                     style = MaterialTheme.typography.labelSmall,
                     color = Gray600
                 )
@@ -71,6 +69,7 @@ fun LandmarkListItem(
                     journalEntryViewModel.createJournalEntry(landmark)
                     onAddJournal(landmark)
                 },
+                enabled = distance <= MIN_JOURNAL_DISTANCE
             ) {
                 Text(
                     stringResource(R.string.add_journal_entry),

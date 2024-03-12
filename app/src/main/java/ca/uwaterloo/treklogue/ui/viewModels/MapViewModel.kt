@@ -14,6 +14,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
+import com.google.android.gms.maps.model.LatLng
 import io.realm.kotlin.notifications.InitialResults
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.notifications.UpdatedResults
@@ -35,7 +36,10 @@ sealed class MapEvent {
  */
 data class MapState(
     val landmarks: SnapshotStateList<Landmark>,
-    val mockLandmarks: SnapshotStateList<MockLandmark>
+    val mockLandmarks: SnapshotStateList<MockLandmark>,
+    val userLocation: LatLng = LatLng(
+        43.4822734, -80.5879188
+    ) // Waterloo
 ) {
     companion object {
         val initialState =
@@ -93,6 +97,10 @@ class MapViewModel(
                 }
             }
         }
+    }
+
+    fun setUserLocation(location: LatLng) {
+        _state.value = state.value.copy(userLocation = location)
     }
 
     fun error(errorEvent: MapEvent.Error) {

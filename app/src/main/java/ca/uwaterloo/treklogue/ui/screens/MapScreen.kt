@@ -45,16 +45,7 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
 ) {
-    val defaultLocation = LatLng(
-        43.4822734, -80.5879188
-    ) // Waterloo
-    val currentLocation = remember {
-        mutableStateOf(
-            defaultLocation
-        )
-    }
-
-    val defaultCameraPosition = CameraPosition.fromLatLngZoom(defaultLocation, 12f)
+    val defaultCameraPosition = CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
     }
@@ -71,7 +62,8 @@ fun MapScreen(
             if (isGranted) {
                 // Permission granted, update the location
                 getCurrentLocation(context, { lat, long ->
-                    currentLocation.value = LatLng(lat, long)
+                    mapViewModel.setUserLocation(LatLng(lat, long))
+
                     cameraPositionState.move(
                         CameraUpdateFactory.newLatLng(
                             LatLng(lat, long)
@@ -89,7 +81,8 @@ fun MapScreen(
             if (locationPermissionState.status.isGranted) {
                 // Permission already granted, update the location
                 getCurrentLocation(context, { lat, long ->
-                    currentLocation.value = LatLng(lat, long)
+                    mapViewModel.setUserLocation(LatLng(lat, long))
+
                     cameraPositionState.move(
                         CameraUpdateFactory.newLatLng(
                             LatLng(lat, long)
@@ -110,7 +103,7 @@ fun MapScreen(
             modifier = Modifier
                 .fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = currentLocation.value,
+            userLocation = mapViewModel.state.value.userLocation,
             landmarks = mapViewModel.state.value.landmarks,
         )
     }
