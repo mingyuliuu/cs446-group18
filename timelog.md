@@ -30,4 +30,6 @@
 | 2024/03/02 | 0      | 0     | 0       | 0       | 3     | 0       | Navigation between screens, Journal Entry and Map view                         |
 | 2024/03/03 | 0      | 0     | 0       | 0       | 4     | 0       | Add Journal Entry UI                                                           |
 | 2024/03/03 | 2      | 2     | 2       | 2       | 2     | 2       | Prepare for project demo, discuss outstanding bugs                             |
+| 2024/03/06 | 0      | 1     | 1       | 0.5     | 0     | 0       | Demo document (D3)                                                             |
 | 2024/03/06 | 9      | 0     | 0       | 0       | 0     | 0       | UI for landmark list, add/edit journal entry screen, profile & settings screen |
+| 2024/03/06 | 0      | 0     | 0       | 1.5     | 0     | 0       | Distance sorted landmark list                                                  |
