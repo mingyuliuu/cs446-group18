@@ -14,14 +14,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.ui.composables.MapMarker
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.CameraPositionState
@@ -29,10 +30,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -45,7 +43,8 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
 ) {
-    val defaultCameraPosition = CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
+    val defaultCameraPosition =
+        CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
     }
@@ -132,31 +131,22 @@ fun GoogleMapView(
         uiSettings = mapUiSettings,
         properties = mapProperties,
     ) {
-        Marker(
-            state = MarkerState(position = userLocation),
+        MapMarker(
+            position = userLocation,
             title = "User Location",
+            context = LocalContext.current,
+            iconResourceId = R.drawable.ic_my_location,
+            variant = "large"
         )
+
         for (landmark in landmarks) {
-            LandmarkMarker(
-                LatLng(landmark.latitude, landmark.longitude),
-                landmark.name,
-                true
+            MapMarker(
+                position = LatLng(landmark.latitude, landmark.longitude),
+                title = landmark.name,
+                context = LocalContext.current,
+//                iconResourceId = if (hasVisited) R.drawable.ic_unvisited_landmark else R.drawable.ic_visited_landmark,
+                iconResourceId = R.drawable.ic_unvisited_landmark
             )
         }
     }
-}
-
-@Composable
-fun LandmarkMarker(position: LatLng, title: String, hasVisited: Boolean) {
-    val markerState = rememberMarkerState(null, position)
-
-    Marker(
-        state = markerState,
-        title = title,
-        snippet = title, // TODO: Can include landmark description in the future
-        icon = if (hasVisited) BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE) else BitmapDescriptorFactory.defaultMarker(
-            BitmapDescriptorFactory.HUE_YELLOW
-        ),
-        alpha = if (hasVisited) 1F else 0.8F
-    )
 }
