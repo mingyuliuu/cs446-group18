@@ -33,3 +33,4 @@
 | 2024/03/06 | 0      | 5     | 1       | 0.5     | 0     | 0       | Demo document (D3)                                                             |
 | 2024/03/06 | 9      | 0     | 0       | 0       | 0     | 0       | UI for landmark list, add/edit journal entry screen, profile & settings screen |
 | 2024/03/06 | 0      | 0     | 0       | 1.5     | 0     | 0       | Distance sorted landmark list                                                  |
+| 2024/03/06 | 1.5    | 0     | 0       | 0       | 0     | 0       | Draw custom map markers, implement custom MapMarker composable                 |
