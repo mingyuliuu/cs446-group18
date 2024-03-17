@@ -2,6 +2,7 @@
 * Template app provided by MongoDB Atlas: https://www.mongodb.com/docs/atlas/app-services/reference/template-apps/#std-label-template-apps
 * Maps Compose Library: https://developers.google.com/maps/documentation/android-sdk/maps-compose
 * Distance function:  https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
+* Custom MapMarker from drawable icons: https://www.boltuix.com/2022/11/add-custom-marker-to-google-maps-in.html
 
 #### Assets
 * All custom markers are drawn based on: https://www.flaticon.com/free-icon/destination_3295084?related_id=3295084&origin=pack
