@@ -1,5 +1,11 @@
 package ca.uwaterloo.treklogue.ui.composables
 
+import android.net.Uri
+import android.util.Log
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +33,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +52,7 @@ import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
+import coil.compose.AsyncImage
 
 @Composable
 fun JournalEntryDetail(
@@ -49,7 +61,7 @@ fun JournalEntryDetail(
     onBackClicked: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
-    val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
+    var journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value;
 
     if (journalEntry != null) {
         Column(modifier) {
@@ -110,13 +122,28 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        OutlinedTextField(
-            value = TextFieldValue(journalEntry.description),
-            onValueChange = { /* TODO: handle text change */ },
-            label = { Text(stringResource(R.string.personal_note)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp),
+        var text = remember { journalEntry?.let { mutableStateOf(it.description) } }
+        if (text != null) {
+            OutlinedTextField(
+                readOnly = false,
+                enabled = true,
+                value = text.value,
+                onValueChange = {
+                    text.value = it;},
+                label = { Text(stringResource(R.string.personal_note)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(150.dp),
+            )
+        }
+
+        var selectedImageUri by remember {
+            mutableStateOf<List<Uri?>>(emptyList())
+        }
+
+        val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.PickVisualMedia(),
+            onResult = { uri -> selectedImageUri = selectedImageUri + uri }
         )
 
         FormSectionHeader(text = R.string.personal_photos)
@@ -141,8 +168,23 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                     )
                 }
 
+                journalEntry.uploadedImages = selectedImageUri;
+                journalEntry.uploadedImages.forEach { uri->
+                    if (uri != null) {
+                        AsyncImage(
+                            model = uri,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .height(150.dp),
+                            contentScale = ContentScale.Fit
+                        )
+                    }
+                }
+
                 FloatingActionButton(
-                    onClick = { /* TODO: handle add image */ },
+                    onClick = {
+                        singlePhotoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                              },
                     modifier = Modifier
                         .height(75.dp)
                         .width(75.dp)

@@ -22,24 +22,28 @@ class JournalEntryViewModel : ViewModel() {
 
     fun createJournalEntry(landmark: MockLandmark) {
         val dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val newJournalEntry = MockJournalEntry (landmark.name, dateString)
+        val newIndex = journalEntries.size;
+        val newJournalEntry = MockJournalEntry (newIndex, landmark.name, dateString)
         _selectedJournalEntry.value = newJournalEntry
     }
 
     // Mock: List of journal entries
     val journalEntries = listOf(
         MockJournalEntry(
+            0,
             "Eiffel Tower-1",
             "15th March 2023",
             images = mutableListOf(R.drawable.img_eiffel_tower_1)
         ),
         MockJournalEntry(
+            1,
             "Eiffel Tower-2",
             "30th August 2023",
             "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
             images = mutableListOf(R.drawable.img_eiffel_tower_1, R.drawable.img_eiffel_tower_2, R.drawable.img_eiffel_tower_3)
         ),
         MockJournalEntry(
+            2,
             "Eiffel Tower-3",
             "1st January 2024",
             "The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: Tour Eiffel [tuʁ ɛfɛl] ⓘ) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower from 1887 to 1889. ",
