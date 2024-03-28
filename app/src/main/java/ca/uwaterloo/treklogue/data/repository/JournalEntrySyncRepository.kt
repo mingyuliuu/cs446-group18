@@ -5,7 +5,10 @@ import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.data.model.Landmark
 import io.realm.kotlin.Realm
+import io.realm.kotlin.ext.isFrozen
+import io.realm.kotlin.ext.isManaged
 import io.realm.kotlin.ext.query
+import io.realm.kotlin.ext.realmListOf
 import io.realm.kotlin.mongodb.User
 import io.realm.kotlin.mongodb.exceptions.SyncException
 import io.realm.kotlin.mongodb.subscriptions
@@ -15,6 +18,7 @@ import io.realm.kotlin.mongodb.syncSession
 import io.realm.kotlin.notifications.ResultsChange
 import io.realm.kotlin.query.RealmQuery
 import io.realm.kotlin.query.Sort
+import io.realm.kotlin.types.EmbeddedRealmObject
 import io.realm.kotlin.types.RealmList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -85,9 +89,34 @@ class JournalEntryRealmSyncRepository(
         realm = Realm.open(config)
 
         // Mutable states must be updated on the UI thread
-        CoroutineScope(Dispatchers.Main).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             realm.subscriptions.waitForSynchronization()
             Log.v(null, "Successfully opened realm: ${realm.configuration} configured for JournalEntrySyncRepository")
+
+            runCatching {
+                Log.v(null, "Adding initial journal entry.")
+                realm.write {
+                    Log.v(null, "realm write:")
+
+                    val newJournalEntry = JournalEntry().apply {
+                        ownerId = currentUser.id
+                        landmark = Landmark().apply {
+                            name = "Niagara Falls"
+                            latitude = 43.107565
+                            longitude = -79.060331
+                        }
+                        visitedAt = "2024-03-27"
+                        photos = realmListOf()
+                        description = "I visited Niagara Falls today!"
+                    }
+//                    Log.v(null, "STATUS2: " + newJournalEntry.isFrozen() + newJournalEntry.isManaged())
+                    copyToRealm(newJournalEntry)
+                }
+            }.onSuccess {
+                Log.v(null, "Successfully added journal entry.")
+            }.onFailure { ex: Throwable ->
+                Log.v(null, "Failed to add journal entry: " + ex.message)
+            }
         }
     }
 

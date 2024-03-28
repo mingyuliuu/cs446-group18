@@ -18,10 +18,14 @@ class JournalEntry() : RealmObject {
     constructor(
         ownerId: String = "",
         landmark: Landmark? = null,
-        visitedAt: String = ""
+        visitedAt: String = "",
+        photos: RealmList<String> = realmListOf(),
+        description: String = ""
     ) : this() {
         this.ownerId = ownerId
         this.landmark = landmark
         this.visitedAt = visitedAt
+        this.photos = photos
+        this.description = description
     }
 }

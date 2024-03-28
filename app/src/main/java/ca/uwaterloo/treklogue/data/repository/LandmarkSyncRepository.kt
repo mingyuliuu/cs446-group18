@@ -69,22 +69,22 @@ class LandmarkRealmSyncRepository(
         realm = Realm.open(config)
 
         // Can write to database like this:
-        CoroutineScope(Dispatchers.IO).launch {
-            runCatching {
-                realm.write {
-                    val newLandmark = Landmark().apply {
-                        name = "Niagara Falls"
-                        latitude = 43.107565
-                        longitude = -79.060331
-                    }
-                    copyToRealm(newLandmark)
-                }
-            }.onSuccess {
-                Log.v(null, "Successfully added landmark.")
-            }.onFailure { ex: Throwable ->
-                Log.v(null, "Failed to add landmark: " + ex.message)
-            }
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            runCatching {
+//                realm.write {
+//                    val newLandmark = Landmark().apply {
+//                        name = "Niagara Falls"
+//                        latitude = 43.107565
+//                        longitude = -79.060331
+//                    }
+//                    copyToRealm(newLandmark)
+//                }
+//            }.onSuccess {
+//                Log.v(null, "Successfully added landmark.")
+//            }.onFailure { ex: Throwable ->
+//                Log.v(null, "Failed to add landmark: " + ex.message)
+//            }
+//        }
 
         // Mutable states must be updated on the UI thread
         CoroutineScope(Dispatchers.Main).launch {
