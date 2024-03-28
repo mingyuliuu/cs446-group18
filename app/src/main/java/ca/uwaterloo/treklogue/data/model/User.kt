@@ -9,10 +9,9 @@ import org.mongodb.kbson.ObjectId
 class User() : RealmObject {
     @PrimaryKey
     var _id: String = ""
-    var name: String = ""
+    var name: String? = ""
     var email: String = ""
-    var emailVerified: String = "" // TODO: Use proper Date object
-    var avatar: String = ""
+    var avatar: String? = ""
     var journalEntries: RealmList<JournalEntry> = realmListOf()
     var badges: RealmList<Badge> = realmListOf()
 

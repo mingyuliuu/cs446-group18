@@ -58,7 +58,6 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:2.15.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-location:21.1.0")
-    implementation("androidx.room:room-common:2.6.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation("androidx.compose.ui:ui-graphics")

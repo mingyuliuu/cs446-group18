@@ -1,8 +1,6 @@
 package ca.uwaterloo.treklogue.ui.composables
 
 import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -48,12 +45,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.room.Delete
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import coil.compose.AsyncImage
 
 @Composable
@@ -63,7 +59,7 @@ fun JournalEntryDetail(
     onBackClicked: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
-    var journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value;
+    var journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
 
     if (journalEntry != null) {
         Column(modifier) {
@@ -124,20 +120,19 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
             modifier = Modifier.fillMaxWidth()
         )
 
-        var text = remember { journalEntry?.let { mutableStateOf(it.description) } }
-        if (text != null) {
-            OutlinedTextField(
-                readOnly = false,
-                enabled = true,
-                value = text.value,
-                onValueChange = {
-                    text.value = it;},
-                label = { Text(stringResource(R.string.personal_note)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-            )
-        }
+        val text = remember { mutableStateOf(journalEntry.description) }
+        OutlinedTextField(
+            readOnly = false,
+            enabled = true,
+            value = text.value,
+            onValueChange = {
+                text.value = it
+            },
+            label = { Text(stringResource(R.string.personal_note)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+        )
 
         var selectedImageUri by remember {
             mutableStateOf<List<Uri?>>(emptyList())
@@ -170,8 +165,8 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                     )
                 }
 
-                journalEntry.uploadedImages = selectedImageUri;
-                journalEntry.uploadedImages.forEach { uri->
+                journalEntry.uploadedImages = selectedImageUri
+                journalEntry.uploadedImages.forEach { uri ->
                     if (uri != null) {
                         Box(modifier = Modifier.height(150.dp)) {
                             AsyncImage(
@@ -182,7 +177,9 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                                 contentScale = ContentScale.Fit
                             )
                             IconButton(
-                                onClick = { selectedImageUri = selectedImageUri.filter { it != uri } },
+                                onClick = {
+                                    selectedImageUri = selectedImageUri.filter { it != uri }
+                                },
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {
                                 Icon(Icons.Default.Delete, contentDescription = "Delete Image")
@@ -193,8 +190,12 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
 
                 FloatingActionButton(
                     onClick = {
-                        singlePhotoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                              },
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(
+                                ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    },
                     modifier = Modifier
                         .height(75.dp)
                         .width(75.dp)
