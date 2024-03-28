@@ -85,7 +85,9 @@ class MainActivity : ComponentActivity() {
     private val mapViewModel: MapViewModel by viewModels {
         MapViewModel.factory(landmarkRepository, this)
     }
-    private val journalEntryViewModel: JournalEntryViewModel by viewModels()
+    private val journalEntryViewModel: JournalEntryViewModel by viewModels {
+        JournalEntryViewModel.factory(journalEntryRepository, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

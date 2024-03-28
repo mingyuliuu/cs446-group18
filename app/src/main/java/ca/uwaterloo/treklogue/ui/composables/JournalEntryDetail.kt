@@ -1,12 +1,9 @@
 package ca.uwaterloo.treklogue.ui.composables
 
 import android.net.Uri
-import android.util.Log
-import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,16 +40,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import coil.compose.AsyncImage
+import io.realm.kotlin.ext.copyFromRealm
 
 @Composable
 fun JournalEntryDetail(
@@ -61,21 +58,26 @@ fun JournalEntryDetail(
     onBackClicked: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
-    var journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value;
+    val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
+    val editedJournalEntry = remember { mutableStateOf(journalEntry!!) }
 
     if (journalEntry != null) {
         Column(modifier) {
             // Top bar section
-            TopBar(onBackClicked)
+            TopBar(onBackClicked, editedJournalEntry, journalEntryViewModel)
 
             // Content section
-            ContentSection(isEditing, journalEntry)
+            ContentSection(isEditing, editedJournalEntry)
         }
     }
 }
 
 @Composable
-fun TopBar(onBackClicked: () -> Unit) {
+fun TopBar(
+    onBackClicked: () -> Unit,
+    editedJournalEntry: MutableState<JournalEntry>,
+    journalEntryViewModel: JournalEntryViewModel
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -88,7 +90,15 @@ fun TopBar(onBackClicked: () -> Unit) {
             Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.save))
         }
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = {/* TODO: handle save */ }) {
+        Button(onClick = {
+            // TODO: Logic for updating existing journal entry
+            journalEntryViewModel.saveJournalEntry(
+                editedJournalEntry.value.landmark!!,
+                editedJournalEntry.value.visitedAt,
+                editedJournalEntry.value.photos,
+                editedJournalEntry.value.description
+            )
+        }) {
             Text(stringResource(R.string.save), style = MaterialTheme.typography.labelLarge)
         }
     }
@@ -96,7 +106,7 @@ fun TopBar(onBackClicked: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
+fun ContentSection(isEditing: Boolean, editedJournalEntry: MutableState<JournalEntry>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -107,7 +117,7 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
         OutlinedTextField(
             readOnly = isEditing,
             enabled = !isEditing,
-            value = TextFieldValue(journalEntry.name),
+            value = TextFieldValue(editedJournalEntry.value.landmark?.name ?: "Landmark"),
             onValueChange = {},
             label = { Text(stringResource(R.string.name_of_landmark)) },
             modifier = Modifier.fillMaxWidth()
@@ -116,26 +126,33 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
         OutlinedTextField(
             readOnly = isEditing,
             enabled = !isEditing,
-            value = TextFieldValue(journalEntry.dateVisited),
+            value = TextFieldValue(editedJournalEntry.value.visitedAt),
             onValueChange = {},
             label = { Text(stringResource(R.string.date_of_visit)) },
             modifier = Modifier.fillMaxWidth()
         )
 
-        var text = remember { journalEntry?.let { mutableStateOf(it.description) } }
-        if (text != null) {
-            OutlinedTextField(
-                readOnly = false,
-                enabled = true,
-                value = text.value,
-                onValueChange = {
-                    text.value = it;},
-                label = { Text(stringResource(R.string.personal_note)) },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp),
-            )
-        }
+        OutlinedTextField(
+            readOnly = false,
+            enabled = true,
+            value = editedJournalEntry.value.description,
+            onValueChange = {
+                editedJournalEntry.value.description = it
+            },
+            label = { Text(stringResource(R.string.personal_note)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp),
+        )
+
+//        var selectedImageUri by remember {
+//            mutableStateOf<List<Uri?>>(emptyList())
+//        }
+//
+//        val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+//            contract = ActivityResultContracts.PickVisualMedia(),
+//            onResult = { uri -> selectedImageUri = selectedImageUri + uri }
+//        )
 
         var selectedImageUri by remember {
             mutableStateOf<List<Uri?>>(emptyList())
@@ -143,7 +160,10 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
 
         val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = { uri -> selectedImageUri = selectedImageUri + uri }
+            onResult = { uri ->
+                selectedImageUri = selectedImageUri + uri
+                editedJournalEntry.value.photos.add(uri.toString())
+            }
         )
 
         FormSectionHeader(text = R.string.personal_photos)
@@ -158,52 +178,44 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                     .fillMaxWidth()
                     .padding(8.dp),
             ) {
-                journalEntry.images.forEach {
-                    Image(
-                        painter = painterResource(id = it),
+                editedJournalEntry.value.photos.forEach { str ->
+                    val uri: Uri = Uri.parse(str)
+                    AsyncImage(
+                        model = uri,
                         contentDescription = null,
                         modifier = Modifier
                             .height(150.dp),
-                        contentScale = ContentScale.Fit,
+                        contentScale = ContentScale.Fit
                     )
                 }
+            }
 
-                journalEntry.uploadedImages = selectedImageUri;
-                journalEntry.uploadedImages.forEach { uri->
-                    if (uri != null) {
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .height(150.dp),
-                            contentScale = ContentScale.Fit
+            FloatingActionButton(
+                onClick = {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly
                         )
-                    }
-                }
-
-                FloatingActionButton(
-                    onClick = {
-                        singlePhotoPickerLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                              },
-                    modifier = Modifier
-                        .height(75.dp)
-                        .width(75.dp)
-                        .align(Alignment.CenterVertically),
-                    containerColor = Blue100,
-                    contentColor = Blue200
-                ) {
-                    Icon(Icons.Filled.Add, contentDescription = "Add")
-                }
+                    )
+                },
+                modifier = Modifier
+                    .height(75.dp)
+                    .width(75.dp)
+                    .align(Alignment.CenterStart),
+                containerColor = Blue100,
+                contentColor = Blue200
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add")
             }
         }
+    }
 
-        FormSectionHeader(text = R.string.personal_rating)
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
-        ) {
-            RatingSlider()
-        }
+    FormSectionHeader(text = R.string.personal_rating)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
+    ) {
+        RatingSlider()
     }
 }

@@ -69,7 +69,7 @@ class LandmarkRealmSyncRepository(
         realm = Realm.open(config)
 
         // Can write to database like this:
-        /* CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             runCatching {
                 realm.write {
                     val newLandmark = Landmark().apply {
@@ -85,7 +85,6 @@ class LandmarkRealmSyncRepository(
                 Log.v(null, "Failed to add landmark: " + ex.message)
             }
         }
-         */
 
         // Mutable states must be updated on the UI thread
         CoroutineScope(Dispatchers.Main).launch {

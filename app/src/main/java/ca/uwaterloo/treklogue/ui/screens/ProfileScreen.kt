@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryListItem
@@ -28,7 +29,7 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel,
     journalEntryViewModel: JournalEntryViewModel,
-    showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
+    showJournalDetail: (journalEntry: JournalEntry) -> Unit,
 ) {
     Column(
         modifier = modifier.background(color = Gray100),

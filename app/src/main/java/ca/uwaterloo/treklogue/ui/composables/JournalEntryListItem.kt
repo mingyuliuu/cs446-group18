@@ -1,6 +1,6 @@
 package ca.uwaterloo.treklogue.ui.composables
 
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,21 +22,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun JournalEntryListItem(
     modifier: Modifier,
-    journalEntry: MockJournalEntry,
+    journalEntry: JournalEntry,
     journalEntryViewModel: JournalEntryViewModel,
-    showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
+    showJournalDetail: (journalEntry: JournalEntry) -> Unit,
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -62,9 +62,12 @@ fun JournalEntryListItem(
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(journalEntry.name, style = MaterialTheme.typography.titleMedium)
                     Text(
-                        journalEntry.dateVisited,
+                        journalEntry.landmark?.name ?: "Landmark",
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        journalEntry.visitedAt,
                         style = MaterialTheme.typography.labelSmall,
                         color = Gray600
                     )
@@ -89,7 +92,7 @@ fun JournalEntryListItem(
             }
 
             // (Optional) Horizontally scrollable list of images
-            if (journalEntry.images.size > 0) {
+            if (journalEntry.photos.size > 0) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -97,9 +100,10 @@ fun JournalEntryListItem(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    journalEntry.images.forEach {
-                        Image(
-                            painter = painterResource(id = it),
+                    journalEntry.photos.forEach {
+                        val uri: Uri = Uri.parse(it)
+                        AsyncImage(
+                            model = uri,
                             contentDescription = null,
                             modifier = Modifier
                                 .height(150.dp)
