@@ -25,6 +25,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.room.Delete
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -171,13 +173,21 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                 journalEntry.uploadedImages = selectedImageUri;
                 journalEntry.uploadedImages.forEach { uri->
                     if (uri != null) {
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .height(150.dp),
-                            contentScale = ContentScale.Fit
-                        )
+                        Box(modifier = Modifier.height(150.dp)) {
+                            AsyncImage(
+                                model = uri,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .height(150.dp),
+                                contentScale = ContentScale.Fit
+                            )
+                            IconButton(
+                                onClick = { selectedImageUri = selectedImageUri.filter { it != uri } },
+                                modifier = Modifier.align(Alignment.TopEnd)
+                            ) {
+                                Icon(Icons.Default.Delete, contentDescription = "Delete Image")
+                            }
+                        }
                     }
                 }
 
