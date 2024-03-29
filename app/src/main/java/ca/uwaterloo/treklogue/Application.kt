@@ -2,6 +2,7 @@ package ca.uwaterloo.treklogue
 
 import android.app.Application
 import android.util.Log
+import dagger.hilt.android.HiltAndroidApp
 import io.realm.kotlin.mongodb.App
 import io.realm.kotlin.mongodb.AppConfiguration
 
@@ -14,6 +15,7 @@ inline fun <reified T> T.TAG(): String = T::class.java.simpleName
 /*
 *  Sets up the App and enables Realm-specific logging in debug mode.
 */
+@HiltAndroidApp
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()

@@ -4,10 +4,8 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import ca.uwaterloo.treklogue.app
-import ca.uwaterloo.treklogue.data.repository.AuthRealmRepository
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
-import io.realm.kotlin.mongodb.Credentials
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
 import io.realm.kotlin.mongodb.exceptions.UserAlreadyExistsException
@@ -16,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Types of UX events triggered by user actions.
@@ -57,7 +56,10 @@ data class LoginState(
     }
 }
 
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
     private val _state: MutableState<LoginState> = mutableStateOf(LoginState.initialState)
     val state: State<LoginState>
@@ -66,8 +68,6 @@ class LoginViewModel : ViewModel() {
     private val _event: MutableSharedFlow<LoginEvent> = MutableSharedFlow()
     val event: Flow<LoginEvent>
         get() = _event
-
-    private val authRepository: AuthRepository = AuthRealmRepository
 
     fun switchToAction(loginAction: LoginAction) {
         _state.value = state.value.copy(action = loginAction)
@@ -86,7 +86,7 @@ class LoginViewModel : ViewModel() {
 
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
-                authRepository.createAccount(email, password)
+                repository.createAccount(email, password)
             }.onSuccess {
                 _event.emit(
                     LoginEvent.ShowMessage(
@@ -113,7 +113,7 @@ class LoginViewModel : ViewModel() {
 
         CoroutineScope(Dispatchers.IO).launch {
             runCatching {
-                app.login(Credentials.emailPassword(email, password))
+                repository.login(email, password)
             }.onSuccess {
                 _event.emit(LoginEvent.GoToMap(EventSeverity.INFO, "User logged in successfully."))
             }.onFailure { ex: Throwable ->
@@ -126,6 +126,10 @@ class LoginViewModel : ViewModel() {
                 _event.emit(LoginEvent.ShowMessage(EventSeverity.ERROR, message))
             }
         }
+    }
+
+    fun logout() {
+        repository.logout()
     }
 
 }

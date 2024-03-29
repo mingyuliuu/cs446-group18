@@ -13,16 +13,29 @@ import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import ca.uwaterloo.treklogue.ui.viewModels.EventSeverity
 import ca.uwaterloo.treklogue.ui.viewModels.LoginEvent
 import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel by viewModels<LoginViewModel>()
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Fast-track task list screen if we are logged in
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // Fast-track main screen if user is logged in
         if (app.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
@@ -41,6 +54,7 @@ class LoginActivity : ComponentActivity() {
                             startActivity(intent)
                             finish()
                         }
+
                         is LoginEvent.ShowMessage -> event.process()
                     }
                 }
