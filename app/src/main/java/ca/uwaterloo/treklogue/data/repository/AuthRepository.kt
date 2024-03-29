@@ -51,12 +51,11 @@ class AuthFirebaseRepository @Inject constructor(
             ?.await()
 
         // Add user to db
-        val id = usersRef.document().id
         val user = User(
-            id = id,
+            id = email, // use email as the primary id
             email = email
         )
-        usersRef.document(id).set(user).await()
+        usersRef.document(email).set(user).await()
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)

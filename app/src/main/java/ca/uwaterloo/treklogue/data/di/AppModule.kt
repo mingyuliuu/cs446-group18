@@ -2,6 +2,8 @@ package ca.uwaterloo.treklogue.data.di
 
 import ca.uwaterloo.treklogue.data.repository.AuthFirebaseRepository
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
+import ca.uwaterloo.treklogue.data.repository.JournalEntryFirebaseRepository
+import ca.uwaterloo.treklogue.data.repository.JournalEntryRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkFirebaseRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarkRepository
 import com.google.firebase.auth.FirebaseAuth
@@ -19,11 +21,6 @@ import javax.inject.Named
 object AppModule {
 
     @Provides
-    fun provideLandmarkRepository(
-        @Named("landmarks") landmarksRef: CollectionReference
-    ): LandmarkRepository = LandmarkFirebaseRepository(landmarksRef)
-
-    @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
@@ -36,5 +33,18 @@ object AppModule {
 
     @Provides
     fun providesAuthRepository(repo: AuthFirebaseRepository): AuthRepository = repo
+
+    @Provides
+    fun provideLandmarkRepository(
+        @Named("landmarks") landmarksRef: CollectionReference
+    ): LandmarkRepository = LandmarkFirebaseRepository(landmarksRef)
+
+    @Provides
+    fun provideJournalEntryRepository(
+        @Named("users") usersRef: CollectionReference,
+        authRepository: AuthRepository,
+        @Named("landmarks") landmarksRef: CollectionReference
+    ): JournalEntryRepository =
+        JournalEntryFirebaseRepository(usersRef, authRepository, landmarksRef)
 
 }
