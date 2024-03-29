@@ -1,4 +1,4 @@
-package ca.uwaterloo.treklogue.ui.viewModels
+package ca.uwaterloo.treklogue.data.di
 
 import ca.uwaterloo.treklogue.data.repository.AuthFirebaseRepository
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
