@@ -12,21 +12,27 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 
 @InstallIn(SingletonComponent::class)
 @Module
 object AppModule {
 
     @Provides
-    fun provideLandmarksRef() = Firebase.firestore.collection("landmarks")
-
-    @Provides
     fun provideLandmarkRepository(
-        landmarksRef: CollectionReference
+        @Named("landmarks") landmarksRef: CollectionReference
     ): LandmarkRepository = LandmarkFirebaseRepository(landmarksRef)
 
     @Provides
     fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+
+    @Provides
+    @Named("landmarks")
+    fun provideLandmarksRef(): CollectionReference = Firebase.firestore.collection("landmarks")
+
+    @Provides
+    @Named("users")
+    fun provideUsersRef(): CollectionReference = Firebase.firestore.collection("users")
 
     @Provides
     fun providesAuthRepository(repo: AuthFirebaseRepository): AuthRepository = repo

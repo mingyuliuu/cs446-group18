@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Landmarks = List<Landmark>
 typealias LandmarksResponse = Response<Landmarks>
@@ -38,7 +39,9 @@ interface LandmarkRepository {
 /**
  * Repo implementation used in runtime.
  */
-class LandmarkFirebaseRepository @Inject constructor(private val landmarksRef: CollectionReference) : LandmarkRepository {
+class LandmarkFirebaseRepository @Inject constructor(
+    @Named("landmarks") private val landmarksRef: CollectionReference
+) : LandmarkRepository {
 
     override fun getLandmarkList() = callbackFlow {
         val snapshotListener = landmarksRef.orderBy("name").addSnapshotListener { snapshot, e ->
