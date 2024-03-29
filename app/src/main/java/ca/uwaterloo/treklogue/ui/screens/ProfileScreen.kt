@@ -35,11 +35,6 @@ fun ProfileScreen(
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TabSectionHeader(R.string.my_badges)
-
-        // TODO: Badges (horizontally scrollable list?)
-        Spacer(modifier = Modifier.height(30.dp))
-
         TabSectionHeader(R.string.my_journal_entries)
 
         Column(
