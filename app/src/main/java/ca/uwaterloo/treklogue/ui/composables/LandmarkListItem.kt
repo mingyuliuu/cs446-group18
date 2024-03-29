@@ -14,23 +14,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
-const val MIN_JOURNAL_DISTANCE = 0.5
+const val MIN_JOURNAL_DISTANCE = 5
 
 @Composable
 fun LandmarkListItem(
     modifier: Modifier,
     landmark: Landmark,
     distance: Double,
-    onAddJournal: (landmark: MockLandmark) -> Unit,
-    journalEntryViewModel: JournalEntryViewModel = hiltViewModel()
+    onAddJournal: (landmark: Landmark) -> Unit,
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),

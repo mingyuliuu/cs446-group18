@@ -26,7 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -34,9 +34,9 @@ import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 @Composable
 fun JournalEntryListItem(
     modifier: Modifier,
-    journalEntry: MockJournalEntry,
-    journalEntryViewModel: JournalEntryViewModel,
-    showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
+    journalEntry: JournalEntry,
+    showJournalDetail: (journalEntry: JournalEntry) -> Unit,
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -64,7 +64,7 @@ fun JournalEntryListItem(
                 ) {
                     Text(journalEntry.name, style = MaterialTheme.typography.titleMedium)
                     Text(
-                        journalEntry.dateVisited,
+                        journalEntry.visitedAt,
                         style = MaterialTheme.typography.labelSmall,
                         color = Gray600
                     )
@@ -89,7 +89,7 @@ fun JournalEntryListItem(
             }
 
             // (Optional) Horizontally scrollable list of images
-            if (journalEntry.images.size > 0) {
+            if (journalEntry.photos.size > 0) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -97,7 +97,7 @@ fun JournalEntryListItem(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    journalEntry.images.forEach {
+                    journalEntry.photos.forEach {
                         Image(
                             painter = painterResource(id = it),
                             contentDescription = null,

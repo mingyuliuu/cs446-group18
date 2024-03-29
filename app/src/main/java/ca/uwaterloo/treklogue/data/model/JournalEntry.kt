@@ -5,6 +5,6 @@ data class JournalEntry(
     var landmarkId: String? = null,
     var name: String = "",
     var visitedAt: String = "",
-    var photos: MutableList<String> = mutableListOf(),
+    var photos: MutableList<Int> = mutableListOf(),
     var description: String = ""
 )

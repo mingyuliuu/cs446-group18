@@ -36,6 +36,7 @@ class LoginActivity : ComponentActivity() {
         super.onStart()
 
         // Fast-track main screen if user is logged in
+        Log.v(null, "CURRENT USER: ${app.currentUser}")
         if (app.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()

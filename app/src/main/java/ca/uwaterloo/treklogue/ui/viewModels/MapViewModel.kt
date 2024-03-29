@@ -1,5 +1,6 @@
 package ca.uwaterloo.treklogue.ui.viewModels
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
@@ -52,6 +53,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun setUserLocation(location: LatLng) {
+        Log.v(null, "Setting user location: $location")
         _state.value = state.value.copy(userLocation = location)
     }
 

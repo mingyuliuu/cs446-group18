@@ -5,6 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.realm.kotlin.mongodb.exceptions.ConnectionException
 import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
@@ -68,6 +69,9 @@ class LoginViewModel @Inject constructor(
     private val _event: MutableSharedFlow<LoginEvent> = MutableSharedFlow()
     val event: Flow<LoginEvent>
         get() = _event
+
+    val currentUser: FirebaseUser?
+        get() = repository.currentUser
 
     fun switchToAction(loginAction: LoginAction) {
         _state.value = state.value.copy(action = loginAction)

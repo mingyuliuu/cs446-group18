@@ -12,6 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserEvent
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +23,8 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     private val userViewModel: UserViewModel by viewModels()
+    private val mapViewModel by viewModels<MapViewModel>()
+    private val journalEntryViewModel by viewModels<JournalEntryViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +49,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                Router(userViewModel)
+                Router(userViewModel, mapViewModel, journalEntryViewModel)
             }
         }
     }

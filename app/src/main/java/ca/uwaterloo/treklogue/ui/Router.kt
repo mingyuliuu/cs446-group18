@@ -19,11 +19,15 @@ import ca.uwaterloo.treklogue.ui.screens.MapScreen
 import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
 import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
 fun Router(
     userViewModel: UserViewModel,
+    mapViewModel: MapViewModel,
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -58,6 +62,7 @@ fun Router(
             composable(route = Screens.Map.screen) {
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
+                    mapViewModel
                 )
             }
 
@@ -67,6 +72,8 @@ fun Router(
                     onAddJournal = { _ ->
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
+                    mapViewModel,
+                    journalEntryViewModel
                 )
             }
 
@@ -76,6 +83,7 @@ fun Router(
                     showJournalDetail = {
                         navigationController.navigate(Screens.EditJournal.screen)
                     },
+                    journalEntryViewModel
                 )
             }
 
@@ -92,6 +100,7 @@ fun Router(
                     onBackClicked = {
                         navigationController.navigate(Screens.Profile.screen)
                     },
+                    journalEntryViewModel
                 )
             }
 
@@ -101,6 +110,7 @@ fun Router(
                     onBackClicked = {
                         navigationController.navigate(Screens.List.screen)
                     },
+                    journalEntryViewModel = journalEntryViewModel
                 )
             }
         }

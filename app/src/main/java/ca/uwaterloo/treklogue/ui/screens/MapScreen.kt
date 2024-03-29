@@ -45,7 +45,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel = hiltViewModel()
+    mapViewModel: MapViewModel
 ) {
     val defaultCameraPosition =
         CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
@@ -106,14 +106,15 @@ fun MapScreen(
             modifier = Modifier
                 .fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = mapViewModel.state.value.userLocation
+            userLocation = mapViewModel.state.value.userLocation,
+            mapViewModel
         )
     }
 }
 
 @Composable
 fun Landmarks(
-    viewModel: MapViewModel = hiltViewModel(),
+    viewModel: MapViewModel,
     landmarksContent: @Composable (landmarks: Landmarks) -> Unit
 ) {
     when(val landmarksResponse = viewModel.landmarksResponse) {
@@ -128,6 +129,7 @@ fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     userLocation: LatLng,
+    mapViewModel: MapViewModel
 ) {
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
@@ -152,6 +154,7 @@ fun GoogleMapView(
         )
 
         Landmarks(
+            viewModel = mapViewModel,
             landmarksContent = { landmarks ->
                 for (landmark in landmarks) {
                     MapMarker(

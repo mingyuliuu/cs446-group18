@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 typealias JournalEntries = List<JournalEntry>
 typealias JournalEntriesResponse = Response<JournalEntries>
@@ -35,7 +36,7 @@ interface JournalEntryRepository {
     suspend fun addJournalEntry(
         landmarkId: String,
         visitedAt: String,
-        photos: MutableList<String>,
+        photos: MutableList<Int>,
         description: String
     ): AddJournalEntryResponse
 
@@ -44,7 +45,7 @@ interface JournalEntryRepository {
      */
     suspend fun updateJournalEntry(
         journalEntryId: String,
-        photos: MutableList<String>,
+        photos: MutableList<Int>,
         description: String
     ): UpdateJournalEntryResponse
 
@@ -57,6 +58,7 @@ interface JournalEntryRepository {
 /**
  * Repo implementation used in runtime.
  */
+@Singleton
 class JournalEntryFirebaseRepository @Inject constructor(
     @Named("users") private val usersRef: CollectionReference,
     private val authRepository: AuthRepository,
@@ -64,6 +66,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
 ) : JournalEntryRepository {
 
     override fun getJournalEntryList() = callbackFlow {
+        Log.v(null, "USER: ${authRepository.currentUser?.email}")
         val snapshotListener = usersRef.whereEqualTo("email", authRepository.currentUser?.email)
             .addSnapshotListener { snapshot, e ->
                 val journalEntriesResponse = if (snapshot != null) {
@@ -82,7 +85,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
     override suspend fun addJournalEntry(
         landmarkId: String,
         visitedAt: String,
-        photos: MutableList<String>,
+        photos: MutableList<Int>,
         description: String
     ) = try {
         val landmarkRef = landmarksRef.document(landmarkId)
@@ -113,7 +116,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
     // TODO
     override suspend fun updateJournalEntry(
         journalEntryId: String,
-        photos: MutableList<String>,
+        photos: MutableList<Int>,
         description: String
     ) = try {
         Response.Success(true)

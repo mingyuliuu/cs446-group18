@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -58,18 +59,16 @@ fun JournalEntryDetail(
     modifier: Modifier = Modifier,
     isEditing: Boolean = false,
     onBackClicked: () -> Unit,
-    journalEntryViewModel: JournalEntryViewModel = hiltViewModel()
+    journalEntryViewModel: JournalEntryViewModel
 ) {
-    val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
+    val journalEntry = journalEntryViewModel.state.collectAsState().value.selectedJournalEntry
 
-    if (journalEntry != null) {
-        Column(modifier) {
-            // Top bar section
-            TopBar(onBackClicked)
+    Column(modifier) {
+        // Top bar section
+        TopBar(onBackClicked)
 
-            // Content section
-            ContentSection(isEditing, journalEntry)
-        }
+        // Content section
+        ContentSection(isEditing, journalEntry)
     }
 }
 
@@ -95,7 +94,7 @@ fun TopBar(onBackClicked: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
+fun ContentSection(isEditing: Boolean, journalEntry: JournalEntry) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,7 +114,7 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
         OutlinedTextField(
             readOnly = isEditing,
             enabled = !isEditing,
-            value = TextFieldValue(journalEntry.dateVisited),
+            value = TextFieldValue(journalEntry.visitedAt),
             onValueChange = {},
             label = { Text(stringResource(R.string.date_of_visit)) },
             modifier = Modifier.fillMaxWidth()
@@ -156,7 +155,7 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                     .fillMaxWidth()
                     .padding(8.dp),
             ) {
-                journalEntry.images.forEach {
+                journalEntry.photos.forEach {
                     Image(
                         painter = painterResource(id = it),
                         contentDescription = null,
@@ -166,8 +165,8 @@ fun ContentSection(isEditing: Boolean, journalEntry: MockJournalEntry) {
                     )
                 }
 
-                journalEntry.uploadedImages = selectedImageUri
-                journalEntry.uploadedImages.forEach { uri ->
+                // TODO: Actually add the images to journalEntry
+                selectedImageUri.forEach { uri ->
                     if (uri != null) {
                         Box(modifier = Modifier.height(150.dp)) {
                             AsyncImage(

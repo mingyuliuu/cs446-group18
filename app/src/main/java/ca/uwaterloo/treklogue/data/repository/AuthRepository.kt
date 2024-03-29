@@ -11,6 +11,7 @@ import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
 typealias CreateAccountResponse = Response<Boolean>
 
@@ -37,6 +38,7 @@ interface AuthRepository {
 /**
  * [AuthRepository] for authenticating with Firebase Auth.
  */
+@Singleton
 class AuthFirebaseRepository @Inject constructor(
     private val auth: FirebaseAuth,
     @Named("users") private val usersRef: CollectionReference
