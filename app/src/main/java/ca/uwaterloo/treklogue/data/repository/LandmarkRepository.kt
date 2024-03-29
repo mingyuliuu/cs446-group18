@@ -16,7 +16,7 @@ typealias AddLandmarkResponse = Response<Boolean>
 typealias DeleteLandmarkResponse = Response<Boolean>
 
 /**
- * Repository for accessing Realm Sync.
+ * Repository for accessing landmarks.
  */
 interface LandmarkRepository {
 

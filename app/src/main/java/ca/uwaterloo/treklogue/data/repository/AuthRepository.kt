@@ -35,7 +35,7 @@ interface AuthRepository {
 }
 
 /**
- * [AuthRepository] for authenticating with MongoDB.
+ * [AuthRepository] for authenticating with Firebase Auth.
  */
 class AuthFirebaseRepository @Inject constructor(
     private val auth: FirebaseAuth,

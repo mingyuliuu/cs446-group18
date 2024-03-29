@@ -4,6 +4,7 @@
 * Distance function:  https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
 * Custom MapMarker from drawable icons: https://www.boltuix.com/2022/11/add-custom-marker-to-google-maps-in.html
 * Tutorial on using Hilt and Firebase auth: https://www.simplifiedcoding.net/firebase-authentication-using-mvvm/
+* FirestoreCleanArchitectureApp: https://github.com/alexmamo/FirestoreCleanArchitectureApp
 
 #### Assets
 * All custom markers are drawn based on: https://www.flaticon.com/free-icon/destination_3295084?related_id=3295084&origin=pack

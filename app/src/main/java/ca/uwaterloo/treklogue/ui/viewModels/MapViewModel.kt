@@ -42,9 +42,9 @@ class MapViewModel @Inject constructor(
 
     var landmarksResponse by mutableStateOf<LandmarksResponse>(Response.Loading)
         private set
-    var addBookResponse by mutableStateOf<AddLandmarkResponse>(Response.Success(false))
+    var addLandmarkResponse by mutableStateOf<AddLandmarkResponse>(Response.Success(false))
         private set
-    var deleteBookResponse by mutableStateOf<DeleteLandmarkResponse>(Response.Success(false))
+    var deleteLandmarkResponse by mutableStateOf<DeleteLandmarkResponse>(Response.Success(false))
         private set
 
     init {
@@ -62,12 +62,12 @@ class MapViewModel @Inject constructor(
     }
 
     fun addLandmark(name: String, latitude: Double, longitude: Double) = viewModelScope.launch {
-        addBookResponse = Response.Loading
-        addBookResponse = landmarkRepository.addLandmark(name, latitude, longitude)
+        addLandmarkResponse = Response.Loading
+        addLandmarkResponse = landmarkRepository.addLandmark(name, latitude, longitude)
     }
 
     fun deleteLandmark(id: String) = viewModelScope.launch {
-        deleteBookResponse = Response.Loading
-        deleteBookResponse = landmarkRepository.deleteLandmark(id)
+        deleteLandmarkResponse = Response.Loading
+        deleteLandmarkResponse = landmarkRepository.deleteLandmark(id)
     }
 }
