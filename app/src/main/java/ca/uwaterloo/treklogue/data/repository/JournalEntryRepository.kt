@@ -1,5 +1,6 @@
 package ca.uwaterloo.treklogue.data.repository
 
+import android.util.Log
 import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.model.Response
@@ -63,11 +64,11 @@ class JournalEntryFirebaseRepository @Inject constructor(
 ) : JournalEntryRepository {
 
     override fun getJournalEntryList() = callbackFlow {
-        val snapshotListener = usersRef.document(authRepository.currentUser?.uid!!)
+        val snapshotListener = usersRef.whereEqualTo("email", authRepository.currentUser?.email)
             .addSnapshotListener { snapshot, e ->
                 val journalEntriesResponse = if (snapshot != null) {
-                    val user = snapshot.toObject(User::class.java)
-                    Response.Success(user!!.journalEntries)
+                    val users = snapshot.toObjects(User::class.java)
+                    Response.Success(users[0].journalEntries)
                 } else {
                     Response.Failure(e)
                 }
@@ -92,6 +93,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
             }
         }
 
+        // TODO: Fix this - using uid is wrong
         usersRef.document(authRepository.currentUser?.uid!!).update(
             "journalEntries", FieldValue.arrayUnion(
                 JournalEntry(

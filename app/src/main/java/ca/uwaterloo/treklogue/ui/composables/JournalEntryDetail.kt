@@ -45,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
@@ -57,9 +58,9 @@ fun JournalEntryDetail(
     modifier: Modifier = Modifier,
     isEditing: Boolean = false,
     onBackClicked: () -> Unit,
-    journalEntryViewModel: JournalEntryViewModel
+    journalEntryViewModel: JournalEntryViewModel = hiltViewModel()
 ) {
-    var journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
+    val journalEntry = journalEntryViewModel.selectedJournalEntry.observeAsState().value
 
     if (journalEntry != null) {
         Column(modifier) {

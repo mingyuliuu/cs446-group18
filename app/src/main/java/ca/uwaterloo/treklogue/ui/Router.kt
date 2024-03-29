@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,15 +19,11 @@ import ca.uwaterloo.treklogue.ui.screens.MapScreen
 import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
 import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
-import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
 fun Router(
     userViewModel: UserViewModel,
-    journalEntryViewModel: JournalEntryViewModel,
-    mapViewModel: MapViewModel = hiltViewModel(),
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -69,8 +64,6 @@ fun Router(
             composable(route = Screens.List.screen) {
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel,
-                    journalEntryViewModel,
                     onAddJournal = { _ ->
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
@@ -80,8 +73,6 @@ fun Router(
             composable(route = Screens.Profile.screen) {
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
-                    userViewModel,
-                    journalEntryViewModel,
                     showJournalDetail = {
                         navigationController.navigate(Screens.EditJournal.screen)
                     },
@@ -101,7 +92,6 @@ fun Router(
                     onBackClicked = {
                         navigationController.navigate(Screens.Profile.screen)
                     },
-                    journalEntryViewModel
                 )
             }
 
@@ -111,7 +101,6 @@ fun Router(
                     onBackClicked = {
                         navigationController.navigate(Screens.List.screen)
                     },
-                    journalEntryViewModel = journalEntryViewModel
                 )
             }
         }

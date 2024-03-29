@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.data.model.Landmark
@@ -28,8 +29,8 @@ fun LandmarkListItem(
     modifier: Modifier,
     landmark: Landmark,
     distance: Double,
-    journalEntryViewModel: JournalEntryViewModel,
-    onAddJournal: (landmark: MockLandmark) -> Unit
+    onAddJournal: (landmark: MockLandmark) -> Unit,
+    journalEntryViewModel: JournalEntryViewModel = hiltViewModel()
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),

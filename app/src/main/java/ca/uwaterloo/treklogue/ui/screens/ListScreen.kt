@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.distance
 
@@ -25,9 +25,8 @@ import ca.uwaterloo.treklogue.util.distance
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel,
-    journalEntryViewModel: JournalEntryViewModel,
-    onAddJournal: (landmark: MockLandmark) -> Unit
+    onAddJournal: (landmark: MockLandmark) -> Unit,
+    mapViewModel: MapViewModel = hiltViewModel()
 ) {
     Column(
         modifier = modifier.background(color = Gray100),
@@ -56,7 +55,6 @@ fun ListScreen(
                             ),
                             landmark,
                             dist,
-                            journalEntryViewModel,
                             onAddJournal
                         )
                     }
