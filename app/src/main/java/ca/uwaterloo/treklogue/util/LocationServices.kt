@@ -3,6 +3,7 @@ package ca.uwaterloo.treklogue.util
 import android.annotation.SuppressLint
 import android.content.Context
 import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import ca.uwaterloo.treklogue.data.model.Landmark
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -37,7 +38,7 @@ fun getCurrentLocation(
 
 // from https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
 // return value is in kilometres
-fun distance(userLoc : LatLng, landmark : MockLandmark): Double {
+fun distance(userLoc : LatLng, landmark : Landmark): Double {
     val r = 6371.0710 // Radius of the Earth in kilometres
     val rlat1 = userLoc.latitude * (Math.PI/180) // Convert degrees to radians
     val rlat2 = landmark.latitude* (Math.PI/180) // Convert degrees to radians

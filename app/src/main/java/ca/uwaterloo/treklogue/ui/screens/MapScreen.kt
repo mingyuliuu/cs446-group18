@@ -14,9 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.data.model.Response
+import ca.uwaterloo.treklogue.data.repository.Landmarks
 import ca.uwaterloo.treklogue.ui.composables.MapMarker
+import ca.uwaterloo.treklogue.ui.composables.ProgressBar
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -41,7 +45,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel,
+    mapViewModel: MapViewModel = hiltViewModel()
 ) {
     val defaultCameraPosition =
         CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
@@ -102,9 +106,20 @@ fun MapScreen(
             modifier = Modifier
                 .fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = mapViewModel.state.value.userLocation,
-            landmarks = mapViewModel.state.value.landmarks,
+            userLocation = mapViewModel.state.value.userLocation
         )
+    }
+}
+
+@Composable
+fun Landmarks(
+    viewModel: MapViewModel = hiltViewModel(),
+    landmarksContent: @Composable (landmarks: Landmarks) -> Unit
+) {
+    when(val landmarksResponse = viewModel.landmarksResponse) {
+        is Response.Loading -> ProgressBar()
+        is Response.Success -> landmarksContent(landmarksResponse.data)
+        is Response.Failure -> print(landmarksResponse.e)
     }
 }
 
@@ -113,7 +128,6 @@ fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     userLocation: LatLng,
-    landmarks: SnapshotStateList<Landmark>
 ) {
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
@@ -122,8 +136,6 @@ fun GoogleMapView(
     val mapProperties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
-
-    Log.v(null, "# of LANDMARKs fetched from Atlas: ${landmarks.size}")
 
     GoogleMap(
         modifier = modifier,
@@ -139,14 +151,18 @@ fun GoogleMapView(
             variant = "large"
         )
 
-        for (landmark in landmarks) {
-            MapMarker(
-                position = LatLng(landmark.latitude, landmark.longitude),
-                title = landmark.name,
-                context = LocalContext.current,
+        Landmarks(
+            landmarksContent = { landmarks ->
+                for (landmark in landmarks) {
+                    MapMarker(
+                        position = LatLng(landmark.latitude, landmark.longitude),
+                        title = landmark.name,
+                        context = LocalContext.current,
 //                iconResourceId = if (hasVisited) R.drawable.ic_unvisited_landmark else R.drawable.ic_visited_landmark,
-                iconResourceId = R.drawable.ic_unvisited_landmark
-            )
-        }
+                        iconResourceId = R.drawable.ic_unvisited_landmark
+                    )
+                }
+            }
+        )
     }
 }

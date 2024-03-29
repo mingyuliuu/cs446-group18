@@ -9,25 +9,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
-import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.ListScreen
 import ca.uwaterloo.treklogue.ui.screens.MapScreen
-import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
+import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
 fun Router(
     userViewModel: UserViewModel,
-    mapViewModel: MapViewModel,
-    journalEntryViewModel: JournalEntryViewModel
+    journalEntryViewModel: JournalEntryViewModel,
+    mapViewModel: MapViewModel = hiltViewModel(),
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -62,7 +63,6 @@ fun Router(
             composable(route = Screens.Map.screen) {
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel,
                 )
             }
 

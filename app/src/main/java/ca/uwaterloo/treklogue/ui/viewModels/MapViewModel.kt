@@ -1,129 +1,73 @@
 package ca.uwaterloo.treklogue.ui.viewModels
 
-import android.os.Bundle
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.savedstate.SavedStateRegistryOwner
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
-import ca.uwaterloo.treklogue.data.model.Landmark
-import ca.uwaterloo.treklogue.data.repository.LandmarkRealmSyncRepository
+import ca.uwaterloo.treklogue.data.model.Response
+import ca.uwaterloo.treklogue.data.repository.AddLandmarkResponse
+import ca.uwaterloo.treklogue.data.repository.DeleteLandmarkResponse
+import ca.uwaterloo.treklogue.data.repository.LandmarkRepository
+import ca.uwaterloo.treklogue.data.repository.LandmarksResponse
 import com.google.android.gms.maps.model.LatLng
-import io.realm.kotlin.notifications.InitialResults
-import io.realm.kotlin.notifications.ResultsChange
-import io.realm.kotlin.notifications.UpdatedResults
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-
-/**
- * Types of UX events triggered by user actions.
- */
-sealed class MapEvent {
-
-    class Error(val message: String, val throwable: Throwable) : MapEvent()
-
-}
+import javax.inject.Inject
 
 /**
  * UI representation of a screen state.
  */
 data class MapState(
-    val landmarks: SnapshotStateList<Landmark>,
-    val mockLandmarks: SnapshotStateList<MockLandmark>,
     val userLocation: LatLng = LatLng(
         43.4822734, -80.5879188
     ) // Waterloo
 ) {
     companion object {
         val initialState =
-            MapState(landmarks = mutableStateListOf(), mockLandmarks = mutableStateListOf(
-                MockLandmark("Waterloo DC Library", 43.472403, -80.541979, true),
-                MockLandmark("Lazaridis School of Business and Economics", 43.475046, -80.529481, false),
-                MockLandmark("Toronto Union Station", 43.644601, -79.380525, true),
-                MockLandmark("Stratford Shakespearean Garden", 43.371913, -80.985196, false),
-                MockLandmark("Central Park in Manhattan", 40.78384, -73.965553, true),
-            ))
+            MapState()
     }
 }
 
-class MapViewModel(
-    private val landmarkRepository: LandmarkRealmSyncRepository
+@HiltViewModel
+class MapViewModel @Inject constructor(
+    private val landmarkRepository: LandmarkRepository
 ) : ViewModel() {
 
     private val _state: MutableState<MapState> = mutableStateOf(MapState.initialState)
     val state: State<MapState>
         get() = _state
 
-    private val _event: MutableSharedFlow<MapEvent> = MutableSharedFlow()
-    val event: Flow<MapEvent>
-        get() = _event
+    var landmarksResponse by mutableStateOf<LandmarksResponse>(Response.Loading)
+        private set
+    var addBookResponse by mutableStateOf<AddLandmarkResponse>(Response.Success(false))
+        private set
+    var deleteBookResponse by mutableStateOf<DeleteLandmarkResponse>(Response.Success(false))
+        private set
 
     init {
-        viewModelScope.launch {
-            landmarkRepository.getLandmarkList().collect { event: ResultsChange<Landmark> ->
-                when (event) {
-                    is InitialResults -> {
-                        _state.value.landmarks.clear()
-                        _state.value.landmarks.addAll(event.list)
-                    }
-
-                    is UpdatedResults -> {
-                        if (event.deletions.isNotEmpty() && _state.value.landmarks.isNotEmpty()) {
-                            event.deletions.reversed().forEach {
-                                _state.value.landmarks.removeAt(it)
-                            }
-                        }
-                        if (event.insertions.isNotEmpty()) {
-                            event.insertions.forEach {
-                                _state.value.landmarks.add(it, event.list[it])
-                            }
-                        }
-                        if (event.changes.isNotEmpty()) {
-                            event.changes.forEach {
-                                _state.value.landmarks.removeAt(it)
-                                _state.value.landmarks.add(it, event.list[it])
-                            }
-                        }
-                    }
-
-                    else -> Unit // No-op
-                }
-            }
-        }
+        getLandmarks()
     }
 
     fun setUserLocation(location: LatLng) {
         _state.value = state.value.copy(userLocation = location)
     }
 
-    fun error(errorEvent: MapEvent.Error) {
-        viewModelScope.launch {
-            _event.emit(errorEvent)
+    private fun getLandmarks() = viewModelScope.launch {
+        landmarkRepository.getLandmarkList().collect { response ->
+            landmarksResponse = response
         }
     }
 
-    companion object {
-        fun factory(
-            repository: LandmarkRealmSyncRepository,
-            owner: SavedStateRegistryOwner,
-            defaultArgs: Bundle? = null
-        ): AbstractSavedStateViewModelFactory {
-            return object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-                override fun <T : ViewModel> create(
-                    key: String,
-                    modelClass: Class<T>,
-                    handle: SavedStateHandle
-                ): T {
-                    return MapViewModel(repository) as T
-                }
-            }
-        }
+    fun addLandmark(name: String, latitude: Double, longitude: Double) = viewModelScope.launch {
+        addBookResponse = Response.Loading
+        addBookResponse = landmarkRepository.addLandmark(name, latitude, longitude)
+    }
+
+    fun deleteLandmark(id: String) = viewModelScope.launch {
+        deleteBookResponse = Response.Loading
+        deleteBookResponse = landmarkRepository.deleteLandmark(id)
     }
 }

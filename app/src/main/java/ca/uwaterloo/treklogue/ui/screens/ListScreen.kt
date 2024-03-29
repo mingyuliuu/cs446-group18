@@ -42,22 +42,26 @@ fun ListScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            mapViewModel.state.value.mockLandmarks.sortedBy {
-                distance(mapViewModel.state.value.userLocation, it)
-            }.forEachIndexed { idx, landmark ->
-                val dist = distance(mapViewModel.state.value.userLocation, landmark)
+            Landmarks(
+                landmarksContent = { landmarks ->
+                    landmarks.sortedBy {
+                        distance(mapViewModel.state.value.userLocation, it)
+                    }.forEachIndexed { idx, landmark ->
+                        val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                LandmarkListItem(
-                    Modifier.padding(
-                        top = if (idx == 0) 4.dp else 0.dp,
-                        bottom = if (idx == mapViewModel.state.value.landmarks.size - 1) 12.dp else 0.dp
-                    ),
-                    landmark,
-                    dist,
-                    journalEntryViewModel,
-                    onAddJournal
-                )
-            }
+                        LandmarkListItem(
+                            Modifier.padding(
+                                top = if (idx == 0) 4.dp else 0.dp,
+                                bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
+                            ),
+                            landmark,
+                            dist,
+                            journalEntryViewModel,
+                            onAddJournal
+                        )
+                    }
+                }
+            )
         }
     }
 }
