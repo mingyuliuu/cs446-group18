@@ -60,7 +60,6 @@ interface JournalEntryRepository {
 class JournalEntryFirebaseRepository @Inject constructor(
     @Named("users") private val usersRef: CollectionReference,
     private val authRepository: AuthRepository,
-    @Named("landmarks") private val landmarksRef: CollectionReference
 ) : JournalEntryRepository {
 
     override fun getJournalEntryList() = callbackFlow {
@@ -92,54 +91,67 @@ class JournalEntryFirebaseRepository @Inject constructor(
             description
         )
 
-        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val users = it.result.toObjects(User::class.java)
-                if (users[0].id != null) {
-                    usersRef.document(users[0].id!!).update("journalEntries", FieldValue.arrayUnion(newJournalEntry))
-                }
+        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val users = it.result.toObjects(User::class.java)
+                    if (users[0].id != null) {
+                        usersRef.document(users[0].id!!)
+                            .update("journalEntries", FieldValue.arrayUnion(newJournalEntry))
+                    }
 
+                }
             }
-        }
 
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)
     }
 
-    // TODO: Implement this
     override suspend fun updateJournalEntry(
         landmarkName: String,
         photos: MutableList<String>,
         description: String
     ) = try {
-//        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get().addOnCompleteListener {
-//            if (it.isSuccessful) {
-//                val users = it.result.toObjects(User::class.java)
-//                if (users[0].id != null) {
-//                    usersRef.document(users[0].id!!).update("journalEntries", FieldValue.arrayUnion(newJournalEntry))
-//                }
-//
-//            }
-//        }
-//        usersRef.document(authRepository.currentUser?.uid!!).update(
-//            "journalEntries", FieldValue.arrayUnion(
-//                JournalEntry(
-//                    landmarkId = landmarkId,
-//                    name = landmarkName,
-//                    visitedAt = visitedAt,
-//                    photos = photos,
-//                    description = description
-//                )
-//            )
-//        )
+        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val users = it.result.toObjects(User::class.java)
+                    if (users[0].id != null) {
+                        val journalEntries = users[0].journalEntries
+                        val newJournalEntries = journalEntries.map { entry ->
+                            if (entry.name != landmarkName) entry
+                            else JournalEntry(
+                                entry.name,
+                                entry.visitedAt,
+                                photos,
+                                description
+                            )
+                        }
+                        usersRef.document(users[0].id!!).update("journalEntries", newJournalEntries)
+                    }
+                }
+
+            }
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)
     }
 
-    // TODO: Implement this
     override suspend fun deleteJournalEntry(landmarkName: String) = try {
+        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val users = it.result.toObjects(User::class.java)
+                    if (users[0].id != null) {
+                        val journalEntries = users[0].journalEntries
+                        val newJournalEntries = journalEntries.filter { entry ->
+                            entry.name != landmarkName
+                        }
+                        usersRef.document(users[0].id!!).update("journalEntries", newJournalEntries)
+                    }
+                }
+            }
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)

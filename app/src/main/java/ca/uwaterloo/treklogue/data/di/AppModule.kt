@@ -50,8 +50,7 @@ object AppModule {
     fun provideJournalEntryRepository(
         @Named("users") usersRef: CollectionReference,
         authRepository: AuthRepository,
-        @Named("landmarks") landmarksRef: CollectionReference
     ): JournalEntryRepository =
-        JournalEntryFirebaseRepository(usersRef, authRepository, landmarksRef)
+        JournalEntryFirebaseRepository(usersRef, authRepository)
 
 }
