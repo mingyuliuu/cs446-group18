@@ -1,6 +1,6 @@
 package ca.uwaterloo.treklogue.ui.composables
 
-import androidx.compose.foundation.Image
+import android.net.Uri
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
@@ -30,6 +29,7 @@ import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import coil.compose.AsyncImage
 
 @Composable
 fun JournalEntryListItem(
@@ -98,8 +98,8 @@ fun JournalEntryListItem(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     journalEntry.photos.forEach {
-                        Image(
-                            painter = painterResource(id = it),
+                        AsyncImage(
+                            model = Uri.parse(it),
                             contentDescription = null,
                             modifier = Modifier
                                 .height(150.dp)

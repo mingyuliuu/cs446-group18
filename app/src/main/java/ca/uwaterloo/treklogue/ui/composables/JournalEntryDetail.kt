@@ -155,12 +155,15 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
         )
 
         var selectedImageUri by remember {
-            mutableStateOf<List<Uri?>>(emptyList())
+            mutableStateOf<List<Uri?>>(editedJournalEntry.value.photos.map { Uri.parse(it) })
         }
 
         val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickVisualMedia(),
-            onResult = { uri -> selectedImageUri = selectedImageUri + uri }
+            onResult = { uri ->
+                selectedImageUri = selectedImageUri + uri
+                editedJournalEntry.value.photos.add(uri.toString())
+            }
         )
 
         FormSectionHeader(text = R.string.personal_photos)
@@ -175,17 +178,6 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
                     .fillMaxWidth()
                     .padding(8.dp),
             ) {
-                editedJournalEntry.value.photos.forEach {
-                    Image(
-                        painter = painterResource(id = it),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .height(150.dp),
-                        contentScale = ContentScale.Fit,
-                    )
-                }
-
-                // TODO: Actually add the images to journalEntry
                 selectedImageUri.forEach { uri ->
                     if (uri != null) {
                         Box(modifier = Modifier.height(150.dp)) {

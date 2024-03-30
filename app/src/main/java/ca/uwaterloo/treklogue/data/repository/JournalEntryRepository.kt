@@ -36,7 +36,7 @@ interface JournalEntryRepository {
     suspend fun addJournalEntry(
         landmarkName: String,
         visitedAt: String,
-        photos: MutableList<Int>,
+        photos: MutableList<String>,
         description: String
     ): AddJournalEntryResponse
 
@@ -45,7 +45,7 @@ interface JournalEntryRepository {
      */
     suspend fun updateJournalEntry(
         landmarkName: String,
-        photos: MutableList<Int>,
+        photos: MutableList<String>,
         description: String
     ): UpdateJournalEntryResponse
 
@@ -85,7 +85,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
     override suspend fun addJournalEntry(
         landmarkName: String,
         visitedAt: String,
-        photos: MutableList<Int>,
+        photos: MutableList<String>,
         description: String
     ) = try {
         val newJournalEntry = JournalEntry(
@@ -110,10 +110,10 @@ class JournalEntryFirebaseRepository @Inject constructor(
         Response.Failure(e)
     }
 
-    // TODO
+    // TODO: Implement this
     override suspend fun updateJournalEntry(
         landmarkName: String,
-        photos: MutableList<Int>,
+        photos: MutableList<String>,
         description: String
     ) = try {
 //        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get().addOnCompleteListener {
@@ -141,7 +141,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
         Response.Failure(e)
     }
 
-    // TODO
+    // TODO: Implement this
     override suspend fun deleteJournalEntry(landmarkName: String) = try {
         Response.Success(true)
     } catch (e: Exception) {

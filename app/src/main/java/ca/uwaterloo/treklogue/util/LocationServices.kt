@@ -2,7 +2,6 @@ package ca.uwaterloo.treklogue.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.data.model.Landmark
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
