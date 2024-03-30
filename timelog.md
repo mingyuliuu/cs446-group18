@@ -36,3 +36,4 @@
 | 2024/03/06 | 1.5    | 0     | 0       | 0       | 0     | 0       | Draw custom map markers, implement custom MapMarker composable                 |
 | 2024/03/22 | 1      | 1     | 0       | 1       | 0     | 0       | Architecture document (D4)                                                     |
 | 2024/03/29 | 0      | 0     | 0       | 3.5     | 0     | 0       | Coarse location handling, loading screen, settings location toggle             |
+| 2024/03/30 | 15     | 0     | 0       | 0       | 0     | 0       | Firebase migration                                                             |
