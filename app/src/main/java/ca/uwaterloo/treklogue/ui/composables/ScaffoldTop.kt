@@ -1,6 +1,5 @@
 package ca.uwaterloo.treklogue.ui.composables
 
-import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,10 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.app
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * Composable that displays the topBar
@@ -55,7 +50,7 @@ fun ScaffoldTop(
                     colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_logout_24_white),
+                        painter = painterResource(id = R.drawable.ic_logout),
                         contentDescription = null
                     )
                 }

@@ -36,8 +36,8 @@ class LoginActivity : ComponentActivity() {
         super.onStart()
 
         // Fast-track main screen if user is logged in
-        Log.v(null, "CURRENT USER: ${app.currentUser}")
-        if (app.currentUser != null) {
+        Log.v(null, "CURRENT USER: ${loginViewModel.currentUser}")
+        if (loginViewModel.currentUser != null) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
             return
@@ -70,9 +70,9 @@ class LoginActivity : ComponentActivity() {
 
     private fun LoginEvent.process() {
         when (severity) {
-            EventSeverity.INFO -> Log.i(TAG(), message)
+            EventSeverity.INFO -> Log.i(null, message)
             EventSeverity.ERROR -> {
-                Log.e(TAG(), message)
+                Log.e(null, message)
                 Toast.makeText(this@LoginActivity, message, Toast.LENGTH_SHORT)
                     .show()
             }

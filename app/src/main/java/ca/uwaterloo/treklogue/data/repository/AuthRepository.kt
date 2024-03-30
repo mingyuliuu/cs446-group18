@@ -1,13 +1,11 @@
 package ca.uwaterloo.treklogue.data.repository
 
-import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.CollectionReference
-import io.realm.kotlin.mongodb.Credentials
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Named
@@ -65,8 +63,7 @@ class AuthFirebaseRepository @Inject constructor(
     }
 
     override suspend fun login(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password)
-        app.login(Credentials.emailPassword(email, password))
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
     override fun logout() {

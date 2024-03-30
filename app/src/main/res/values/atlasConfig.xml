@@ -1,9 +1,0 @@
-<resources>
-    <string name="realm_app_id">treklogue-chtmq</string>
-    <string name="realm_app_url">https://realm.mongodb.com/groups/65c952d2cde54b7266a52479/apps/65cc485ba1e1bb74a0e8ef5c</string>
-    <string name="realm_base_url">https://realm.mongodb.com</string>
-    <string name="realm_client_api_base_url">https://realm.mongodb.com</string>
-    <string name="realm_data_api_base_url">https://data.mongodb-api.com</string>
-    <string name="realm_data_explorer_link">https://cloud.mongodb.com/links/65c952d2cde54b7266a52479/explorer/AtlasCluster/database/collection/find</string>
-    <string name="realm_data_source_name">mongodb-atlas</string>
-</resources>

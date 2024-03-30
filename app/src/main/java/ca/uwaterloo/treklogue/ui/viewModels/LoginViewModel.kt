@@ -7,9 +7,6 @@ import androidx.lifecycle.ViewModel
 import ca.uwaterloo.treklogue.data.repository.AuthRepository
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.realm.kotlin.mongodb.exceptions.ConnectionException
-import io.realm.kotlin.mongodb.exceptions.InvalidCredentialsException
-import io.realm.kotlin.mongodb.exceptions.UserAlreadyExistsException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -101,11 +98,7 @@ class LoginViewModel @Inject constructor(
                 login(email, password)
             }.onFailure { ex: Throwable ->
                 _state.value = state.value.copy(enabled = true)
-                val message = when (ex) {
-                    is UserAlreadyExistsException -> "Failed to register. User already exists."
-                    else -> "Failed to register: ${ex.message}"
-                }
-                _event.emit(LoginEvent.ShowMessage(EventSeverity.ERROR, message))
+                _event.emit(LoginEvent.ShowMessage(EventSeverity.ERROR, "Failed to register: $ex"))
             }
         }
     }
@@ -122,18 +115,9 @@ class LoginViewModel @Inject constructor(
                 _event.emit(LoginEvent.GoToMap(EventSeverity.INFO, "User logged in successfully."))
             }.onFailure { ex: Throwable ->
                 _state.value = state.value.copy(enabled = true)
-                val message = when (ex) {
-                    is InvalidCredentialsException -> "Invalid username or password. Check your credentials and try again."
-                    is ConnectionException -> "Could not connect to the authentication provider. Check your internet connection and try again."
-                    else -> "Error: $ex"
-                }
-                _event.emit(LoginEvent.ShowMessage(EventSeverity.ERROR, message))
+                _event.emit(LoginEvent.ShowMessage(EventSeverity.ERROR, "Failed to login: $ex"))
             }
         }
-    }
-
-    fun logout() {
-        repository.logout()
     }
 
 }

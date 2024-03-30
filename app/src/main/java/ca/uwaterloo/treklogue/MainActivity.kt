@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val userViewModel: UserViewModel by viewModels()
+    private val userViewModel by viewModels<UserViewModel>()
     private val mapViewModel by viewModels<MapViewModel>()
     private val journalEntryViewModel by viewModels<JournalEntryViewModel>()
 
@@ -39,10 +39,10 @@ class MainActivity : ComponentActivity() {
                         }
 
                         is UserEvent.Info ->
-                            Log.e(TAG(), userEvent.message)
+                            Log.v(null, userEvent.message)
 
                         is UserEvent.Error ->
-                            Log.e(TAG(), "${userEvent.message}: ${userEvent.throwable.message}")
+                            Log.e(null, "${userEvent.message}: ${userEvent.throwable.message}")
                     }
                 }
         }

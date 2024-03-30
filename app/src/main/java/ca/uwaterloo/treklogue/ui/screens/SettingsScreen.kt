@@ -1,5 +1,6 @@
 package ca.uwaterloo.treklogue.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.app
 import ca.uwaterloo.treklogue.ui.viewModels.UserEvent
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
@@ -69,13 +69,13 @@ fun SettingsScreen(
                 listOf {
                     SettingsActionButton(
                         text = R.string.log_out,
-                        icon = R.drawable.ic_baseline_logout_24_white,
+                        icon = R.drawable.ic_logout,
                     ) {
                         CoroutineScope(Dispatchers.IO).launch {
                             runCatching {
-                                app.currentUser?.logOut()
-                            }.onSuccess {
                                 userViewModel.logOut()
+                            }.onSuccess {
+                                Log.v(null, "Logged out successfully.")
                             }.onFailure {
                                 userViewModel.error(UserEvent.Error("Log out failed", it))
                             }

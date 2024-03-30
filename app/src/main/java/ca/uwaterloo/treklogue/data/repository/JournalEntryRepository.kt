@@ -1,8 +1,6 @@
 package ca.uwaterloo.treklogue.data.repository
 
-import android.util.Log
 import ca.uwaterloo.treklogue.data.model.JournalEntry
-import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.model.User
 import com.google.firebase.firestore.CollectionReference
@@ -31,7 +29,7 @@ interface JournalEntryRepository {
     fun getJournalEntryList(): Flow<JournalEntriesResponse>
 
     /**
-     * Adds a journal entry that belongs to the current user using the specified [landmark], [visitedAt] date, list of [photos], and [description].
+     * Adds a journal entry that belongs to the current user using the specified [landmarkName], [visitedAt] date, list of [photos], and [description].
      */
     suspend fun addJournalEntry(
         landmarkName: String,
@@ -66,7 +64,6 @@ class JournalEntryFirebaseRepository @Inject constructor(
 ) : JournalEntryRepository {
 
     override fun getJournalEntryList() = callbackFlow {
-        Log.v(null, "USER: ${authRepository.currentUser?.email}")
         val snapshotListener = usersRef.whereEqualTo("email", authRepository.currentUser?.email)
             .addSnapshotListener { snapshot, e ->
                 val journalEntriesResponse = if (snapshot != null) {

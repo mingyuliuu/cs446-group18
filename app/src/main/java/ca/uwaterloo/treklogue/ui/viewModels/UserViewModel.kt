@@ -5,9 +5,12 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ca.uwaterloo.treklogue.data.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * Types of UX events triggered by user actions.
@@ -31,7 +34,10 @@ data class UserState(
     }
 }
 
-class UserViewModel : ViewModel() {
+@HiltViewModel
+class UserViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
     private val _state: MutableState<UserState> = mutableStateOf(UserState.initialState)
     val state: State<UserState>
@@ -59,6 +65,7 @@ class UserViewModel : ViewModel() {
     }
 
     fun logOut() {
+        repository.logout()
         viewModelScope.launch {
             _event.emit(UserEvent.LogOut)
         }

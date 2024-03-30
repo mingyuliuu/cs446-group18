@@ -38,7 +38,4 @@
     <string name="rating_3">Love it!</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
-
-    <!-- Strings related to badges -->
-    <string name="my_badges">My Badges</string>
 </resources>

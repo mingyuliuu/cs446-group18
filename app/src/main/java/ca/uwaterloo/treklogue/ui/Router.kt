@@ -20,6 +20,7 @@ import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
 import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
