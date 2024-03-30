@@ -41,4 +41,6 @@
 
     <!-- Strings related to badges -->
     <string name="my_badges">My Badges</string>
+    <string name="settings_toggle_location_revoke">Allow Treklogue to access my location (restart to take effect)
+    </string>
 </resources>
