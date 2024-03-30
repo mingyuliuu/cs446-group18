@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 
 @Composable
 fun SettingsToggle(
+    enabled: Boolean = true,
     @StringRes name: Int,
     state: Boolean,
     onClick: (Boolean) -> Unit
@@ -28,6 +29,7 @@ fun SettingsToggle(
             style = MaterialTheme.typography.bodyMedium,
         )
         Switch(
+            enabled = enabled,
             checked = state,
             onCheckedChange = onClick
         )

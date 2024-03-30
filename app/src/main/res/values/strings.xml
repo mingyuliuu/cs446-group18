@@ -38,4 +38,6 @@
     <string name="rating_3">Love it!</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+
+    <string name="settings_toggle_location_revoke">Allow Treklogue to access my location (restart to take effect)</string>
 </resources>
