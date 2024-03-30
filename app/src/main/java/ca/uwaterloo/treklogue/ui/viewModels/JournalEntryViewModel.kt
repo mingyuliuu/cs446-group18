@@ -106,7 +106,7 @@ class JournalEntryViewModel @Inject constructor(
 
     // TODO: Implement the following three
     fun addJournalEntry(
-        landmarkId: String,
+        landmarkName: String,
         photos: MutableList<Int>,
         description: String
     ) = viewModelScope.launch {
@@ -114,7 +114,7 @@ class JournalEntryViewModel @Inject constructor(
 
         val dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         addJournalEntryResponse = journalEntryRepository.addJournalEntry(
-            landmarkId,
+            landmarkName,
             dateString,
             photos,
             description
@@ -122,13 +122,13 @@ class JournalEntryViewModel @Inject constructor(
     }
 
     fun updateJournalEntry(
-        journalEntryId: String,
+        landmarkName: String,
         photos: MutableList<Int>,
         description: String
     ) = viewModelScope.launch {
         addJournalEntryResponse = Response.Loading
         addJournalEntryResponse = journalEntryRepository.updateJournalEntry(
-            journalEntryId,
+            landmarkName,
             photos,
             description,
         )

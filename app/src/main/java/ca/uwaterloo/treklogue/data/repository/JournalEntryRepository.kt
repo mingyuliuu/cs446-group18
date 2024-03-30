@@ -34,7 +34,7 @@ interface JournalEntryRepository {
      * Adds a journal entry that belongs to the current user using the specified [landmark], [visitedAt] date, list of [photos], and [description].
      */
     suspend fun addJournalEntry(
-        landmarkId: String,
+        landmarkName: String,
         visitedAt: String,
         photos: MutableList<Int>,
         description: String
@@ -44,7 +44,7 @@ interface JournalEntryRepository {
      * Updates a journal entry using new list of [photos] and [description].
      */
     suspend fun updateJournalEntry(
-        journalEntryId: String,
+        landmarkName: String,
         photos: MutableList<Int>,
         description: String
     ): UpdateJournalEntryResponse
@@ -52,7 +52,7 @@ interface JournalEntryRepository {
     /**
      * Deletes a given journal entry.
      */
-    suspend fun deleteJournalEntry(journalEntryId: String): DeleteJournalEntryResponse
+    suspend fun deleteJournalEntry(landmarkName: String): DeleteJournalEntryResponse
 }
 
 /**
@@ -83,31 +83,28 @@ class JournalEntryFirebaseRepository @Inject constructor(
     }
 
     override suspend fun addJournalEntry(
-        landmarkId: String,
+        landmarkName: String,
         visitedAt: String,
         photos: MutableList<Int>,
         description: String
     ) = try {
-        val landmarkRef = landmarksRef.document(landmarkId)
-        var landmarkName = "Landmark"
-        landmarkRef.get().addOnCompleteListener {
+        val newJournalEntry = JournalEntry(
+            landmarkName,
+            visitedAt,
+            photos,
+            description
+        )
+
+        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get().addOnCompleteListener {
             if (it.isSuccessful) {
-                landmarkName = it.result.toObject(Landmark::class.java)!!.name
+                val users = it.result.toObjects(User::class.java)
+                if (users[0].id != null) {
+                    usersRef.document(users[0].id!!).update("journalEntries", FieldValue.arrayUnion(newJournalEntry))
+                }
+
             }
         }
 
-        // TODO: Fix this - using uid is wrong
-        usersRef.document(authRepository.currentUser?.uid!!).update(
-            "journalEntries", FieldValue.arrayUnion(
-                JournalEntry(
-                    landmarkId = landmarkId,
-                    name = landmarkName,
-                    visitedAt = visitedAt,
-                    photos = photos,
-                    description = description
-                )
-            )
-        )
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)
@@ -115,17 +112,37 @@ class JournalEntryFirebaseRepository @Inject constructor(
 
     // TODO
     override suspend fun updateJournalEntry(
-        journalEntryId: String,
+        landmarkName: String,
         photos: MutableList<Int>,
         description: String
     ) = try {
+//        usersRef.whereEqualTo("email", authRepository.currentUser?.email).get().addOnCompleteListener {
+//            if (it.isSuccessful) {
+//                val users = it.result.toObjects(User::class.java)
+//                if (users[0].id != null) {
+//                    usersRef.document(users[0].id!!).update("journalEntries", FieldValue.arrayUnion(newJournalEntry))
+//                }
+//
+//            }
+//        }
+//        usersRef.document(authRepository.currentUser?.uid!!).update(
+//            "journalEntries", FieldValue.arrayUnion(
+//                JournalEntry(
+//                    landmarkId = landmarkId,
+//                    name = landmarkName,
+//                    visitedAt = visitedAt,
+//                    photos = photos,
+//                    description = description
+//                )
+//            )
+//        )
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)
     }
 
     // TODO
-    override suspend fun deleteJournalEntry(journalEntryId: String) = try {
+    override suspend fun deleteJournalEntry(landmarkName: String) = try {
         Response.Success(true)
     } catch (e: Exception) {
         Response.Failure(e)

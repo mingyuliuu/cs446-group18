@@ -27,7 +27,7 @@ fun LandmarkListItem(
     modifier: Modifier,
     landmark: Landmark,
     distance: Double,
-    onAddJournal: (landmark: Landmark) -> Unit,
+    onAddJournal: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
     Card(
@@ -66,8 +66,8 @@ fun LandmarkListItem(
                         minHeight = 1.dp
                     ), // To override default button sizes by Material3
                 onClick = {
-//                    journalEntryViewModel.createJournalEntry(landmark)
-//                    onAddJournal(landmark)
+                    journalEntryViewModel.createJournalEntry(landmark)
+                    onAddJournal()
                 },
                 enabled = distance <= MIN_JOURNAL_DISTANCE
             ) {

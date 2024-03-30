@@ -27,7 +27,7 @@ import ca.uwaterloo.treklogue.util.distance
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
-    onAddJournal: (landmark: Landmark) -> Unit,
+    onAddJournal: () -> Unit,
     mapViewModel: MapViewModel,
     journalEntryViewModel: JournalEntryViewModel
 ) {

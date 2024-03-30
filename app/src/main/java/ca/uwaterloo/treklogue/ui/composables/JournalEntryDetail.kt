@@ -32,9 +32,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,9 +46,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.JournalEntry
+import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -62,18 +62,24 @@ fun JournalEntryDetail(
     journalEntryViewModel: JournalEntryViewModel
 ) {
     val journalEntry = journalEntryViewModel.state.collectAsState().value.selectedJournalEntry
+    val editedJournalEntry = remember { mutableStateOf(journalEntry) }
 
     Column(modifier) {
         // Top bar section
-        TopBar(onBackClicked)
+        TopBar(onBackClicked, !isEditing, editedJournalEntry, journalEntryViewModel)
 
         // Content section
-        ContentSection(isEditing, journalEntry)
+        ContentSection(editedJournalEntry)
     }
 }
 
 @Composable
-fun TopBar(onBackClicked: () -> Unit) {
+fun TopBar(
+    onBackClicked: () -> Unit,
+    isAddingNewJournalEntry: Boolean,
+    editedJournalEntry: MutableState<JournalEntry>,
+    journalEntryViewModel: JournalEntryViewModel
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -86,7 +92,22 @@ fun TopBar(onBackClicked: () -> Unit) {
             Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.save))
         }
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = {/* TODO: handle save */ }) {
+        Button(onClick = {
+            if (isAddingNewJournalEntry) {
+                journalEntryViewModel.addJournalEntry(
+                    editedJournalEntry.value.name,
+                    editedJournalEntry.value.photos,
+                    editedJournalEntry.value.description
+                )
+            } else {
+                journalEntryViewModel.updateJournalEntry(
+                    editedJournalEntry.value.name,
+                    editedJournalEntry.value.photos,
+                    editedJournalEntry.value.description
+                )
+            }
+            onBackClicked()
+        }) {
             Text(stringResource(R.string.save), style = MaterialTheme.typography.labelLarge)
         }
     }
@@ -94,7 +115,7 @@ fun TopBar(onBackClicked: () -> Unit) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun ContentSection(isEditing: Boolean, journalEntry: JournalEntry) {
+fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -103,30 +124,29 @@ fun ContentSection(isEditing: Boolean, journalEntry: JournalEntry) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         OutlinedTextField(
-            readOnly = isEditing,
-            enabled = !isEditing,
-            value = TextFieldValue(journalEntry.name),
+            readOnly = true,
+            enabled = false,
+            value = TextFieldValue(editedJournalEntry.value.name),
             onValueChange = {},
             label = { Text(stringResource(R.string.name_of_landmark)) },
             modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
-            readOnly = isEditing,
-            enabled = !isEditing,
-            value = TextFieldValue(journalEntry.visitedAt),
+            readOnly = true,
+            enabled = false,
+            value = TextFieldValue(editedJournalEntry.value.visitedAt),
             onValueChange = {},
             label = { Text(stringResource(R.string.date_of_visit)) },
             modifier = Modifier.fillMaxWidth()
         )
 
-        val text = remember { mutableStateOf(journalEntry.description) }
         OutlinedTextField(
             readOnly = false,
             enabled = true,
-            value = text.value,
+            value = editedJournalEntry.value.description,
             onValueChange = {
-                text.value = it
+                editedJournalEntry.value = editedJournalEntry.value.copy(description = it)
             },
             label = { Text(stringResource(R.string.personal_note)) },
             modifier = Modifier
@@ -155,7 +175,7 @@ fun ContentSection(isEditing: Boolean, journalEntry: JournalEntry) {
                     .fillMaxWidth()
                     .padding(8.dp),
             ) {
-                journalEntry.photos.forEach {
+                editedJournalEntry.value.photos.forEach {
                     Image(
                         painter = painterResource(id = it),
                         contentDescription = null,

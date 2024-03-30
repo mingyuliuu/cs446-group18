@@ -69,7 +69,7 @@ fun Router(
             composable(route = Screens.List.screen) {
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    onAddJournal = { _ ->
+                    onAddJournal = {
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
                     mapViewModel,
