@@ -4,19 +4,25 @@ import android.Manifest
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.composables.MapMarker
+import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -51,9 +57,11 @@ fun MapScreen(
 
     val context = LocalContext.current
 
-    // TODO: handle coarse location access as well
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
     val locationPermissionState = rememberPermissionState(locationPermission)
+
+    val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
+    val coarseLocationPermissionState = rememberPermissionState(coarseLocationPermission)
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -77,7 +85,7 @@ fun MapScreen(
     LaunchedEffect(Unit) {
         // Move this to a separate thread to prevent it from blocking the Main thread
         withContext(Dispatchers.IO) {
-            if (locationPermissionState.status.isGranted) {
+            if (locationPermissionState.status.isGranted || coarseLocationPermissionState.status.isGranted) {
                 // Permission already granted, update the location
                 getCurrentLocation(context, { lat, long ->
                     mapViewModel.setUserLocation(LatLng(lat, long))
@@ -99,12 +107,25 @@ fun MapScreen(
 
     Box(modifier) {
         GoogleMapView(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
             userLocation = mapViewModel.state.value.userLocation,
             landmarks = mapViewModel.state.value.landmarks,
-        )
+            )
+        // allowing user to use the app with default location is probably not a good idea
+        if (mapViewModel.state.value.userLocation == LatLng(
+                43.4822734, -80.5879188)) {
+            Box(modifier = Modifier.fillMaxSize().background(Gray100)) {
+                Row(modifier = Modifier.align(Alignment.Center), verticalAlignment = Alignment.CenterVertically) {
+                    Text(text =
+                    if (!locationPermissionState.status.isGranted && !coarseLocationPermissionState.status.isGranted)
+                        "Please allow location permissions..."
+                    else "Retrieving initial location...", style = MaterialTheme.typography.headlineLarge)
+                    Spacer(Modifier.width(16.dp))
+                    CircularProgressIndicator()
+                }
+            }
+        }
     }
 }
 
