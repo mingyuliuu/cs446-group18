@@ -191,6 +191,7 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
                             IconButton(
                                 onClick = {
                                     selectedImageUri = selectedImageUri.filter { it != uri }
+                                    editedJournalEntry.value.photos.remove(uri.toString())
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {
