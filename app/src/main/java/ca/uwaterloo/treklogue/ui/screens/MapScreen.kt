@@ -19,12 +19,12 @@ import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.repository.Landmarks
-import ca.uwaterloo.treklogue.data.model.Landmark
+import ca.uwaterloo.treklogue.data.repository.JournalEntries
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
 import ca.uwaterloo.treklogue.ui.composables.MapMarker
 import ca.uwaterloo.treklogue.ui.composables.ProgressBar
 import ca.uwaterloo.treklogue.ui.theme.Gray100
-import ca.uwaterloo.treklogue.ui.theme.*
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -49,7 +49,8 @@ import kotlinx.coroutines.withContext
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    journalModel: JournalEntryViewModel,
 ) {
     val defaultCameraPosition =
         CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
@@ -72,16 +73,19 @@ fun MapScreen(
             // getting rid of 'if' seems fine though, app will warn but no crash and behaviour seems okay
 //            if (isGranted) {
                 // Permission granted, update the location
-                getCurrentLocation(context, { lat, long ->
+                getCurrentLocation(context, { lat, long, updateCam ->
                     mapViewModel.setUserLocation(LatLng(lat, long))
 
-                    cameraPositionState.move(
-                        CameraUpdateFactory.newLatLng(
-                            LatLng(lat, long)
+                    if (updateCam) {
+                        cameraPositionState.move(
+                            CameraUpdateFactory.newLatLng(
+                                LatLng(lat, long)
+                            )
                         )
-                    )
+                        Log.v(null, "Updating cam...")
+                    }
+                    Log.v(null, "Updating location...")
                 })
-                Log.v(null, "Updating location...")
 //            }
         }
     )
@@ -91,14 +95,18 @@ fun MapScreen(
         withContext(Dispatchers.IO) {
             if (locationPermissionState.status.isGranted || coarseLocationPermissionState.status.isGranted) {
                 // Permission already granted, update the location
-                getCurrentLocation(context, { lat, long ->
+                getCurrentLocation(context, { lat, long, updateCam ->
                     mapViewModel.setUserLocation(LatLng(lat, long))
 
-                    cameraPositionState.move(
-                        CameraUpdateFactory.newLatLng(
-                            LatLng(lat, long)
+                    if (updateCam) {
+                        cameraPositionState.move(
+                            CameraUpdateFactory.newLatLng(
+                                LatLng(lat, long)
+                            )
                         )
-                    )
+                        Log.v(null, "Updating cam...")
+                    }
+                    Log.v(null, "Updating location...")
                 })
                 Log.v(null, "Permission already granted; current location fetched.")
             } else {
@@ -113,8 +121,8 @@ fun MapScreen(
         GoogleMapView(
             modifier = Modifier.fillMaxSize(),
             cameraPositionState = cameraPositionState,
-            userLocation = mapViewModel.state.value.userLocation,
-            mapViewModel
+            mapViewModel = mapViewModel,
+            journalModel = journalModel,
         )
 
         // allowing user to use the app with default location is probably not a good idea
@@ -137,12 +145,54 @@ fun Landmarks(
 }
 
 @Composable
+fun LandmarksJournals(
+    viewModel: MapViewModel,
+    journalModel: JournalEntryViewModel,
+    content: @Composable (landmarks: Landmarks, journalEntries: JournalEntries) -> Unit
+) {
+    val landmarksResponse = viewModel.landmarksResponse
+    var landmarksLoading = true
+    var landmarksContent : Landmarks? = null
+
+    val journalEntriesResponse = journalModel.journalEntryResponse
+    var journalsLoading = true
+    var journalsContent : JournalEntries? = null
+
+
+    when (landmarksResponse) {
+        is Response.Loading -> landmarksLoading = true
+        is Response.Success -> {
+            landmarksContent = landmarksResponse.data
+            landmarksLoading = false
+        }
+        is Response.Failure -> print(landmarksResponse.e)
+    }
+
+    when (journalEntriesResponse) {
+        is Response.Loading -> journalsLoading = true
+        is Response.Success -> {
+            journalsContent = journalEntriesResponse.data
+            journalsLoading = false
+        }
+        is Response.Failure -> print(journalEntriesResponse.e)
+    }
+
+    if (landmarksLoading && journalsLoading) {
+        ProgressBar()
+    } else {
+        content(landmarksContent!!, journalsContent!!)
+    }
+}
+
+@Composable
 fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
-    userLocation: LatLng,
-    mapViewModel: MapViewModel
+    mapViewModel: MapViewModel,
+    journalModel: JournalEntryViewModel
 ) {
+    val userLocation = mapViewModel.state.value.userLocation
+
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
     }
@@ -165,16 +215,18 @@ fun GoogleMapView(
                 variant = "large"
             )
 
-            Landmarks(
+            LandmarksJournals(
                 viewModel = mapViewModel,
-                landmarksContent = { landmarks ->
+                journalModel = journalModel,
+                content = { landmarks, journals ->
                     for (landmark in landmarks) {
+                        // TODO: this needs to be replaced with IDs
+                        val hasVisited = (journals.find { it.name == landmark.id } != null)
                         MapMarker(
                             position = LatLng(landmark.latitude, landmark.longitude),
                             title = landmark.name,
                             context = LocalContext.current,
-                            //                iconResourceId = if (hasVisited) R.drawable.ic_unvisited_landmark else R.drawable.ic_visited_landmark,
-                            iconResourceId = R.drawable.ic_unvisited_landmark
+                            iconResourceId = if (hasVisited)  R.drawable.ic_visited_landmark else R.drawable.ic_unvisited_landmark,
                         )
                     }
                 }

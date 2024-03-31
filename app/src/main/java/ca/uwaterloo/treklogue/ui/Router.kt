@@ -63,7 +63,8 @@ fun Router(
             composable(route = Screens.Map.screen) {
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel
+                    mapViewModel = mapViewModel,
+                    journalModel = journalEntryViewModel,
                 )
             }
 
