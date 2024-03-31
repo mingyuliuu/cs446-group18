@@ -8,7 +8,11 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,11 +20,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 
-const val MIN_JOURNAL_DISTANCE = 5
+const val MIN_JOURNAL_DISTANCE = 1 // Unit: km
 
 @Composable
 fun LandmarkListItem(
@@ -53,7 +57,8 @@ fun LandmarkListItem(
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(landmark.name, style = MaterialTheme.typography.titleMedium)
-                Text( String.format("%.1f", distance),
+                Text(
+                    String.format("%.1f", distance),
                     style = MaterialTheme.typography.labelSmall,
                     color = Gray600
                 )
