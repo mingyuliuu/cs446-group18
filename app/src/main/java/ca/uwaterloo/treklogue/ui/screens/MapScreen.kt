@@ -129,7 +129,7 @@ fun Landmarks(
     viewModel: MapViewModel,
     landmarksContent: @Composable (landmarks: Landmarks) -> Unit
 ) {
-    when(val landmarksResponse = viewModel.landmarksResponse) {
+    when (val landmarksResponse = viewModel.landmarksResponse) {
         is Response.Loading -> ProgressBar()
         is Response.Success -> landmarksContent(landmarksResponse.data)
         is Response.Failure -> print(landmarksResponse.e)
@@ -173,29 +173,30 @@ fun GoogleMapView(
                             position = LatLng(landmark.latitude, landmark.longitude),
                             title = landmark.name,
                             context = LocalContext.current,
-    //                iconResourceId = if (hasVisited) R.drawable.ic_unvisited_landmark else R.drawable.ic_visited_landmark,
+                            //                iconResourceId = if (hasVisited) R.drawable.ic_unvisited_landmark else R.drawable.ic_visited_landmark,
                             iconResourceId = R.drawable.ic_unvisited_landmark
                         )
                     }
                 }
             )
-            FloatingActionButton( modifier =
+        }
+        FloatingActionButton(
+            modifier =
             Modifier
                 .align(Alignment.BottomStart)
                 .padding(vertical = 40.dp, horizontal = 13.dp)
                 .width(50.dp),
-                onClick = {
-                    cameraPositionState.move(CameraUpdateFactory.newLatLng(
-                        LatLng(userLocation.latitude, userLocation.longitude)))
-                },
-                containerColor = Gray100
-            ) {
-                Icon(
-                    painterResource(id = R.drawable.ic_current_location),
-                    modifier = Modifier.width(30.dp),
-                    contentDescription = "Re-center map"
-                )
-            }
+            onClick = {
+                cameraPositionState.move(CameraUpdateFactory.newLatLng(
+                    LatLng(userLocation.latitude, userLocation.longitude)))
+            },
+            containerColor = Gray100
+        ) {
+            Icon(
+                painterResource(id = R.drawable.ic_current_location),
+                modifier = Modifier.width(30.dp),
+                contentDescription = "Re-center map"
+            )
         }
     }
 }
