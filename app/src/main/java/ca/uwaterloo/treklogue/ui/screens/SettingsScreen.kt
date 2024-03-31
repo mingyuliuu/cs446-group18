@@ -21,7 +21,6 @@ import ca.uwaterloo.treklogue.ui.composables.SettingsActionButton
 import ca.uwaterloo.treklogue.ui.composables.SettingsGroup
 import ca.uwaterloo.treklogue.ui.composables.SettingsToggle
 import ca.uwaterloo.treklogue.ui.theme.Gray100
-import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -38,6 +37,7 @@ import kotlinx.coroutines.launch
 fun SettingsScreen(
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel,
+    onLocationToggle: () -> Unit,
 ) {
     val viewModel by remember { mutableStateOf(userViewModel) }
     var toRevoke by remember { mutableStateOf(false) }
@@ -55,8 +55,8 @@ fun SettingsScreen(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
-                // Permission granted, update the location
-                getCurrentLocation(context, { _, _ -> })
+                // Permission granted, update the location by going to map screen
+                onLocationToggle()
             }
         }
     )
