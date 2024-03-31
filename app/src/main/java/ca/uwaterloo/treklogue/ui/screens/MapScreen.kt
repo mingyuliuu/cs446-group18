@@ -221,7 +221,7 @@ fun GoogleMapView(
                 content = { landmarks, journals ->
                     for (landmark in landmarks) {
                         // TODO: this needs to be replaced with IDs
-                        val hasVisited = (journals.find { it.name == landmark.id } != null)
+                        val hasVisited = (journals.find { it.name == landmark.name } != null)
                         MapMarker(
                             position = LatLng(landmark.latitude, landmark.longitude),
                             title = landmark.name,
