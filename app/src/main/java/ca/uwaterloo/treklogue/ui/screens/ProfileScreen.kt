@@ -3,8 +3,6 @@ package ca.uwaterloo.treklogue.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -13,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockJournalEntry
-import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
-import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
+import ca.uwaterloo.treklogue.data.model.JournalEntry
+import ca.uwaterloo.treklogue.data.model.Response
+import ca.uwaterloo.treklogue.data.repository.JournalEntries
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryListItem
+import ca.uwaterloo.treklogue.ui.composables.ProgressBar
+import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 
@@ -26,20 +26,14 @@ import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    userViewModel: UserViewModel,
-    journalEntryViewModel: JournalEntryViewModel,
-    showJournalDetail: (journalEntry: MockJournalEntry) -> Unit,
+    showJournalDetail: (journalEntry: JournalEntry) -> Unit,
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     Column(
         modifier = modifier.background(color = Gray100),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        TabSectionHeader(R.string.my_badges)
-
-        // TODO: Badges (horizontally scrollable list?)
-        Spacer(modifier = Modifier.height(30.dp))
-
         TabSectionHeader(R.string.my_journal_entries)
 
         Column(
@@ -48,15 +42,32 @@ fun ProfileScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            journalEntryViewModel.journalEntries.forEachIndexed { idx, journalEntry ->
-                JournalEntryListItem(
-                    Modifier.padding(
-                        top = if (idx == 0) 4.dp else 0.dp,
-                        bottom = if (idx == journalEntryViewModel.journalEntries.size - 1) 12.dp else 0.dp
-                    ),
-                    journalEntry, journalEntryViewModel, showJournalDetail
-                )
-            }
+            JournalEntries(
+                viewModel = journalEntryViewModel,
+                journalEntriesContent = { journalEntries ->
+                    journalEntries.forEachIndexed { idx, journalEntry ->
+                        JournalEntryListItem(
+                            Modifier.padding(
+                                top = if (idx == 0) 4.dp else 0.dp,
+                                bottom = if (idx == journalEntries.size - 1) 12.dp else 0.dp
+                            ),
+                            journalEntry, showJournalDetail, journalEntryViewModel
+                        )
+                    }
+                }
+            )
         }
+    }
+}
+
+@Composable
+fun JournalEntries(
+    viewModel: JournalEntryViewModel,
+    journalEntriesContent: @Composable (journalEntries: JournalEntries) -> Unit
+) {
+    when (val journalEntriesResponse = viewModel.journalEntryResponse) {
+        is Response.Loading -> ProgressBar()
+        is Response.Success -> journalEntriesContent(journalEntriesResponse.data)
+        is Response.Failure -> print(journalEntriesResponse.e)
     }
 }

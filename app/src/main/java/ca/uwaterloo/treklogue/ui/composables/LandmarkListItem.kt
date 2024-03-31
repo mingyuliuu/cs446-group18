@@ -15,20 +15,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
+import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
-const val MIN_JOURNAL_DISTANCE = 0.5
+const val MIN_JOURNAL_DISTANCE = 5
 
 @Composable
 fun LandmarkListItem(
     modifier: Modifier,
-    landmark: MockLandmark,
+    landmark: Landmark,
     distance: Double,
-    journalEntryViewModel: JournalEntryViewModel,
-    onAddJournal: (landmark: MockLandmark) -> Unit
+    onAddJournal: () -> Unit,
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
@@ -67,7 +67,7 @@ fun LandmarkListItem(
                     ), // To override default button sizes by Material3
                 onClick = {
                     journalEntryViewModel.createJournalEntry(landmark)
-                    onAddJournal(landmark)
+                    onAddJournal()
                 },
                 enabled = distance <= MIN_JOURNAL_DISTANCE
             ) {
