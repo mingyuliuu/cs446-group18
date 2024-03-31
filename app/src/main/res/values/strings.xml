@@ -40,8 +40,9 @@
     <!-- Strings related to settings -->
     <string name="settings_name">Settings</string>
     <string name="settings_group_profile">Profile</string>
-    <string name="settings_group_permissions">Permissions (note: can change in Apps > Treklogue > Permissions)</string>
+    <string name="settings_group_permissions">Permissions\n(note: can change in Apps > Treklogue > Permissions)</string>
     <string name="settings_toggle_notifications">Enable nearby landmark notifications</string>
     <string name="settings_toggle_location">Allow Treklogue to access my location</string>
-    <string name="settings_toggle_location_revoke">Allow Treklogue to access my location (restart to take effect)</string>
+    <string name="settings_toggle_location_revoke">Allow Treklogue to access my location\n(restart to take effect)</string>
+    <string name="feedback">Please share your thoughts with us</string>
 </resources>
