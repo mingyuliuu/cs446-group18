@@ -2,6 +2,7 @@ package ca.uwaterloo.treklogue.ui.screens
 
 import android.Manifest
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -201,15 +202,16 @@ fun GoogleMapView(
     journalModel: JournalEntryViewModel,
     onAddJournal: () -> Unit,
 ) {
+    val context = LocalContext.current
     val userLocation = mapViewModel.state.value.userLocation
 
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
     }
-
     val mapProperties by remember {
         mutableStateOf(MapProperties(mapType = MapType.NORMAL))
     }
+
     Box(modifier) {
         GoogleMap(
             modifier = modifier,
@@ -245,6 +247,8 @@ fun GoogleMapView(
                                 if (isActive) {
                                     journalModel.createJournalEntry(landmark)
                                     onAddJournal()
+                                } else {
+                                    Toast.makeText(context, R.string.landmark_distance_too_far, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )
