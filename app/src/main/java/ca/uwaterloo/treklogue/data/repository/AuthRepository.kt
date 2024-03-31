@@ -54,7 +54,8 @@ class AuthFirebaseRepository @Inject constructor(
         val id = usersRef.document().id
         val user = User(
             id = email, // use email as the primary id
-            email = email
+            email = email,
+            journalEntries = mutableListOf()
         )
         usersRef.document(id).set(user).await()
         Response.Success(true)
