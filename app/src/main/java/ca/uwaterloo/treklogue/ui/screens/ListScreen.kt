@@ -1,9 +1,7 @@
 package ca.uwaterloo.treklogue.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -12,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
+import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -64,4 +63,5 @@ fun ListScreen(
             )
         }
     }
+    LoadingPopup(mapViewModel = mapViewModel)
 }

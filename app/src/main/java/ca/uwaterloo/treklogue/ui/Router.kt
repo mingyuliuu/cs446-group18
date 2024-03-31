@@ -90,7 +90,12 @@ fun Router(
 
             composable(route = Screens.Settings.screen) {
                 SettingsScreen(
-                    Modifier, userViewModel
+                    Modifier,
+                    userViewModel,
+                    onLocationToggle = {
+                        selectedTab.value = Icons.Default.LocationOn
+                        navigationController.navigate(Screens.Map.screen)
+                    }
                 )
             }
 
