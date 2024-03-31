@@ -37,3 +37,5 @@
 | 2024/03/22 | 1      | 1     | 0       | 1       | 0     | 0       | Architecture document (D4)                                                     |
 | 2024/03/28 | 0      | 0     | 1       | 0       | 1     | 1       | Design pattern document (D5)                                                   |
 | 2024/03/29 | 0      | 0     | 0       | 3.5     | 0     | 0       | Coarse location handling, loading screen, settings location toggle             |
+| 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern disscussion (D5)                                                   |
+| 2024/03/31 | 0      | 0     | 0       | 0       | 6.5     | 0       | Setting UI, deleting journal entry                                                |
