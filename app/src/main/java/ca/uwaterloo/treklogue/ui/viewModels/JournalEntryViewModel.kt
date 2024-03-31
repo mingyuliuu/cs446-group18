@@ -67,7 +67,7 @@ class JournalEntryViewModel @Inject constructor(
 
     fun createJournalEntry(landmark: Landmark) {
         val dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        val newJournalEntry = JournalEntry(0, landmark.name, dateString)
+        val newJournalEntry = JournalEntry(0, landmark.id, landmark.name, dateString)
         _state.value = state.value.copy(selectedJournalEntry = newJournalEntry)
     }
 
@@ -78,6 +78,7 @@ class JournalEntryViewModel @Inject constructor(
     }
 
     fun addJournalEntry(
+        landmarkId: String,
         landmarkName: String,
         photos: MutableList<String>,
         description: String
@@ -86,6 +87,7 @@ class JournalEntryViewModel @Inject constructor(
 
         val dateString = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         addJournalEntryResponse = journalEntryRepository.addJournalEntry(
+            landmarkId,
             landmarkName,
             dateString,
             photos,
@@ -94,24 +96,24 @@ class JournalEntryViewModel @Inject constructor(
     }
 
     fun updateJournalEntry(
-        landmarkIndex: Int,
+        journalEntryIndex: Int,
         photos: MutableList<String>,
         description: String
     ) = viewModelScope.launch {
         addJournalEntryResponse = Response.Loading
         addJournalEntryResponse = journalEntryRepository.updateJournalEntry(
-            landmarkIndex,
+            journalEntryIndex,
             photos,
             description,
         )
     }
 
     fun deleteJournalEntry(
-        landmarkIndex: Int
+        journalEntryIndex: Int
     ) = viewModelScope.launch {
         addJournalEntryResponse = Response.Loading
         addJournalEntryResponse = journalEntryRepository.deleteJournalEntry(
-            landmarkIndex
+            journalEntryIndex
         )
     }
 

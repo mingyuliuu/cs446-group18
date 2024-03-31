@@ -92,6 +92,7 @@ fun TopBar(
         Button(onClick = {
             if (isAddingNewJournalEntry) {
                 journalEntryViewModel.addJournalEntry(
+                    editedJournalEntry.value.landmarkId,
                     editedJournalEntry.value.name,
                     editedJournalEntry.value.photos,
                     editedJournalEntry.value.description
