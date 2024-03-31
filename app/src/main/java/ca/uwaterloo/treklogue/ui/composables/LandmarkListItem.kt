@@ -58,7 +58,7 @@ fun LandmarkListItem(
             ) {
                 Text(landmark.name, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    String.format("%.1f", distance),
+                    String.format("%.1f KM", distance),
                     style = MaterialTheme.typography.labelSmall,
                     color = Gray600
                 )
