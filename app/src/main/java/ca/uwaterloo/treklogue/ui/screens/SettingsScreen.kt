@@ -53,6 +53,7 @@ import ca.uwaterloo.treklogue.ui.composables.SettingsGroup
 import ca.uwaterloo.treklogue.ui.composables.SettingsToggle
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray100
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -70,6 +71,7 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     userViewModel: UserViewModel,
     onLocationToggle: () -> Unit,
+    loginViewModel: LoginViewModel
 ) {
     val viewModel by remember { mutableStateOf(userViewModel) }
     var toRevoke by remember { mutableStateOf(false) }
@@ -166,13 +168,17 @@ fun SettingsScreen(
                 .padding(12.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                /* TODO: get current user email */
-                text = "user-email",
-                fontWeight = FontWeight.Bold,
-                fontSize = 36.sp,
-                textAlign = Center
-            )
+            loginViewModel.currentUser?.let {
+                it.email?.let { it1 ->
+                    Text(
+                        /* TODO: get current user email */
+                        text = it1,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 32.sp,
+                        textAlign = Center
+                    )
+                }
+            }
         }
         Box(
             modifier = Modifier

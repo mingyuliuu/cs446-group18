@@ -20,6 +20,7 @@ import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
 import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
@@ -27,7 +28,8 @@ import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 fun Router(
     userViewModel: UserViewModel,
     mapViewModel: MapViewModel,
-    journalEntryViewModel: JournalEntryViewModel
+    journalEntryViewModel: JournalEntryViewModel,
+    loginViewModel: LoginViewModel
 ) {
     val navigationController = rememberNavController()
     val selectedTab = remember {
@@ -98,7 +100,8 @@ fun Router(
                     onLocationToggle = {
                         selectedTab.value = Icons.Default.LocationOn
                         navigationController.navigate(Screens.Map.screen)
-                    }
+                    },
+                    loginViewModel
                 )
             }
 

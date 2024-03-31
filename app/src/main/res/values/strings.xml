@@ -36,6 +36,7 @@
     <string name="rating_3">Love it!</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
 
     <!-- Strings related to settings -->
     <string name="settings_name">Settings</string>
