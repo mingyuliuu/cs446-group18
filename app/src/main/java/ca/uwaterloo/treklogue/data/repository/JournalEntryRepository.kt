@@ -33,6 +33,7 @@ interface JournalEntryRepository {
      * Adds a journal entry that belongs to the current user using the specified [landmarkName], [visitedAt] date, list of [photos], and [description].
      */
     suspend fun addJournalEntry(
+        landmarkId: String,
         landmarkName: String,
         visitedAt: String,
         photos: MutableList<String>,
@@ -43,7 +44,7 @@ interface JournalEntryRepository {
      * Updates a journal entry using new list of [photos] and [description].
      */
     suspend fun updateJournalEntry(
-        landmarkIndex: Int,
+        journalEntryIndex: Int,
         photos: MutableList<String>,
         description: String
     ): UpdateJournalEntryResponse
@@ -51,7 +52,7 @@ interface JournalEntryRepository {
     /**
      * Deletes a given journal entry.
      */
-    suspend fun deleteJournalEntry(landmarkIndex: Int): DeleteJournalEntryResponse
+    suspend fun deleteJournalEntry(journalEntryIndex: Int): DeleteJournalEntryResponse
 }
 
 /**
@@ -80,6 +81,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
     }
 
     override suspend fun addJournalEntry(
+        landmarkId: String,
         landmarkName: String,
         visitedAt: String,
         photos: MutableList<String>,
@@ -102,6 +104,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
         if (userId != null && userEmail != null && journalEntries != null) {
             val newJournalEntry = JournalEntry(
                 if (journalEntries!!.size == 0) 0 else journalEntries!![journalEntries!!.size - 1].index + 1,
+                landmarkId,
                 landmarkName,
                 visitedAt,
                 photos,
@@ -127,7 +130,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
     }
 
     override suspend fun updateJournalEntry(
-        landmarkIndex: Int,
+        journalEntryIndex: Int,
         photos: MutableList<String>,
         description: String
     ) = try {
@@ -138,9 +141,10 @@ class JournalEntryFirebaseRepository @Inject constructor(
                     val userId = it.result.documents[0].id
                     val journalEntries = users[0].journalEntries
                     val newJournalEntries = journalEntries.map { entry ->
-                        if (entry.index != landmarkIndex) entry
+                        if (entry.index != journalEntryIndex) entry
                         else JournalEntry(
                             entry.index,
+                            entry.landmarkId,
                             entry.name,
                             entry.visitedAt,
                             photos,
@@ -156,7 +160,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
         Response.Failure(e)
     }
 
-    override suspend fun deleteJournalEntry(landmarkIndex: Int) = try {
+    override suspend fun deleteJournalEntry(journalEntryIndex: Int) = try {
         usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -164,7 +168,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
                     val userId = it.result.documents[0].id
                     val journalEntries = users[0].journalEntries
                     val newJournalEntries = journalEntries.filter { entry ->
-                        entry.index != landmarkIndex
+                        entry.index != journalEntryIndex
                     }
                     usersRef.document(userId).update("journalEntries", newJournalEntries)
                     Log.v(null, "Deleted journal entry successfully.")

@@ -227,8 +227,7 @@ fun GoogleMapView(
                 journalModel = journalModel,
                 content = { landmarks, journals ->
                     for (landmark in landmarks) {
-                        // TODO: this needs to be replaced with IDs
-                        val hasVisited = (journals.find { it.name == landmark.name } != null)
+                        val hasVisited = (journals.find { it.landmarkId == landmark.id } != null)
                         val isActive = distance(
                             mapViewModel.state.value.userLocation,
                             landmark
