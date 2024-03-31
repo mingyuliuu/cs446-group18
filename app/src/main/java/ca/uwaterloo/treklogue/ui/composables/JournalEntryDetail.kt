@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,13 +41,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.JournalEntry
-import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -101,7 +98,7 @@ fun TopBar(
                 )
             } else {
                 journalEntryViewModel.updateJournalEntry(
-                    editedJournalEntry.value.name,
+                    editedJournalEntry.value.index,
                     editedJournalEntry.value.photos,
                     editedJournalEntry.value.description
                 )
