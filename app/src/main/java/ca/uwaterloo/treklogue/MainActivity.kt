@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import ca.uwaterloo.treklogue.ui.Router
 import ca.uwaterloo.treklogue.ui.theme.MyApplicationTheme
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserEvent
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
@@ -25,6 +26,7 @@ class MainActivity : ComponentActivity() {
     private val userViewModel by viewModels<UserViewModel>()
     private val mapViewModel by viewModels<MapViewModel>()
     private val journalEntryViewModel by viewModels<JournalEntryViewModel>()
+    private val loginViewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +51,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MyApplicationTheme {
-                Router(userViewModel, mapViewModel, journalEntryViewModel)
+                Router(userViewModel, mapViewModel, journalEntryViewModel, loginViewModel)
             }
         }
     }
