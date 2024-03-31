@@ -4,8 +4,12 @@ import android.Manifest
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,14 +22,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Response
-import ca.uwaterloo.treklogue.data.repository.Landmarks
 import ca.uwaterloo.treklogue.data.repository.JournalEntries
+import ca.uwaterloo.treklogue.data.repository.Landmarks
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
+import ca.uwaterloo.treklogue.ui.composables.MIN_JOURNAL_DISTANCE
 import ca.uwaterloo.treklogue.ui.composables.MapMarker
 import ca.uwaterloo.treklogue.ui.composables.ProgressBar
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.util.distance
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -72,20 +78,20 @@ fun MapScreen(
             // there is a bug where isGranted is false when only coarse access is given, so location is not updated
             // getting rid of 'if' seems fine though, app will warn but no crash and behaviour seems okay
 //            if (isGranted) {
-                // Permission granted, update the location
-                getCurrentLocation(context, { lat, long, updateCam ->
-                    mapViewModel.setUserLocation(LatLng(lat, long))
+            // Permission granted, update the location
+            getCurrentLocation(context, { lat, long, updateCam ->
+                mapViewModel.setUserLocation(LatLng(lat, long))
 
-                    if (updateCam) {
-                        cameraPositionState.move(
-                            CameraUpdateFactory.newLatLng(
-                                LatLng(lat, long)
-                            )
+                if (updateCam) {
+                    cameraPositionState.move(
+                        CameraUpdateFactory.newLatLng(
+                            LatLng(lat, long)
                         )
-                        Log.v(null, "Updating cam...")
-                    }
-                    Log.v(null, "Updating location...")
-                })
+                    )
+                    Log.v(null, "Updating cam...")
+                }
+                Log.v(null, "Updating location...")
+            })
 //            }
         }
     )
@@ -152,12 +158,11 @@ fun LandmarksJournals(
 ) {
     val landmarksResponse = viewModel.landmarksResponse
     var landmarksLoading = true
-    var landmarksContent : Landmarks? = null
+    var landmarksContent: Landmarks? = null
 
     val journalEntriesResponse = journalModel.journalEntryResponse
     var journalsLoading = true
-    var journalsContent : JournalEntries? = null
-
+    var journalsContent: JournalEntries? = null
 
     when (landmarksResponse) {
         is Response.Loading -> landmarksLoading = true
@@ -165,6 +170,7 @@ fun LandmarksJournals(
             landmarksContent = landmarksResponse.data
             landmarksLoading = false
         }
+
         is Response.Failure -> print(landmarksResponse.e)
     }
 
@@ -174,6 +180,7 @@ fun LandmarksJournals(
             journalsContent = journalEntriesResponse.data
             journalsLoading = false
         }
+
         is Response.Failure -> print(journalEntriesResponse.e)
     }
 
@@ -222,11 +229,16 @@ fun GoogleMapView(
                     for (landmark in landmarks) {
                         // TODO: this needs to be replaced with IDs
                         val hasVisited = (journals.find { it.name == landmark.name } != null)
+                        val isActive = distance(
+                            mapViewModel.state.value.userLocation,
+                            landmark
+                        ) < MIN_JOURNAL_DISTANCE
+
                         MapMarker(
                             position = LatLng(landmark.latitude, landmark.longitude),
                             title = landmark.name,
                             context = LocalContext.current,
-                            iconResourceId = if (hasVisited)  R.drawable.ic_visited_landmark else R.drawable.ic_unvisited_landmark,
+                            iconResourceId = if (hasVisited) R.drawable.ic_visited_landmark else if (isActive) R.drawable.ic_unvisited_landmark else R.drawable.ic_inactive_landmark,
                         )
                     }
                 }
@@ -239,8 +251,11 @@ fun GoogleMapView(
                 .padding(vertical = 40.dp, horizontal = 13.dp)
                 .width(50.dp),
             onClick = {
-                cameraPositionState.move(CameraUpdateFactory.newLatLng(
-                    LatLng(userLocation.latitude, userLocation.longitude)))
+                cameraPositionState.move(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(userLocation.latitude, userLocation.longitude)
+                    )
+                )
             },
             containerColor = Gray100
         ) {

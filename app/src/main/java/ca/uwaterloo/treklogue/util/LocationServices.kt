@@ -63,6 +63,6 @@ fun distance(userLoc : LatLng, landmark : Landmark): Double {
     val difflat = rlat2-rlat1 // Radian difference (latitudes)
     val difflon = (landmark.longitude-userLoc.longitude) * (Math.PI/180) // Radian difference (longitudes)
 
-    var d = 2 * r * asin(sqrt(sin(difflat/2) * sin(difflat/2) + cos(rlat1) * cos(rlat2) * sin(difflon/2) * sin(difflon/2)))
+    val d = 2 * r * asin(sqrt(sin(difflat/2) * sin(difflat/2) + cos(rlat1) * cos(rlat2) * sin(difflon/2) * sin(difflon/2)))
     return d
 }
