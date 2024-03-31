@@ -57,6 +57,7 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
     journalModel: JournalEntryViewModel,
+    onAddJournal: () -> Unit,
 ) {
     val defaultCameraPosition =
         CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
@@ -129,6 +130,7 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             mapViewModel = mapViewModel,
             journalModel = journalModel,
+            onAddJournal = onAddJournal
         )
 
         // allowing user to use the app with default location is probably not a good idea
@@ -196,7 +198,8 @@ fun GoogleMapView(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     mapViewModel: MapViewModel,
-    journalModel: JournalEntryViewModel
+    journalModel: JournalEntryViewModel,
+    onAddJournal: () -> Unit,
 ) {
     val userLocation = mapViewModel.state.value.userLocation
 
@@ -219,7 +222,7 @@ fun GoogleMapView(
                 title = "User Location",
                 context = LocalContext.current,
                 iconResourceId = R.drawable.ic_my_location,
-                variant = "large"
+                variant = "large",
             )
 
             LandmarksJournals(
@@ -238,6 +241,12 @@ fun GoogleMapView(
                             title = landmark.name,
                             context = LocalContext.current,
                             iconResourceId = if (hasVisited) R.drawable.ic_visited_landmark else if (isActive) R.drawable.ic_unvisited_landmark else R.drawable.ic_inactive_landmark,
+                            onClick = {
+                                if (isActive) {
+                                    journalModel.createJournalEntry(landmark)
+                                    onAddJournal()
+                                }
+                            }
                         )
                     }
                 }
