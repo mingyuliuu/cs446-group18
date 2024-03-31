@@ -9,7 +9,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
@@ -24,9 +23,9 @@ import ca.uwaterloo.treklogue.util.distance
 @Composable
 fun ListScreen(
     modifier: Modifier = Modifier,
+    onAddJournal: () -> Unit,
     mapViewModel: MapViewModel,
-    journalEntryViewModel: JournalEntryViewModel,
-    onAddJournal: (landmark: MockLandmark) -> Unit
+    journalEntryViewModel: JournalEntryViewModel
 ) {
     Column(
         modifier = modifier.background(color = Gray100),
@@ -41,22 +40,27 @@ fun ListScreen(
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            mapViewModel.state.value.mockLandmarks.sortedBy {
-                distance(mapViewModel.state.value.userLocation, it)
-            }.forEachIndexed { idx, landmark ->
-                val dist = distance(mapViewModel.state.value.userLocation, landmark)
+            Landmarks(
+                viewModel = mapViewModel,
+                landmarksContent = { landmarks ->
+                    landmarks.sortedBy {
+                        distance(mapViewModel.state.value.userLocation, it)
+                    }.forEachIndexed { idx, landmark ->
+                        val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                LandmarkListItem(
-                    Modifier.padding(
-                        top = if (idx == 0) 4.dp else 0.dp,
-                        bottom = if (idx == mapViewModel.state.value.landmarks.size - 1) 12.dp else 0.dp
-                    ),
-                    landmark,
-                    dist,
-                    journalEntryViewModel,
-                    onAddJournal
-                )
-            }
+                        LandmarkListItem(
+                            Modifier.padding(
+                                top = if (idx == 0) 4.dp else 0.dp,
+                                bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
+                            ),
+                            landmark,
+                            dist,
+                            onAddJournal,
+                            journalEntryViewModel
+                        )
+                    }
+                }
+            )
         }
     }
     LoadingPopup(mapViewModel = mapViewModel)

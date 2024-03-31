@@ -2,9 +2,9 @@ package ca.uwaterloo.treklogue.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import ca.uwaterloo.treklogue.data.mockModel.MockLandmark
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+import android.os.Looper
+import ca.uwaterloo.treklogue.data.model.Landmark
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.asin
@@ -15,29 +15,48 @@ import kotlin.math.sqrt
 @SuppressLint("MissingPermission")
 fun getCurrentLocation(
     context: Context,
-    callback: (Double, Double) -> Unit,
+    callback: (Double, Double, Boolean) -> Unit,
     priority: Boolean = true
 ) {
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-    val accuracy = if (priority) Priority.PRIORITY_HIGH_ACCURACY
-    else Priority.PRIORITY_BALANCED_POWER_ACCURACY
+//    val accuracy = if (priority) Priority.PRIORITY_HIGH_ACCURACY
+//    else Priority.PRIORITY_BALANCED_POWER_ACCURACY
+//
+//    fusedLocationClient.getCurrentLocation(
+//        accuracy, CancellationTokenSource().token,
+//    ).addOnSuccessListener { location ->
+//        if (location != null) {
+//            val lat = location.latitude
+//            val long = location.longitude
+//            callback(lat, long)
+//        }
+//    }.addOnFailureListener { exception ->
+//        exception.printStackTrace()
+//    }
 
-    fusedLocationClient.getCurrentLocation(
-        accuracy, CancellationTokenSource().token,
-    ).addOnSuccessListener { location ->
-        if (location != null) {
-            val lat = location.latitude
-            val long = location.longitude
-            callback(lat, long)
+    var initial = true
+
+    val locationRequest = LocationRequest.Builder(10000)
+        .build()
+
+    val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            for (location in p0.locations){
+                val lat = location.latitude
+                val long = location.longitude
+                callback(lat, long, initial)
+            }
+
+            initial = false
         }
-    }.addOnFailureListener { exception ->
-        exception.printStackTrace()
     }
+
+    fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
 }
 
 // from https://mapsplatform.google.com/resources/blog/how-calculate-distances-map-maps-javascript-api/
 // return value is in kilometres
-fun distance(userLoc : LatLng, landmark : MockLandmark): Double {
+fun distance(userLoc : LatLng, landmark : Landmark): Double {
     val r = 6371.0710 // Radius of the Earth in kilometres
     val rlat1 = userLoc.latitude * (Math.PI/180) // Convert degrees to radians
     val rlat2 = landmark.latitude* (Math.PI/180) // Convert degrees to radians

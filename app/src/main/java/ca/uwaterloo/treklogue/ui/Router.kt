@@ -14,13 +14,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
-import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.ListScreen
 import ca.uwaterloo.treklogue.ui.screens.MapScreen
-import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
-import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.screens.ProfileScreen
+import ca.uwaterloo.treklogue.ui.screens.Screens
 import ca.uwaterloo.treklogue.ui.screens.SettingsScreen
+import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 @Composable
@@ -62,29 +63,29 @@ fun Router(
             composable(route = Screens.Map.screen) {
                 MapScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel,
+                    mapViewModel = mapViewModel,
+                    journalModel = journalEntryViewModel,
                 )
             }
 
             composable(route = Screens.List.screen) {
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
-                    mapViewModel,
-                    journalEntryViewModel,
-                    onAddJournal = { _ ->
+                    onAddJournal = {
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
+                    mapViewModel,
+                    journalEntryViewModel
                 )
             }
 
             composable(route = Screens.Profile.screen) {
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
-                    userViewModel,
-                    journalEntryViewModel,
                     showJournalDetail = {
                         navigationController.navigate(Screens.EditJournal.screen)
                     },
+                    journalEntryViewModel
                 )
             }
 
