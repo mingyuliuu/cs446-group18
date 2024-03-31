@@ -17,7 +17,8 @@ fun MapMarker(
     position: LatLng,
     title: String,
     @DrawableRes iconResourceId: Int,
-    variant: String = "small" // "small" (default) or "large"
+    variant: String = "small", // "small" (default) or "large"
+    onClick: (() -> Unit)? = null
 ) {
     val icon = bitmapDescriptorFromVector(
         context, iconResourceId, variant
@@ -25,7 +26,11 @@ fun MapMarker(
     Marker(
         state = MarkerState(position = position),
         title = title,
-        icon = icon
+        icon = icon,
+        onClick = {
+            if (onClick != null) onClick()
+            false
+        },
     )
 }
 
