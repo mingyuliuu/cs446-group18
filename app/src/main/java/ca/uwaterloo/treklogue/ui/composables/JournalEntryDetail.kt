@@ -91,6 +91,16 @@ fun TopBar(
         Spacer(modifier = Modifier.weight(1f))
         Button(onClick = {
             if (isAddingNewJournalEntry) {
+                onBackClicked()
+            } else {
+                journalEntryViewModel.deleteJournalEntry(editedJournalEntry.value.index)
+            }
+        }) {
+            Text(stringResource(R.string.delete), style = MaterialTheme.typography.labelLarge)
+        }
+        Spacer(modifier = Modifier.width(10.dp))
+        Button(onClick = {
+            if (isAddingNewJournalEntry) {
                 journalEntryViewModel.addJournalEntry(
                     editedJournalEntry.value.landmarkId,
                     editedJournalEntry.value.name,
