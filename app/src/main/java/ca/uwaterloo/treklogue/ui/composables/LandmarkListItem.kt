@@ -74,7 +74,7 @@ fun LandmarkListItem(
                     journalEntryViewModel.createJournalEntry(landmark)
                     onAddJournal()
                 },
-//                enabled = distance <= MIN_JOURNAL_DISTANCE
+                enabled = distance <= MIN_JOURNAL_DISTANCE
             ) {
                 Text(
                     stringResource(R.string.add_journal_entry),
