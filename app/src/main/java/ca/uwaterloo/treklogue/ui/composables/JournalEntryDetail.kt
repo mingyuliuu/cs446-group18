@@ -89,14 +89,13 @@ fun TopBar(
             Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.save))
         }
         Spacer(modifier = Modifier.weight(1f))
-        Button(onClick = {
-            if (isAddingNewJournalEntry) {
-                onBackClicked()
-            } else {
+        if (!isAddingNewJournalEntry) {
+            Button(onClick = {
                 journalEntryViewModel.deleteJournalEntry(editedJournalEntry.value.index)
+                onBackClicked()
+            }) {
+                Text(stringResource(R.string.delete), style = MaterialTheme.typography.labelLarge)
             }
-        }) {
-            Text(stringResource(R.string.delete), style = MaterialTheme.typography.labelLarge)
         }
         Spacer(modifier = Modifier.width(10.dp))
         Button(onClick = {
