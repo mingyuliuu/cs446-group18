@@ -158,15 +158,15 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(90.dp))
                 // Text with clarification on Atlas Cloud account vs Device Sync account
-                Text(
-                    text = stringResource(R.string.account_clarification),
-                    modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
-                    textAlign = TextAlign.Center,
-                    fontSize = 12.sp
-                )
-                Spacer(modifier = Modifier.height(30.dp))
+//                Text(
+//                    text = stringResource(R.string.account_clarification),
+//                    modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
+//                    textAlign = TextAlign.Center,
+//                    fontSize = 12.sp
+//                )
+//                Spacer(modifier = Modifier.height(30.dp))
             }
         }
     }

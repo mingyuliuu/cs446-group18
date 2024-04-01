@@ -15,7 +15,6 @@
     <string name="does_not_have_account">Don\'t have an account? Create account</string>
     <string name="log_out">Log Out</string>
     <string name="permissions_error">You are not allowed to delete or modify the current item that doesn\'t belong to you.</string>
-    <string name="account_clarification">Please log in or register with a Device Sync user account. This is separate from your Atlas Cloud login.</string>
 
     <!-- Strings related to map view -->
     <string name="landmark_distance_too_far">You\'re too far away from the landmark!</string>
