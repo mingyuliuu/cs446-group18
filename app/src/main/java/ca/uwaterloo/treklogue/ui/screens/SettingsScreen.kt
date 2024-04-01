@@ -2,10 +2,10 @@ package ca.uwaterloo.treklogue.ui.screens
 
 import android.Manifest
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -24,17 +26,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -43,17 +47,14 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import ca.uwaterloo.treklogue.R
-import ca.uwaterloo.treklogue.ui.viewModels.UserEvent
-import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
-import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
-import ca.uwaterloo.treklogue.ui.composables.SettingsActionButton
 import ca.uwaterloo.treklogue.ui.composables.SettingsGroup
 import ca.uwaterloo.treklogue.ui.composables.SettingsToggle
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.LoginViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.UserEvent
+import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -101,54 +102,50 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(color = Gray100)
     ){
-        Box(
-            modifier = Modifier
-                .background(color = Gray100)
-        ) {
             // Top bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
-                    .zIndex(1f)
                     .background(color = Blue100)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.immigrant),
-                    contentDescription = "UserProfile top left image",
-                    contentScale = ContentScale.Fit,
+                Spacer(modifier = Modifier.height(40.dp))
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        .width(120.dp)
-                        .height(150.dp)
-                        .graphicsLayer {
-                            translationX = 80f
-                            translationY = 60f
-                        }
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.trip),
-                    contentDescription = "UserProfile top right image",
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier
-                        .width(130.dp)
-                        .height(150.dp)
-                        .graphicsLayer {
-                            translationX = 865f
-                            translationY = 60f
-                        }
-                )
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.immigrant),
+                        contentDescription = "UserProfile top left image",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .width(120.dp)
+                            .height(150.dp)
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.trip),
+                        contentDescription = "UserProfile top right image",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .width(130.dp)
+                            .height(150.dp)
+                    )
+                }
             }
 
-            // User profile
+        // User profile
+        Box(
+            contentAlignment = Alignment.TopCenter,
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(y = (-70).dp)
+        ) {
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .size(140.dp)
-                    .zIndex(3f)
-                    .graphicsLayer {
-                        translationX = 450f
-                        translationY = 340f
-                    }
                     .border(width = 1.dp, color = Color(0xFF797878), shape = CircleShape)
                     .background(color = Color(0xFFD9D9D9), shape = CircleShape)
             ) {
@@ -160,19 +157,18 @@ fun SettingsScreen(
                 )
             }
         }
-        Box(modifier = Modifier.height(20.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth()
+                .offset(y = (-70).dp)
         ) {
             loginViewModel.currentUser?.let {
-                it.email?.let { it1 ->
+                it.email?.let { email ->
                     Text(
-                        /* TODO: get current user email */
-                        text = it1,
+                        text = email,
                         fontWeight = FontWeight.Bold,
                         fontSize = 32.sp,
                         textAlign = Center
@@ -180,9 +176,13 @@ fun SettingsScreen(
                 }
             }
         }
+
+
+
         Box(
             modifier = Modifier
                 .background(color = Gray100)
+                .offset(y = (-70).dp)
         ) {
             SettingsGroup(
                 name = R.string.settings_group_permissions,
@@ -220,12 +220,13 @@ fun SettingsScreen(
                 )
             )
         }
-        Box (
+        Box(
             modifier = Modifier
                 .background(color = Gray100)
                 .fillMaxWidth()
                 .padding(10.dp)
                 .height(150.dp)
+                .offset(y = (-70).dp)
         ) {
             var feedback by remember { mutableStateOf("") }
             OutlinedTextField(
@@ -246,6 +247,7 @@ fun SettingsScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .offset(y = (-70).dp)
                 .graphicsLayer {
                     translationY = 40f
                 },
