@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Looper
 import ca.uwaterloo.treklogue.data.model.Landmark
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.gms.maps.model.LatLng
 import kotlin.math.asin
 import kotlin.math.cos
@@ -16,23 +15,8 @@ import kotlin.math.sqrt
 fun getCurrentLocation(
     context: Context,
     callback: (Double, Double, Boolean) -> Unit,
-    priority: Boolean = true
 ) {
     val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
-//    val accuracy = if (priority) Priority.PRIORITY_HIGH_ACCURACY
-//    else Priority.PRIORITY_BALANCED_POWER_ACCURACY
-//
-//    fusedLocationClient.getCurrentLocation(
-//        accuracy, CancellationTokenSource().token,
-//    ).addOnSuccessListener { location ->
-//        if (location != null) {
-//            val lat = location.latitude
-//            val long = location.longitude
-//            callback(lat, long)
-//        }
-//    }.addOnFailureListener { exception ->
-//        exception.printStackTrace()
-//    }
 
     var initial = true
 

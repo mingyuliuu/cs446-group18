@@ -40,6 +40,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -75,35 +76,34 @@ fun MapScreen(
     val coarseLocationPermissionState = rememberPermissionState(coarseLocationPermission)
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            // there is a bug where isGranted is false when only coarse access is given, so location is not updated
-            // getting rid of 'if' seems fine though, app will warn but no crash and behaviour seems okay
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        // there is a bug where isGranted is false when only coarse access is given, so location is not updated
+        // getting rid of 'if' seems fine though, app will warn but no crash and behaviour seems okay
 //            if (isGranted) {
-            // Permission granted, update the location
-            getCurrentLocation(context, { lat, long, updateCam ->
-                mapViewModel.setUserLocation(LatLng(lat, long))
+        // Permission granted, update the location
+        getCurrentLocation(context) { lat, long, updateCam ->
+            mapViewModel.setUserLocation(LatLng(lat, long))
 
-                if (updateCam) {
-                    cameraPositionState.move(
-                        CameraUpdateFactory.newLatLng(
-                            LatLng(lat, long)
-                        )
+            if (updateCam) {
+                cameraPositionState.move(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(lat, long)
                     )
-                    Log.v(null, "Updating cam...")
-                }
-                Log.v(null, "Updating location...")
-            })
-//            }
+                )
+                Log.v(null, "Updating cam...")
+            }
+            Log.v(null, "Updating location...")
         }
-    )
+//            }
+    }
 
     LaunchedEffect(Unit) {
         // Move this to a separate thread to prevent it from blocking the Main thread
         withContext(Dispatchers.IO) {
             if (locationPermissionState.status.isGranted || coarseLocationPermissionState.status.isGranted) {
                 // Permission already granted, update the location
-                getCurrentLocation(context, { lat, long, updateCam ->
+                getCurrentLocation(context) { lat, long, updateCam ->
                     mapViewModel.setUserLocation(LatLng(lat, long))
 
                     if (updateCam) {
@@ -115,7 +115,7 @@ fun MapScreen(
                         Log.v(null, "Updating cam...")
                     }
                     Log.v(null, "Updating location...")
-                })
+                }
                 Log.v(null, "Permission already granted; current location fetched.")
             } else {
                 // Request location permission
@@ -209,7 +209,9 @@ fun GoogleMapView(
         mutableStateOf(MapUiSettings())
     }
     val mapProperties by remember {
-        mutableStateOf(MapProperties(mapType = MapType.NORMAL))
+        mutableStateOf(MapProperties(mapType = MapType.NORMAL,
+            mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.style_json)
+        ))
     }
 
     Box(modifier) {
