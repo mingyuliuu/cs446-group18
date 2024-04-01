@@ -40,3 +40,4 @@
 | 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern disscussion (D5)                                                |
 | 2024/03/30 | 15     | 0     | 0       | 0       | 0     | 0       | Firebase migration                                                             |
 | 2024/03/31 | 0      | 0     | 0       | 0       | 6.5   | 0       | Setting UI, deleting journal entry                                             |
+| 2024/03/31 | 3      | 0     | 0       | 0       | 0     | 0       | Add inactive markers; add interactions with markers; ux fine-tuning            |
