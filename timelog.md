@@ -30,11 +30,13 @@
 | 2024/03/02 | 0      | 0     | 0       | 0       | 3     | 0       | Navigation between screens, Journal Entry and Map view                         |
 | 2024/03/03 | 0      | 0     | 0       | 0       | 4     | 0       | Add Journal Entry UI                                                           |
 | 2024/03/03 | 2      | 2     | 2       | 2       | 2     | 2       | Prepare for project demo, discuss outstanding bugs                             |
-| 2024/03/06 | 0      | 5     | 1       | 0.5     | 0     | 0       | Demo document (D3)                                                             |
+| 2024/03/06 | 0      | 5     | 2       | 0.5     | 0     | 0       | Demo document (D3)                                                             |
 | 2024/03/06 | 9      | 0     | 0       | 0       | 0     | 0       | UI for landmark list, add/edit journal entry screen, profile & settings screen |
 | 2024/03/06 | 0      | 0     | 0       | 1.5     | 0     | 0       | Distance sorted landmark list                                                  |
 | 2024/03/06 | 1.5    | 0     | 0       | 0       | 0     | 0       | Draw custom map markers, implement custom MapMarker composable                 |
+| 2024/03/21 | 0      | 0     | 8       | 0       | 0     | 0       | Add logic for updating journal description and adding images from phone        |
 | 2024/03/22 | 1      | 1     | 0       | 1       | 0     | 0       | Architecture document (D4)                                                     |
+| 2024/03/28 | 0      | 0     | 4       | 0       | 0     | 0       | Add logic and icon for deleting uploaded images                                |
 | 2024/03/28 | 0      | 0     | 1       | 0       | 1     | 1       | Design pattern document (D5)                                                   |
 | 2024/03/29 | 0      | 0     | 0       | 3.5     | 0     | 0       | Coarse location handling, loading screen, settings location toggle             |
 | 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern disscussion (D5)                                                |
@@ -42,4 +44,5 @@
 | 2024/03/30 | 0      | 0     | 0       | 7       | 0     | 0       | Location refactor + bugs, remove google markers, investigate background update |
 | 2024/03/31 | 0      | 0     | 0       | 0       | 6.5   | 0       | Setting UI, deleting journal entry                                             |
 | 2024/03/31 | 3      | 0     | 0       | 0       | 0     | 0       | Add inactive markers; add interactions with markers; ux fine-tuning            |
+| 2024/03/31 | 0      | 0     | 3       | 0       | 0     | 0       | Prepare and edit video for project demo                                        |
 | 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views   |
