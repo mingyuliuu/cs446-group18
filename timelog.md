@@ -39,5 +39,7 @@
 | 2024/03/29 | 0      | 0     | 0       | 3.5     | 0     | 0       | Coarse location handling, loading screen, settings location toggle             |
 | 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern disscussion (D5)                                                |
 | 2024/03/30 | 15     | 0     | 0       | 0       | 0     | 0       | Firebase migration                                                             |
+| 2024/03/30 | 0      | 0     | 0       | 7       | 0     | 0       | Location refactor + bugs, remove google markers, investigate background update |
 | 2024/03/31 | 0      | 0     | 0       | 0       | 6.5   | 0       | Setting UI, deleting journal entry                                             |
 | 2024/03/31 | 3      | 0     | 0       | 0       | 0     | 0       | Add inactive markers; add interactions with markers; ux fine-tuning            |
+| 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views   |

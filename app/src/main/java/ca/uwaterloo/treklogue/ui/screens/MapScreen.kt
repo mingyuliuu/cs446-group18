@@ -32,6 +32,7 @@ import ca.uwaterloo.treklogue.ui.composables.ProgressBar
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.util.NotificationHelper
 import ca.uwaterloo.treklogue.util.distance
 import ca.uwaterloo.treklogue.util.getCurrentLocation
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -62,12 +63,15 @@ fun MapScreen(
     onAddJournal: () -> Unit,
 ) {
     val defaultCameraPosition =
-        CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 12f)
+        CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 15f)
     val cameraPositionState = rememberCameraPositionState {
         position = defaultCameraPosition
     }
 
     val context = LocalContext.current
+
+    val notificationHelper = NotificationHelper(context = context)
+    notificationHelper.setUpNotificationChannels()
 
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
     val locationPermissionState = rememberPermissionState(locationPermission)
@@ -131,7 +135,8 @@ fun MapScreen(
             cameraPositionState = cameraPositionState,
             mapViewModel = mapViewModel,
             journalModel = journalModel,
-            onAddJournal = onAddJournal
+            onAddJournal = onAddJournal,
+            notificationHelper = notificationHelper,
         )
 
         // allowing user to use the app with default location is probably not a good idea
@@ -201,9 +206,14 @@ fun GoogleMapView(
     mapViewModel: MapViewModel,
     journalModel: JournalEntryViewModel,
     onAddJournal: () -> Unit,
+    notificationHelper: NotificationHelper
 ) {
     val context = LocalContext.current
     val userLocation = mapViewModel.state.value.userLocation
+
+    val notifiedList by remember {
+        mutableStateOf(MutableList<String>(0) { "" })
+    }
 
     val mapUiSettings by remember {
         mutableStateOf(MapUiSettings())
@@ -229,34 +239,41 @@ fun GoogleMapView(
                 variant = "large",
             )
 
-            LandmarksJournals(
-                viewModel = mapViewModel,
-                journalModel = journalModel,
-                content = { landmarks, journals ->
-                    for (landmark in landmarks) {
-                        val hasVisited = (journals.find { it.landmarkId == landmark.id } != null)
-                        val isActive = distance(
-                            mapViewModel.state.value.userLocation,
-                            landmark
-                        ) < MIN_JOURNAL_DISTANCE
+            if (cameraPositionState.position.zoom >= 12.5f) {
+                LandmarksJournals(
+                    viewModel = mapViewModel,
+                    journalModel = journalModel,
+                    content = { landmarks, journals ->
+                        for (landmark in landmarks) {
+                            val hasVisited = (journals.find { it.landmarkId == landmark.id } != null)
+                            val isActive = distance(
+                                mapViewModel.state.value.userLocation,
+                                landmark
+                            ) < MIN_JOURNAL_DISTANCE
 
-                        MapMarker(
-                            position = LatLng(landmark.latitude, landmark.longitude),
-                            title = landmark.name,
-                            context = LocalContext.current,
-                            iconResourceId = if (hasVisited) R.drawable.ic_visited_landmark else if (isActive) R.drawable.ic_unvisited_landmark else R.drawable.ic_inactive_landmark,
-                            onClick = {
-                                if (isActive) {
-                                    journalModel.createJournalEntry(landmark)
-                                    onAddJournal()
-                                } else {
-                                    Toast.makeText(context, R.string.landmark_distance_too_far, Toast.LENGTH_SHORT).show()
-                                }
+                            if (!hasVisited && isActive && notifiedList.find { it == landmark.id } == null) {
+                                notificationHelper.showNotification(landmark.name)
+                                notifiedList.add(landmark.id)
                             }
-                        )
+
+                            MapMarker(
+                                position = LatLng(landmark.latitude, landmark.longitude),
+                                title = landmark.name,
+                                context = LocalContext.current,
+                                iconResourceId = if (hasVisited) R.drawable.ic_visited_landmark else if (isActive) R.drawable.ic_unvisited_landmark else R.drawable.ic_inactive_landmark,
+                                onClick = {
+                                    if (isActive) {
+                                        journalModel.createJournalEntry(landmark)
+                                        onAddJournal()
+                                    } else {
+                                        Toast.makeText(context, R.string.landmark_distance_too_far, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
         FloatingActionButton(
             modifier =

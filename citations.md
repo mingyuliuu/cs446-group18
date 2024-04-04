@@ -5,6 +5,7 @@
 * Custom MapMarker from drawable icons: https://www.boltuix.com/2022/11/add-custom-marker-to-google-maps-in.html
 * Tutorial on using Hilt and Firebase auth: https://www.simplifiedcoding.net/firebase-authentication-using-mvvm/
 * FirestoreCleanArchitectureApp: https://github.com/alexmamo/FirestoreCleanArchitectureApp
+* NotificationServices: https://github.com/android/user-interface-samples/blob/main/People/app/src/main/java/com/example/android/people/data/NotificationHelper.kt
 
 #### Assets
 * All custom markers are drawn based on: https://www.flaticon.com/free-icon/destination_3295084?related_id=3295084&origin=pack

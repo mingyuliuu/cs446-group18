@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
+import ca.uwaterloo.treklogue.ui.composables.MIN_LIST_DISTANCE
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
@@ -50,16 +51,20 @@ fun ListScreen(
                     }.forEachIndexed { idx, landmark ->
                         val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                        LandmarkListItem(
-                            Modifier.padding(
-                                top = if (idx == 0) 4.dp else 0.dp,
-                                bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
-                            ),
-                            landmark,
-                            dist,
-                            onAddJournal,
-                            journalEntryViewModel
-                        )
+                        // this is not at all scalable
+                        // ideally, only load in landmarks within a certain range of user so less to compare
+                        if (dist < MIN_LIST_DISTANCE) {
+                            LandmarkListItem(
+                                Modifier.padding(
+                                    top = if (idx == 0) 4.dp else 0.dp,
+                                    bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
+                                ),
+                                landmark,
+                                dist,
+                                onAddJournal,
+                                journalEntryViewModel
+                            )
+                        }
                     }
                 }
             )
