@@ -24,8 +24,8 @@ import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 
-const val MIN_JOURNAL_DISTANCE = 0.5 // Unit: km
-const val MIN_LIST_DISTANCE = 0.5 // Unit: km
+const val MIN_JOURNAL_DISTANCE = 5 // Unit: km
+const val MIN_LIST_DISTANCE = 5 // Unit: km
 
 @Composable
 fun LandmarkListItem(
