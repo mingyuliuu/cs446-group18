@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.BuildConfig
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
@@ -30,21 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.FileInputStream
 import java.net.URL
-import java.util.Properties
-
-fun getApiKey(): String? {
-    val properties = Properties()
-    val localPropertiesFile = "local.properties"
-    try {
-        properties.load(FileInputStream(localPropertiesFile))
-        return properties.getProperty("apiKey")
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return null
-}
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -54,6 +41,8 @@ fun ListScreen(
     mapViewModel: MapViewModel,
     journalEntryViewModel: JournalEntryViewModel
 ) {
+    val apiKey = BuildConfig.MAPS_API_KEY
+
     Column(
         modifier = modifier.background(color = Gray100),
         horizontalAlignment = Alignment.Start,
@@ -74,8 +63,6 @@ fun ListScreen(
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    //May need to change API key
-                    val apiKey = ""
                     val radius = 5000 // 5km in meters
                     val type = "tourist_attraction"
                     val nearbySearchUrl =
