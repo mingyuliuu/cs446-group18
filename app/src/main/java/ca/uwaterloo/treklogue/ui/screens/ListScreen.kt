@@ -82,7 +82,7 @@ fun ListScreen(
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     //May need to change API key
-                    val apiKey = "AIzaSyC66UjhTX9HPM_hrWPuztQQvAM-wePsGe0"
+                    val apiKey = ""
                     val radius = 5000 // 5km in meters
                     val type = "tourist_attraction";
                     val nearbySearchUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
