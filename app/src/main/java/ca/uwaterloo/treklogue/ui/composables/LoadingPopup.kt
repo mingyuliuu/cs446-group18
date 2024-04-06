@@ -61,7 +61,7 @@ fun LoadingPopup(
                     if (!locationPermissionState.status.isGranted && !coarseLocationPermissionState.status.isGranted)
                         "Please allow location permissions..."
                     else "Retrieving initial location...",
-                    style = MaterialTheme.typography.headlineLarge
+                    style = MaterialTheme.typography.headlineSmall
                 )
             }
         }

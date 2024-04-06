@@ -1,4 +1,5 @@
 package ca.uwaterloo.treklogue.ui.screens
+
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.background
@@ -11,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,21 +26,12 @@ import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import ca.uwaterloo.treklogue.util.distance
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
-import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.URL
-import org.json.JSONArray
 import org.json.JSONObject
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import java.io.FileInputStream
+import java.net.URL
 import java.util.Properties
 
 fun getApiKey(): String? {
@@ -84,12 +77,13 @@ fun ListScreen(
                     //May need to change API key
                     val apiKey = ""
                     val radius = 5000 // 5km in meters
-                    val type = "tourist_attraction";
-                    val nearbySearchUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-                            "location=${userLocation.latitude},${userLocation.longitude}&" +
-                            "radius=$radius&" +
-                            "type=$type&" +
-                            "key=$apiKey"
+                    val type = "tourist_attraction"
+                    val nearbySearchUrl =
+                        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+                                "location=${userLocation.latitude},${userLocation.longitude}&" +
+                                "radius=$radius&" +
+                                "type=$type&" +
+                                "key=$apiKey"
                     val response = URL(nearbySearchUrl).readText()
                     val jsonObject = JSONObject(response)
                     val resultsArray = jsonObject.getJSONArray("results")
@@ -100,7 +94,8 @@ fun ListScreen(
                     for (i in 0 until resultsArray.length()) {
                         val placeObject = resultsArray.getJSONObject(i)
                         val name = placeObject.getString("name")
-                        val locationObject = placeObject.getJSONObject("geometry").getJSONObject("location")
+                        val locationObject =
+                            placeObject.getJSONObject("geometry").getJSONObject("location")
                         val lat = locationObject.getDouble("lat")
                         val lng = locationObject.getDouble("lng")
                         val newLandmark = Landmark(i.toString(), name, lat, lng)
@@ -117,7 +112,7 @@ fun ListScreen(
                 }
             }
 
-            Log.d("////", landmarks.toString());
+            Log.d("////", landmarks.toString())
 
             // Display landmarks using the state value
             Landmarks(
