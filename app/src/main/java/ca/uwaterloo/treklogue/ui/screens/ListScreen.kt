@@ -15,12 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.BuildConfig
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
+import ca.uwaterloo.treklogue.ui.composables.LoadingWithText
 import ca.uwaterloo.treklogue.ui.composables.MIN_LIST_DISTANCE
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
@@ -101,32 +103,36 @@ fun ListScreen(
 
             Log.d("////", landmarks.toString())
 
-            // Display landmarks using the state value
-            Landmarks(
-                viewModel = mapViewModel,
-                landmarksContent = {
-                    landmarks.sortedBy {
-                        distance(mapViewModel.state.value.userLocation, it)
-                    }.forEachIndexed { idx, landmark ->
-                        val dist = distance(mapViewModel.state.value.userLocation, landmark)
+            if (landmarks.isEmpty()) {
+                LoadingWithText(stringResource(R.string.loading_landmarks))
+            } else {
+                // Display landmarks using the state value
+                Landmarks(
+                    viewModel = mapViewModel,
+                    landmarksContent = {
+                        landmarks.sortedBy {
+                            distance(mapViewModel.state.value.userLocation, it)
+                        }.forEachIndexed { idx, landmark ->
+                            val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                        // this is not at all scalable
-                        // ideally, only load in landmarks within a certain range of user so less to compare
-                        if (dist < MIN_LIST_DISTANCE) {
-                            LandmarkListItem(
-                                Modifier.padding(
-                                    top = if (idx == 0) 4.dp else 0.dp,
-                                    bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
-                                ),
-                                landmark,
-                                dist,
-                                onAddJournal,
-                                journalEntryViewModel
-                            )
+                            // this is not at all scalable
+                            // ideally, only load in landmarks within a certain range of user so less to compare
+                            if (dist < MIN_LIST_DISTANCE) {
+                                LandmarkListItem(
+                                    Modifier.padding(
+                                        top = if (idx == 0) 4.dp else 0.dp,
+                                        bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
+                                    ),
+                                    landmark,
+                                    dist,
+                                    onAddJournal,
+                                    journalEntryViewModel
+                                )
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
     LoadingPopup(mapViewModel = mapViewModel)

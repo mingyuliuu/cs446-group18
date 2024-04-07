@@ -18,10 +18,13 @@
 
     <!-- Strings related to map view -->
     <string name="landmark_distance_too_far">You\'re too far away from the landmark!</string>
+    <string name="loading_permissions">Please allow location permissions…</string>
+    <string name="loading_location">Retrieving initial location…</string>
 
     <!-- Strings related to list view -->
     <string name="nearby_landmarks">Nearby Landmarks</string>
     <string name="add_journal_entry">Add Journal</string>
+    <string name="loading_landmarks">Retrieving your nearby landmarks…</string>
 
     <!-- Strings related to journal entries -->
     <string name="my_journal_entries">My Journal Entries</string>
