@@ -50,3 +50,4 @@
 | 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views   |
 | 2024/04/05 | 0      | 5     | 0       | 0       | 5     | 5       | Arch + Design Document (D6)                                                    |    
 | 2024/04/06 | 0      | 0     | 18      | 0       | 0     | 0       | Research landmark API + setup Google Places API to retrieve nearby landmarks   |    
+| 2024/04/06 | 6      | 0     | 0       | 0       | 0     | 0       | Upload images to & delete images from Firebase cloud storage                   |    
