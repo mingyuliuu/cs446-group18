@@ -1,6 +1,7 @@
 package ca.uwaterloo.treklogue.ui.screens
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -9,19 +10,18 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.repository.JournalEntries
 import ca.uwaterloo.treklogue.data.repository.Landmarks
@@ -48,8 +48,12 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberCameraPositionState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
 
 /**
  * Composable for the map view
@@ -61,6 +65,7 @@ fun MapScreen(
     mapViewModel: MapViewModel,
     journalModel: JournalEntryViewModel,
     onAddJournal: () -> Unit,
+    onAddLandmark: () -> Unit,
 ) {
     val defaultCameraPosition =
         CameraPosition.fromLatLngZoom(mapViewModel.state.value.userLocation, 15f)
@@ -136,6 +141,7 @@ fun MapScreen(
             mapViewModel = mapViewModel,
             journalModel = journalModel,
             onAddJournal = onAddJournal,
+            onAddLandmark = onAddLandmark,
             notificationHelper = notificationHelper,
         )
 
@@ -168,6 +174,10 @@ fun LandmarksJournals(
     var landmarksLoading = true
     var landmarksContent: Landmarks? = null
 
+    val userLandmarksResponse = viewModel.userLandmarksResponse
+    var userLandmarksLoading = true
+    var userLandmarksContent: Landmarks? = null
+
     val journalEntriesResponse = journalModel.journalEntryResponse
     var journalsLoading = true
     var journalsContent: JournalEntries? = null
@@ -182,6 +192,16 @@ fun LandmarksJournals(
         is Response.Failure -> print(landmarksResponse.e)
     }
 
+    when (userLandmarksResponse) {
+        is Response.Loading -> userLandmarksLoading = true
+        is Response.Success -> {
+            userLandmarksContent = userLandmarksResponse.data
+            userLandmarksLoading = false
+        }
+
+        is Response.Failure -> print(userLandmarksResponse.e)
+    }
+
     when (journalEntriesResponse) {
         is Response.Loading -> journalsLoading = true
         is Response.Success -> {
@@ -192,13 +212,14 @@ fun LandmarksJournals(
         is Response.Failure -> print(journalEntriesResponse.e)
     }
 
-    if (landmarksLoading && journalsLoading) {
+    if (landmarksLoading && journalsLoading && userLandmarksLoading) {
         ProgressBar()
-    } else {
-        content(landmarksContent!!, journalsContent!!)
+    } else if (landmarksContent != null) {
+        landmarksContent += userLandmarksContent!!
+        content(landmarksContent, journalsContent!!)
     }
 }
-
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GoogleMapView(
     modifier: Modifier = Modifier,
@@ -206,6 +227,7 @@ fun GoogleMapView(
     mapViewModel: MapViewModel,
     journalModel: JournalEntryViewModel,
     onAddJournal: () -> Unit,
+    onAddLandmark: () -> Unit,
     notificationHelper: NotificationHelper
 ) {
     val context = LocalContext.current
@@ -223,6 +245,8 @@ fun GoogleMapView(
             mapStyleOptions = MapStyleOptions.loadRawResourceStyle(context, R.raw.style_json)
         ))
     }
+
+
 
     Box(modifier) {
         GoogleMap(
@@ -274,6 +298,28 @@ fun GoogleMapView(
                     }
                 )
             }
+        }
+        FloatingActionButton(
+            modifier =
+            Modifier
+                .align(Alignment.BottomStart)
+                .padding(vertical = 110.dp, horizontal = 13.dp)
+                .width(50.dp),
+            onClick = {
+                onAddLandmark()
+                cameraPositionState.move(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(userLocation.latitude, userLocation.longitude)
+                    )
+                )
+            },
+            containerColor = Gray100
+        ) {
+            Icon(
+                Icons.Default.Add,
+                modifier = Modifier.width(30.dp),
+                contentDescription = "Add a landmark"
+            )
         }
         FloatingActionButton(
             modifier =

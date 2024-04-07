@@ -42,8 +42,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideLandmarkRepository(
-        @Named("landmarks") landmarksRef: CollectionReference
-    ): LandmarkRepository = LandmarkFirebaseRepository(landmarksRef)
+        @Named("landmarks") landmarksRef: CollectionReference,
+        @Named("users") usersRef: CollectionReference,
+        authRepository: AuthRepository,
+    ): LandmarkRepository = LandmarkFirebaseRepository(landmarksRef, usersRef, authRepository)
 
     @Provides
     @Singleton

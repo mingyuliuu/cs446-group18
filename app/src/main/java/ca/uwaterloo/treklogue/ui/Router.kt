@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import ca.uwaterloo.treklogue.ui.composables.JournalEntryDetail
+import ca.uwaterloo.treklogue.ui.composables.LandmarkAdd
 import ca.uwaterloo.treklogue.ui.composables.ScaffoldBottom
 import ca.uwaterloo.treklogue.ui.screens.ListScreen
 import ca.uwaterloo.treklogue.ui.screens.MapScreen
@@ -69,6 +70,9 @@ fun Router(
                     onAddJournal = {
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
+                    onAddLandmark = {
+                        navigationController.navigate(Screens.AddLandmark.screen)
+                    },
                 )
             }
 
@@ -123,6 +127,16 @@ fun Router(
                         navigationController.navigate(Screens.List.screen)
                     },
                     journalEntryViewModel = journalEntryViewModel
+                )
+            }
+
+            composable(route = Screens.AddLandmark.screen) {
+                LandmarkAdd(
+                    modifier = Modifier.fillMaxSize(),
+                    onBackClicked = {
+                        navigationController.navigate(Screens.Map.screen)
+                    },
+                    mapViewModel = mapViewModel,
                 )
             }
         }
