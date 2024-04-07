@@ -153,6 +153,8 @@ fun TopBar(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,6 +231,7 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
                                 onClick = {
                                     selectedImageUri = selectedImageUri.filter { it != uri }
                                     editedJournalEntry.value.photos.remove(uri.toString())
+                                    StorageServices.deleteFromStorage(uri, context)
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {

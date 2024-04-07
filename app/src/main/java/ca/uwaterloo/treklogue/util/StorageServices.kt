@@ -52,5 +52,19 @@ class StorageServices {
 
             return result
         }
+
+        fun deleteFromStorage(uri: Uri, context: Context) {
+            val imageRef = Firebase.storage.getReferenceFromUrl(uri.toString())
+
+            // Delete the file
+            imageRef.delete().addOnSuccessListener {
+                Log.v(
+                    null,
+                    "Image with url [$uri] deleted successfully."
+                )
+            }.addOnFailureListener {
+                Toast.makeText(context, "Deletion failed.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
