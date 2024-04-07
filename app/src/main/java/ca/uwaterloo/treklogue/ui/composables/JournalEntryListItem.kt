@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
@@ -62,7 +64,12 @@ fun JournalEntryListItem(
                 Column(
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(journalEntry.name, style = MaterialTheme.typography.titleMedium)
+                    Text(
+                        journalEntry.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        lineHeight = 20.sp
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         journalEntry.visitedAt,
                         style = MaterialTheme.typography.labelSmall,
