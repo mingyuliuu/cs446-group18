@@ -46,4 +46,5 @@
     <string name="settings_toggle_location_revoke">Allow Treklogue to access my location\n(restart to take effect)</string>
     <string name="feedback">Please share your thoughts with us</string>
     <string name="channel_name">Treklogue</string>
+    <string name="landmark_set_name_reminder">Please set a name for this landmark</string>
 </resources>

@@ -7,4 +7,5 @@ sealed class Screens(val screen: String) {
     data object Settings : Screens("Settings")
     data object EditJournal : Screens("EditJournal")
     data object AddJournal : Screens("AddJournal")
+    data object AddLandmark : Screens("AddLandmark")
 }

@@ -49,3 +49,4 @@
 | 2024/03/31 | 0      | 0     | 0       | 0       | 0     | 5       | Refined settings UI; Prepare and edit video for project demo                   |
 | 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views   |
 | 2024/04/06 | 0      | 0     | 18      | 0       | 0     | 0       | Research landmark API + setup Google Places API to retrieve nearby landmarks   |    
+| 2024/04/06 | 0      | 0     | 0       | 5       | 0     | 0       | Add functionality to add user-created landmarks, investigate map marker API    |    

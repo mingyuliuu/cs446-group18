@@ -10,9 +10,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.repository.AddLandmarkResponse
+import ca.uwaterloo.treklogue.data.repository.AddUserLandmarkResponse
 import ca.uwaterloo.treklogue.data.repository.DeleteLandmarkResponse
 import ca.uwaterloo.treklogue.data.repository.LandmarkRepository
 import ca.uwaterloo.treklogue.data.repository.LandmarksResponse
+import ca.uwaterloo.treklogue.data.repository.UserLandmarksResponse
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -43,15 +45,23 @@ class MapViewModel @Inject constructor(
 
     var landmarksResponse by mutableStateOf<LandmarksResponse>(Response.Loading)
         private set
+    var userLandmarksResponse by mutableStateOf<UserLandmarksResponse>(Response.Loading)
+        private set
     var addLandmarkResponse by mutableStateOf<AddLandmarkResponse>(Response.Success(false))
+        private set
+    var addUserLandmarkResponse by mutableStateOf<AddUserLandmarkResponse>(Response.Success(false))
         private set
     var deleteLandmarkResponse by mutableStateOf<DeleteLandmarkResponse>(Response.Success(false))
         private set
 
     init {
         getLandmarks()
+        getUserLandmarks()
     }
 
+    fun getUserLocation(): LatLng {
+        return state.value.userLocation
+    }
     fun setUserLocation(location: LatLng) {
         Log.v(null, "Setting user location: $location")
         _state.value = state.value.copy(userLocation = location)
@@ -62,10 +72,20 @@ class MapViewModel @Inject constructor(
             landmarksResponse = response
         }
     }
+    private fun getUserLandmarks() = viewModelScope.launch {
+        landmarkRepository.getUserLandmarkList().collect { response ->
+            userLandmarksResponse = response
+        }
+    }
 
     fun addLandmark(name: String, latitude: Double, longitude: Double) = viewModelScope.launch {
         addLandmarkResponse = Response.Loading
         addLandmarkResponse = landmarkRepository.addLandmark(name, latitude, longitude)
+    }
+
+    fun addUserLandmark(name: String, latitude: Double, longitude: Double) = viewModelScope.launch {
+        addUserLandmarkResponse = Response.Loading
+        addUserLandmarkResponse = landmarkRepository.addUserLandmark(name, latitude, longitude)
     }
 
     fun deleteLandmark(id: String) = viewModelScope.launch {
