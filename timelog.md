@@ -52,3 +52,4 @@
 | 2024/04/06 | 0      | 0     | 18      | 0       | 0     | 0       | Research landmark API + setup Google Places API to retrieve nearby landmarks   |    
 | 2024/04/06 | 0      | 0     | 0       | 5       | 0     | 0       | Add functionality to add user-created landmarks, investigate map marker API    |    
 | 2024/04/06 | 6      | 0     | 0       | 0       | 0     | 0       | Upload images to & delete images from Firebase cloud storage                   |    
+| 2024/04/07 | 0      | 0     | 0       | 1.5     | 0     | 0       | Add api markers to map, add functionality to notification toggle               |    

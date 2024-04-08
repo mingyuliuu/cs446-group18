@@ -11,12 +11,13 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
 import ca.uwaterloo.treklogue.MainActivity
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 
 /**
  * Handles all operations related to [Notification].
  * Modified from https://github.com/android/user-interface-samples
  */
-class NotificationHelper(private val context: Context) {
+class NotificationHelper(private val context: Context, private val userViewModel: UserViewModel) {
 
     companion object {
         /**
@@ -60,7 +61,9 @@ class NotificationHelper(private val context: Context) {
             .setTimeoutAfter(10000L)
         // id should be unique, but is fine for now; current implementation would overload user notifs
         // if we make other notification types, add timer delay to new landmarks channel
-        notificationManager.notify(1, builder.build())
+        if (userViewModel.state.value.notificationEnabled) {
+            notificationManager.notify(1, builder.build())
+        }
     }
     private fun dismissNotification(id: Long) {
         notificationManager.cancel(id.toInt())

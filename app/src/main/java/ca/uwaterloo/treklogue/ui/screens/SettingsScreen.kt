@@ -87,7 +87,6 @@ fun SettingsScreen(
     val coarseLocationPermission = Manifest.permission.ACCESS_COARSE_LOCATION
     val coarseLocationPermissionState = rememberPermissionState(coarseLocationPermission)
 
-
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
