@@ -48,6 +48,8 @@
 | 2024/03/31 | 3      | 0     | 3       | 0       | 0     | 0       | Prepare and edit video for project demo                                        |
 | 2024/03/31 | 0      | 0     | 0       | 0       | 0     | 5       | Refined settings UI; Prepare and edit video for project demo                   |
 | 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views   |
+| 2024/04/05 | 0      | 5     | 0       | 0       | 5     | 5       | Arch + Design Document (D6)                                                    |    
 | 2024/04/06 | 0      | 0     | 18      | 0       | 0     | 0       | Research landmark API + setup Google Places API to retrieve nearby landmarks   |    
 | 2024/04/06 | 0      | 0     | 0       | 5       | 0     | 0       | Add functionality to add user-created landmarks, investigate map marker API    |    
+| 2024/04/06 | 6      | 0     | 0       | 0       | 0     | 0       | Upload images to & delete images from Firebase cloud storage                   |    
 | 2024/04/07 | 0      | 0     | 0       | 1.5     | 0     | 0       | Add api markers to map, add functionality to notification toggle               |    

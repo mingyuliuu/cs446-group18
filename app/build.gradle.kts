@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -27,7 +29,21 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            val p = Properties()
+            p.load(project.rootProject.file("local.properties").reader())
+            val yourKey: String = p.getProperty("MAPS_API_KEY")
+            buildConfigField("String", "MAPS_API_KEY", "\"$yourKey\"")
+        }
+
+        debug {
+            val p = Properties()
+            p.load(project.rootProject.file("local.properties").reader())
+            val yourKey: String = p.getProperty("MAPS_API_KEY")
+            buildConfigField("String", "MAPS_API_KEY", "\"$yourKey\"")
         }
     }
     compileOptions {
@@ -38,6 +54,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
         viewBinding = true
     }
@@ -98,6 +115,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     // Hilt
     implementation("com.google.dagger:hilt-android:2.48")

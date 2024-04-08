@@ -15,8 +15,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -42,28 +44,36 @@ fun LoadingPopup(
             43.4822734, -80.5879188
         )
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Gray100)
-                .padding(16.dp)
+        LoadingWithText(
+            if (!locationPermissionState.status.isGranted && !coarseLocationPermissionState.status.isGranted)
+                stringResource(R.string.loading_permissions)
+            else stringResource(R.string.loading_location)
+        )
+    }
+}
+
+@Composable
+fun LoadingWithText(
+    text: String,
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Gray100)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator()
-                Spacer(Modifier.height(20.dp))
-                Text(
-                    textAlign = TextAlign.Center,
-                    text =
-                    if (!locationPermissionState.status.isGranted && !coarseLocationPermissionState.status.isGranted)
-                        "Please allow location permissions..."
-                    else "Retrieving initial location...",
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
+            CircularProgressIndicator()
+            Spacer(Modifier.height(20.dp))
+            Text(
+                textAlign = TextAlign.Center,
+                text = text,
+                style = MaterialTheme.typography.headlineSmall
+            )
         }
     }
 }

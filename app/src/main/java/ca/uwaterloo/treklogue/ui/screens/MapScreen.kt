@@ -217,7 +217,7 @@ fun LandmarksJournals(
     if (landmarksLoading && journalsLoading && userLandmarksLoading) {
         ProgressBar()
     } else if (userLandmarksContent != null) {
-//        landmarksContent += userLandmarksContent!!
+        // landmarksContent += userLandmarksContent!!
         // only considering user landmarks and google api landmarks
         content(userLandmarksContent, journalsContent!!)
     }

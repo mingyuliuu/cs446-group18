@@ -15,11 +15,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.BuildConfig
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.ui.composables.LandmarkListItem
 import ca.uwaterloo.treklogue.ui.composables.LoadingPopup
+import ca.uwaterloo.treklogue.ui.composables.LoadingWithText
 import ca.uwaterloo.treklogue.ui.composables.MIN_LIST_DISTANCE
 import ca.uwaterloo.treklogue.ui.composables.TabSectionHeader
 import ca.uwaterloo.treklogue.ui.theme.Gray100
@@ -30,21 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
-import java.io.FileInputStream
 import java.net.URL
-import java.util.Properties
-
-fun getApiKey(): String? {
-    val properties = Properties()
-    val localPropertiesFile = "local.properties"
-    try {
-        properties.load(FileInputStream(localPropertiesFile))
-        return properties.getProperty("apiKey")
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
-    return null
-}
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -54,6 +43,8 @@ fun ListScreen(
     mapViewModel: MapViewModel,
     journalEntryViewModel: JournalEntryViewModel
 ) {
+    val apiKey = BuildConfig.MAPS_API_KEY
+
     Column(
         modifier = modifier.background(color = Gray100),
         horizontalAlignment = Alignment.Start,
@@ -75,8 +66,6 @@ fun ListScreen(
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    //May need to change API key
-                    val apiKey = ""
                     val radius = 5000 // 5km in meters
                     val type = "tourist_attraction"
                     val nearbySearchUrl =
@@ -115,14 +104,17 @@ fun ListScreen(
 
             Log.d("////", landmarks.toString())
 
-            // Display landmarks using the state value
-            Landmarks(
-                viewModel = mapViewModel,
-                landmarksContent = {
-                    landmarks.sortedBy {
-                        distance(mapViewModel.state.value.userLocation, it)
-                    }.forEachIndexed { idx, landmark ->
-                        val dist = distance(mapViewModel.state.value.userLocation, landmark)
+            if (landmarks.isEmpty()) {
+                LoadingWithText(stringResource(R.string.loading_landmarks))
+            } else {
+                // Display landmarks using the state value
+                Landmarks(
+                    viewModel = mapViewModel,
+                    landmarksContent = {
+                        landmarks.sortedBy {
+                            distance(mapViewModel.state.value.userLocation, it)
+                        }.forEachIndexed { idx, landmark ->
+                            val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
                         if (dist < MIN_LIST_DISTANCE) {
                             LandmarkListItem(
@@ -137,8 +129,8 @@ fun ListScreen(
                             )
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
     LoadingPopup(mapViewModel = mapViewModel)

@@ -1,6 +1,7 @@
 package ca.uwaterloo.treklogue.ui.composables
 
 import android.net.Uri
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -49,7 +51,11 @@ import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
+import ca.uwaterloo.treklogue.util.StorageServices
 import coil.compose.AsyncImage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun JournalEntryDetail(
@@ -77,6 +83,8 @@ fun TopBar(
     editedJournalEntry: MutableState<JournalEntry>,
     journalEntryViewModel: JournalEntryViewModel
 ) {
+    val context = LocalContext.current
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -99,21 +107,43 @@ fun TopBar(
         }
         Spacer(modifier = Modifier.width(10.dp))
         Button(onClick = {
-            if (isAddingNewJournalEntry) {
-                journalEntryViewModel.addJournalEntry(
-                    editedJournalEntry.value.landmarkId,
-                    editedJournalEntry.value.name,
-                    editedJournalEntry.value.photos,
-                    editedJournalEntry.value.description
-                )
-            } else {
-                journalEntryViewModel.updateJournalEntry(
-                    editedJournalEntry.value.index,
-                    editedJournalEntry.value.photos,
-                    editedJournalEntry.value.description
-                )
+            CoroutineScope(Dispatchers.Main).launch {
+                runCatching {
+                    editedJournalEntry.value.photos.forEach { photoString ->
+                        if (!photoString.contains("firebasestorage")) {
+                            // Upload image to Firebase Storage
+                            Uri.parse(photoString).let { uri ->
+                                val downloadUri = StorageServices.uploadToStorage(
+                                    uri = uri,
+                                    context = context,
+                                )
+
+                                // Update uri of the current photo
+                                editedJournalEntry.value.photos.replaceAll { if (it == photoString) downloadUri.toString() else it }
+                            }
+                        }
+                    }
+                }.onSuccess {
+                    if (isAddingNewJournalEntry) {
+                        journalEntryViewModel.addJournalEntry(
+                            editedJournalEntry.value.landmarkId,
+                            editedJournalEntry.value.name,
+                            editedJournalEntry.value.photos,
+                            editedJournalEntry.value.description
+                        )
+                    } else {
+                        journalEntryViewModel.updateJournalEntry(
+                            editedJournalEntry.value.index,
+                            editedJournalEntry.value.photos,
+                            editedJournalEntry.value.description
+                        )
+                    }
+                }.onFailure { ex: Throwable ->
+                    Log.e(null, "Failed to add/update journal entry due to: $ex")
+                }
+
+                onBackClicked()
             }
-            onBackClicked()
         }) {
             Text(stringResource(R.string.save), style = MaterialTheme.typography.labelLarge)
         }
@@ -123,6 +153,8 @@ fun TopBar(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -199,6 +231,7 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
                                 onClick = {
                                     selectedImageUri = selectedImageUri.filter { it != uri }
                                     editedJournalEntry.value.photos.remove(uri.toString())
+                                    StorageServices.deleteFromStorage(uri, context)
                                 },
                                 modifier = Modifier.align(Alignment.TopEnd)
                             ) {
