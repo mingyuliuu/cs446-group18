@@ -116,22 +116,23 @@ fun ListScreen(
                         }.forEachIndexed { idx, landmark ->
                             val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                        if (dist < MIN_LIST_DISTANCE) {
-                            LandmarkListItem(
-                                Modifier.padding(
-                                    top = if (idx == 0) 4.dp else 0.dp,
-                                    bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
-                                ),
-                                landmark,
-                                dist,
-                                onAddJournal,
-                                journalEntryViewModel
-                            )
+                            if (dist < MIN_LIST_DISTANCE) {
+                                LandmarkListItem(
+                                    Modifier.padding(
+                                        top = if (idx == 0) 4.dp else 0.dp,
+                                        bottom = if (idx == landmarks.size - 1) 12.dp else 0.dp
+                                    ),
+                                    landmark,
+                                    dist,
+                                    onAddJournal,
+                                    journalEntryViewModel
+                                )
+                            }
                         }
                     }
                 )
             }
         }
+        LoadingPopup(mapViewModel = mapViewModel)
     }
-    LoadingPopup(mapViewModel = mapViewModel)
 }
