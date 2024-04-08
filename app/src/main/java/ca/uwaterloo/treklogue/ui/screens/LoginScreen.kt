@@ -10,14 +10,21 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
@@ -27,10 +34,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.R.drawable
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.theme.Blue400
 import ca.uwaterloo.treklogue.ui.viewModels.LoginAction
@@ -41,11 +50,13 @@ private const val USABLE_WIDTH = 0.8F
 @Composable
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 fun LoginScreen(loginViewModel: LoginViewModel) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
             .paint(
-                painterResource(R.drawable.img_login_bg),
+                painterResource(drawable.img_login_bg),
                 contentScale = ContentScale.FillBounds
             ),
         color = Color.Transparent // Set transparent color as the background is set using Modifier.background
@@ -89,12 +100,20 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                         loginViewModel.setEmail(it)
                     },
                     label = { Text(stringResource(R.string.prompt_email)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = drawable.email_icon),
+                            contentDescription = "Email",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
                 )
 
                 // Password field
                 TextField(
                     enabled = loginViewModel.state.value.enabled,
-                    visualTransformation = PasswordVisualTransformation(),
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
                     value = loginViewModel.state.value.password,
                     colors = TextFieldDefaults.colors(
@@ -106,7 +125,27 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                     onValueChange = {
                         loginViewModel.setPassword(it)
                     },
-                    label = { Text(stringResource(R.string.prompt_password)) })
+                    label = { Text(stringResource(R.string.prompt_password)) },
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = drawable.password_icon),
+                            contentDescription = "Password",
+                            tint = Color.Gray,
+                            modifier = Modifier.size(30.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            passwordVisible = !passwordVisible
+                        }) {
+                            Icon(
+                                painter = painterResource(id = drawable.view_icon),
+                                contentDescription = "View",
+                                tint = Color.Gray,
+                                modifier = Modifier.size(30.dp)
+                            )
+                        }
+                    })
 
                 Spacer(modifier = Modifier.height(40.dp))
 
