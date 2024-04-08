@@ -32,6 +32,7 @@ import ca.uwaterloo.treklogue.ui.composables.ProgressBar
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.viewModels.JournalEntryViewModel
 import ca.uwaterloo.treklogue.ui.viewModels.MapViewModel
+import ca.uwaterloo.treklogue.ui.viewModels.UserViewModel
 import ca.uwaterloo.treklogue.util.NotificationHelper
 import ca.uwaterloo.treklogue.util.distance
 import ca.uwaterloo.treklogue.util.getCurrentLocation
@@ -64,6 +65,7 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     mapViewModel: MapViewModel,
     journalModel: JournalEntryViewModel,
+    userViewModel: UserViewModel,
     onAddJournal: () -> Unit,
     onAddLandmark: () -> Unit,
 ) {
@@ -75,7 +77,7 @@ fun MapScreen(
 
     val context = LocalContext.current
 
-    val notificationHelper = NotificationHelper(context = context)
+    val notificationHelper = NotificationHelper(context = context, userViewModel = userViewModel)
     notificationHelper.setUpNotificationChannels()
 
     val locationPermission = Manifest.permission.ACCESS_FINE_LOCATION
@@ -214,9 +216,10 @@ fun LandmarksJournals(
 
     if (landmarksLoading && journalsLoading && userLandmarksLoading) {
         ProgressBar()
-    } else if (landmarksContent != null) {
-        landmarksContent += userLandmarksContent!!
-        content(landmarksContent, journalsContent!!)
+    } else if (userLandmarksContent != null) {
+//        landmarksContent += userLandmarksContent!!
+        // only considering user landmarks and google api landmarks
+        content(userLandmarksContent, journalsContent!!)
     }
 }
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -263,13 +266,83 @@ fun GoogleMapView(
                 variant = "large",
             )
 
+            // State for api landmarks
+            var landmarks by remember { mutableStateOf<List<Landmark>>(emptyList()) }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    //May need to change API key
+                    val apiKey = ""
+                    val radius = 5000 // 5km in meters
+                    val type = "tourist_attraction"
+                    val nearbySearchUrl =
+                        "https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+                                "location=${userLocation.latitude},${userLocation.longitude}&" +
+                                "radius=$radius&" +
+                                "type=$type&" +
+                                "key=$apiKey"
+                    val response = URL(nearbySearchUrl).readText()
+                    val jsonObject = JSONObject(response)
+                    val resultsArray = jsonObject.getJSONArray("results")
+
+                    val landmarksList = mutableListOf<Landmark>()
+
+                    // Iterate over each place in the results array and extract the name
+                    for (i in 0 until resultsArray.length()) {
+                        val placeObject = resultsArray.getJSONObject(i)
+                        val name = placeObject.getString("name")
+                        val locationObject =
+                            placeObject.getJSONObject("geometry").getJSONObject("location")
+                        val lat = locationObject.getDouble("lat")
+                        val lng = locationObject.getDouble("lng")
+                        val newLandmark = Landmark(i.toString(), name, lat, lng)
+
+                        if (!landmarksList.any { it.name == name }) {
+                            landmarksList.add(newLandmark)
+                        }
+                    }
+
+                    // Update the state of landmarks
+                    landmarks = landmarksList
+                } catch (e: Exception) {
+                    Log.e("ListScreen", "Error fetching nearby places: ${e.message}")
+                }
+            }
+
             if (cameraPositionState.position.zoom >= 12.5f) {
                 LandmarksJournals(
                     viewModel = mapViewModel,
                     journalModel = journalModel,
-                    content = { landmarks, journals ->
-                        for (landmark in landmarks) {
+                    content = { userLandmarks, journals ->
+                        for (landmark in userLandmarks) {
                             val hasVisited = (journals.find { it.landmarkId == landmark.id } != null)
+                            val isActive = distance(
+                                mapViewModel.state.value.userLocation,
+                                landmark
+                            ) < MIN_JOURNAL_DISTANCE
+
+                            if (!hasVisited && isActive && notifiedList.find { it == landmark.id } == null) {
+                                notificationHelper.showNotification(landmark.name)
+                                notifiedList.add(landmark.id)
+                            }
+
+                            MapMarker(
+                                position = LatLng(landmark.latitude, landmark.longitude),
+                                title = landmark.name,
+                                context = LocalContext.current,
+                                iconResourceId = if (hasVisited) R.drawable.ic_visited_landmark else if (isActive) R.drawable.ic_unvisited_landmark else R.drawable.ic_inactive_landmark,
+                                onClick = {
+                                    if (isActive) {
+                                        journalModel.createJournalEntry(landmark)
+                                        onAddJournal()
+                                    } else {
+                                        Toast.makeText(context, R.string.landmark_distance_too_far, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            )
+                        }
+                        for (landmark in landmarks) {
+                            val hasVisited = (journals.find { it.name == landmark.name } != null)
                             val isActive = distance(
                                 mapViewModel.state.value.userLocation,
                                 landmark

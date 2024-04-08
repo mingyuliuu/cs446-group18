@@ -67,6 +67,7 @@ fun Router(
                     modifier = Modifier.fillMaxSize(),
                     mapViewModel = mapViewModel,
                     journalModel = journalEntryViewModel,
+                    userViewModel = userViewModel,
                     onAddJournal = {
                         navigationController.navigate(Screens.AddJournal.screen)
                     },

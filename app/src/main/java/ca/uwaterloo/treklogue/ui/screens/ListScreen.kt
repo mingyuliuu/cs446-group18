@@ -70,6 +70,7 @@ fun ListScreen(
             val userLocation = mapViewModel.state.value.userLocation
 
             // State for landmarks
+            // NOTE: We only consider api landmarks on this screen
             var landmarks by remember { mutableStateOf<List<Landmark>>(emptyList()) }
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -123,8 +124,6 @@ fun ListScreen(
                     }.forEachIndexed { idx, landmark ->
                         val dist = distance(mapViewModel.state.value.userLocation, landmark)
 
-                        // this is not at all scalable
-                        // ideally, only load in landmarks within a certain range of user so less to compare
                         if (dist < MIN_LIST_DISTANCE) {
                             LandmarkListItem(
                                 Modifier.padding(
