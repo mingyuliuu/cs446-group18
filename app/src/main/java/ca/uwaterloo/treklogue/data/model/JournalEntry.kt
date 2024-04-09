@@ -6,5 +6,6 @@ data class JournalEntry(
     var name: String = "",
     var visitedAt: String = "",
     var photos: MutableList<String> = mutableListOf(),
-    var description: String = ""
+    var description: String = "",
+    var rating: Float = 0f,
 )

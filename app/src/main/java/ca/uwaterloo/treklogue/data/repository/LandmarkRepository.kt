@@ -136,7 +136,7 @@ class LandmarkFirebaseRepository @Inject constructor(
 
             if (userLandmarks!!.size == 1) {
                 val newUser = User(
-                    userEmail!!,
+                    userId!!,
                     userEmail!!,
                     journalEntries!!,
                     userLandmarks!!

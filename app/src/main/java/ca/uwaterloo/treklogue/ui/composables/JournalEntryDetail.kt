@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 fun JournalEntryDetail(
     modifier: Modifier = Modifier,
     isEditing: Boolean = false,
+    onSaveClicked: () -> Unit,
     onBackClicked: () -> Unit,
     journalEntryViewModel: JournalEntryViewModel
 ) {
@@ -69,7 +70,7 @@ fun JournalEntryDetail(
 
     Column(modifier) {
         // Top bar section
-        TopBar(onBackClicked, !isEditing, editedJournalEntry, journalEntryViewModel)
+        TopBar(onSaveClicked, onBackClicked, !isEditing, editedJournalEntry, journalEntryViewModel)
 
         // Content section
         ContentSection(editedJournalEntry)
@@ -78,6 +79,7 @@ fun JournalEntryDetail(
 
 @Composable
 fun TopBar(
+    onSaveClicked: () -> Unit,
     onBackClicked: () -> Unit,
     isAddingNewJournalEntry: Boolean,
     editedJournalEntry: MutableState<JournalEntry>,
@@ -94,13 +96,13 @@ fun TopBar(
         IconButton(
             onClick = { onBackClicked() },
         ) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.save))
+            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
         }
         Spacer(modifier = Modifier.weight(1f))
         if (!isAddingNewJournalEntry) {
             Button(onClick = {
                 journalEntryViewModel.deleteJournalEntry(editedJournalEntry.value.index)
-                onBackClicked()
+                onSaveClicked()
             }) {
                 Text(stringResource(R.string.delete), style = MaterialTheme.typography.labelLarge)
             }
@@ -129,20 +131,22 @@ fun TopBar(
                             editedJournalEntry.value.landmarkId,
                             editedJournalEntry.value.name,
                             editedJournalEntry.value.photos,
-                            editedJournalEntry.value.description
+                            editedJournalEntry.value.description,
+                            editedJournalEntry.value.rating,
                         )
                     } else {
                         journalEntryViewModel.updateJournalEntry(
                             editedJournalEntry.value.index,
                             editedJournalEntry.value.photos,
-                            editedJournalEntry.value.description
+                            editedJournalEntry.value.description,
+                            editedJournalEntry.value.rating
                         )
                     }
                 }.onFailure { ex: Throwable ->
                     Log.e(null, "Failed to add/update journal entry due to: $ex")
                 }
 
-                onBackClicked()
+                onSaveClicked()
             }
         }) {
             Text(stringResource(R.string.save), style = MaterialTheme.typography.labelLarge)
@@ -267,7 +271,7 @@ fun ContentSection(editedJournalEntry: MutableState<JournalEntry>) {
                 .fillMaxWidth()
                 .border(1.dp, Color.Gray, RoundedCornerShape(4.dp)),
         ) {
-            RatingSlider()
+            RatingSlider(journalEntry = editedJournalEntry)
         }
     }
 }

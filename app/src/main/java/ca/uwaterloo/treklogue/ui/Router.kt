@@ -3,6 +3,8 @@ package ca.uwaterloo.treklogue.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -36,18 +38,11 @@ fun Router(
     val selectedTab = remember {
         mutableStateOf(Icons.Default.LocationOn)
     }
+    val journalBack = remember {
+        mutableStateOf(Screens.Profile.screen)
+    }
 
     Scaffold(
-        /*
-        topBar = {
-            ScaffoldTop(
-                // may be good to wrap the home/default in a val
-                navigateHome = { navController.navigate(Screen.Map.name) },
-                navigateUp = { navController.navigateUp() },
-                canNavigateBack = currentScreen == Screen.Settings
-            )
-        },
-         */
         bottomBar = {
             ScaffoldBottom(
                 selectedTab = selectedTab,
@@ -69,6 +64,7 @@ fun Router(
                     journalModel = journalEntryViewModel,
                     userViewModel = userViewModel,
                     onAddJournal = {
+                        journalBack.value = Screens.Map.screen
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
                     onAddLandmark = {
@@ -81,6 +77,7 @@ fun Router(
                 ListScreen(
                     modifier = Modifier.fillMaxSize(),
                     onAddJournal = {
+                        journalBack.value = Screens.List.screen
                         navigationController.navigate(Screens.AddJournal.screen)
                     },
                     mapViewModel,
@@ -92,6 +89,7 @@ fun Router(
                 ProfileScreen(
                     modifier = Modifier.fillMaxSize(),
                     showJournalDetail = {
+                        journalBack.value = Screens.Profile.screen
                         navigationController.navigate(Screens.EditJournal.screen)
                     },
                     journalEntryViewModel
@@ -114,8 +112,21 @@ fun Router(
                 JournalEntryDetail(
                     modifier = Modifier.fillMaxSize(),
                     isEditing = true,
-                    onBackClicked = {
+                    onSaveClicked = {
+                        selectedTab.value = Icons.Default.AccountCircle
                         navigationController.navigate(Screens.Profile.screen)
+                    },
+                    onBackClicked = {
+                        if (journalBack.value == Screens.Profile.screen) {
+                            selectedTab.value = Icons.Default.AccountCircle
+                            navigationController.navigate(Screens.Profile.screen)
+                        } else if (journalBack.value == Screens.Map.screen) {
+                            selectedTab.value = Icons.Default.LocationOn
+                            navigationController.navigate(Screens.Map.screen)
+                        } else if (journalBack.value == Screens.List.screen) {
+                            selectedTab.value = Icons.Default.List
+                            navigationController.navigate(Screens.List.screen)
+                        }
                     },
                     journalEntryViewModel
                 )
@@ -124,8 +135,21 @@ fun Router(
             composable(route = Screens.AddJournal.screen) {
                 JournalEntryDetail(
                     modifier = Modifier.fillMaxSize(),
+                    onSaveClicked = {
+                        selectedTab.value = Icons.Default.AccountCircle
+                        navigationController.navigate(Screens.Profile.screen)
+                    },
                     onBackClicked = {
-                        navigationController.navigate(Screens.List.screen)
+                        if (journalBack.value == Screens.Profile.screen) {
+                            selectedTab.value = Icons.Default.AccountCircle
+                            navigationController.navigate(Screens.Profile.screen)
+                        } else if (journalBack.value == Screens.Map.screen) {
+                            selectedTab.value = Icons.Default.LocationOn
+                            navigationController.navigate(Screens.Map.screen)
+                        } else if (journalBack.value == Screens.List.screen) {
+                            selectedTab.value = Icons.Default.List
+                            navigationController.navigate(Screens.List.screen)
+                        }
                     },
                     journalEntryViewModel = journalEntryViewModel
                 )

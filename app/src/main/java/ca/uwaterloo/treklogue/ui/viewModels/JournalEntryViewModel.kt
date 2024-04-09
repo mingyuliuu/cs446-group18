@@ -81,7 +81,8 @@ class JournalEntryViewModel @Inject constructor(
         landmarkId: String,
         landmarkName: String,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ) = viewModelScope.launch {
         addJournalEntryResponse = Response.Loading
 
@@ -91,20 +92,23 @@ class JournalEntryViewModel @Inject constructor(
             landmarkName,
             dateString,
             photos,
-            description
+            description,
+            rating,
         )
     }
 
     fun updateJournalEntry(
         journalEntryIndex: Int,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ) = viewModelScope.launch {
         addJournalEntryResponse = Response.Loading
         addJournalEntryResponse = journalEntryRepository.updateJournalEntry(
             journalEntryIndex,
             photos,
             description,
+            rating,
         )
     }
 

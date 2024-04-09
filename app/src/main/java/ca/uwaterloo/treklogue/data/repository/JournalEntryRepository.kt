@@ -2,6 +2,7 @@ package ca.uwaterloo.treklogue.data.repository
 
 import android.util.Log
 import ca.uwaterloo.treklogue.data.model.JournalEntry
+import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.model.Response
 import ca.uwaterloo.treklogue.data.model.User
 import com.google.firebase.firestore.CollectionReference
@@ -37,7 +38,8 @@ interface JournalEntryRepository {
         landmarkName: String,
         visitedAt: String,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ): AddJournalEntryResponse
 
     /**
@@ -46,7 +48,8 @@ interface JournalEntryRepository {
     suspend fun updateJournalEntry(
         journalEntryIndex: Int,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ): UpdateJournalEntryResponse
 
     /**
@@ -85,11 +88,13 @@ class JournalEntryFirebaseRepository @Inject constructor(
         landmarkName: String,
         visitedAt: String,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ) = try {
         var userId: String? = null
         var userEmail: String? = null
         var journalEntries: MutableList<JournalEntry>? = null
+        var userLandmarks: MutableList<Landmark>? = null
 
         usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
             .addOnCompleteListener {
@@ -98,6 +103,7 @@ class JournalEntryFirebaseRepository @Inject constructor(
                     userId = it.result.documents[0].id
                     userEmail = users[0].email
                     journalEntries = users[0].journalEntries
+                    userLandmarks = users[0].landmarks
                 }
             }.await()
 
@@ -108,15 +114,17 @@ class JournalEntryFirebaseRepository @Inject constructor(
                 landmarkName,
                 visitedAt,
                 photos,
-                description
+                description,
+                rating,
             )
             journalEntries!!.add(newJournalEntry)
 
             if (journalEntries!!.size == 1) {
                 val newUser = User(
+                    userId!!,
                     userEmail!!,
-                    userEmail!!,
-                    journalEntries!!
+                    journalEntries!!,
+                    userLandmarks!!,
                 )
                 usersRef.document(userId!!).set(newUser).await()
             } else {
@@ -132,7 +140,8 @@ class JournalEntryFirebaseRepository @Inject constructor(
     override suspend fun updateJournalEntry(
         journalEntryIndex: Int,
         photos: MutableList<String>,
-        description: String
+        description: String,
+        rating: Float,
     ) = try {
         usersRef.whereEqualTo("email", authRepository.currentUser?.email).get()
             .addOnCompleteListener {
@@ -148,7 +157,8 @@ class JournalEntryFirebaseRepository @Inject constructor(
                             entry.name,
                             entry.visitedAt,
                             photos,
-                            description
+                            description,
+                            rating,
                         )
                     }
                     usersRef.document(userId).update("journalEntries", newJournalEntries)

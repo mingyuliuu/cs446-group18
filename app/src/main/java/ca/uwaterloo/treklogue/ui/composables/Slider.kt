@@ -8,29 +8,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import ca.uwaterloo.treklogue.R
+import ca.uwaterloo.treklogue.data.model.JournalEntry
 import ca.uwaterloo.treklogue.ui.theme.Blue100
 import ca.uwaterloo.treklogue.ui.theme.Blue200
 import ca.uwaterloo.treklogue.ui.theme.Gray100
 import ca.uwaterloo.treklogue.ui.theme.Gray600
 
 @Composable
-fun RatingSlider() {
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
+fun RatingSlider(journalEntry: MutableState<JournalEntry>) {
 
     Column(modifier = Modifier.padding(8.dp, 0.dp, 8.dp, 8.dp)) {
         Slider(
-            value = sliderPosition,
-            onValueChange = { sliderPosition = it },
+            value = journalEntry.value.rating,
+            onValueChange = { journalEntry.value = journalEntry.value.copy(rating = it)},
             colors = SliderDefaults.colors(
                 thumbColor = Blue200,
                 activeTrackColor = Blue100,
