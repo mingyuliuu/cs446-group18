@@ -36,7 +36,10 @@
      <td><img src="app/src/main/res/drawable/mapview.png" width=160 height=360></td>
      <td><img src="app/src/main/res/drawable/listview.png" width=160 height=360></td>
      <td><img src="app/src/main/res/drawable/journalentries.png" width=160 height=360></td>
-       <td><img src="app/src/main/res/drawable/wlu_details.png" width=160 height=360></td>
+       
+ </tr>
+ <tr>
+  <td><img src="app/src/main/res/drawable/wlu_details.png" width=160 height=360></td>
          <td><img src="app/src/main/res/drawable/travel_journal.png" width=160 height=360></td>
  </tr>
 </table>
