@@ -39,7 +39,7 @@
 | 2024/03/28 | 0      | 0     | 4       | 0       | 0     | 0       | Add logic and icon for deleting uploaded images                              |
 | 2024/03/28 | 0      | 0     | 1       | 0       | 1     | 1       | Design pattern document (D5)                                                 |
 | 2024/03/29 | 0      | 0     | 0       | 3.5     | 0     | 0       | Coarse location handling, loading screen, settings location toggle           |
-| 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern disscussion (D5)                                              |
+| 2024/03/29 | 0      | 0     | 0       | 0       | 3     | 3       | Design pattern discussion (D5)                                               |
 | 2024/03/30 | 15     | 0     | 0       | 0       | 0     | 0       | Firebase migration                                                           |
 | 2024/03/30 | 0      | 0     | 0       | 7       | 0     | 0       | Location refactor+bugs, remove google markers, investigate background update |
 | 2024/03/31 | 0      | 2     | 2       | 2       | 2     | 2       | Prepare for project demo, discuss outstanding bugs                           |
@@ -47,12 +47,14 @@
 | 2024/03/31 | 3      | 0     | 0       | 0       | 0     | 0       | Add inactive markers; add interactions with markers; ux fine-tuning          |
 | 2024/03/31 | 3      | 0     | 3       | 0       | 0     | 0       | Prepare and edit video for project demo                                      |
 | 2024/03/31 | 0      | 0     | 0       | 0       | 0     | 5       | Refined settings UI; Prepare and edit video for project demo                 |
+| 2024/03/31 | 0      | 6     | 0       | 0       | 0     | 0       | Adding landmarks to database and researching for landmark databases          |
 | 2024/04/03 | 0      | 0     | 0       | 4       | 0     | 0       | Create new landmark notifications, cap landmark visibility in list/map views |
-| 2024/04/05 | 0      | 5     | 0       | 0       | 5     | 5       | Arch + Design Document (D6)                                                  |    
+| 2024/04/05 | 0      | 8     | 0       | 0       | 5     | 5       | Arch + Design Document (D6)                                                  |    
 | 2024/04/06 | 0      | 0     | 18      | 0       | 0     | 0       | Research landmark API + setup Google Places API to retrieve nearby landmarks |    
 | 2024/04/06 | 0      | 0     | 0       | 5       | 0     | 0       | Add functionality to add user-created landmarks, investigate map marker API  |    
 | 2024/04/06 | 6      | 0     | 0       | 0       | 0     | 0       | Upload images to & delete images from Firebase cloud storage                 |    
 | 2024/04/07 | 0      | 0     | 0       | 1.5     | 0     | 0       | Add api markers to map, add functionality to notification toggle             |    
 | 2024/04/08 | 0      | 0     | 0       | 0       | 0     | 2       | Bug fix, enable hiding and seeing password on login                          |  
 | 2024/04/08 | 0      | 0     | 0       | 3.5     | 0     | 0       | Add ratings to database, fix app flow and bugs                               |  
-| 2024/04/08 | 0      | 0     | 3       | 1       | 0     | 0       | Final Status Report (D7)                                                     |  
+| 2024/04/08 | 0      | 3     | 3       | 1       | 0     | 0       | Final Status Report (D7)                                                     |  
+| 2024/04/08 | 0      | 3     | 0       | 0       | 0     | 0       | Update Readme                                                                |  
