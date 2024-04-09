@@ -54,3 +54,4 @@
 | 2024/04/06 | 6      | 0     | 0       | 0       | 0     | 0       | Upload images to & delete images from Firebase cloud storage                   |    
 | 2024/04/07 | 0      | 0     | 0       | 1.5     | 0     | 0       | Add api markers to map, add functionality to notification toggle               |    
 | 2024/04/08 | 0      | 0     | 0       | 0     | 0       | 2       | Bug fix, enable hiding and seeing password on login                            |  
+| 2024/04/08 | 0      | 0     | 3       | 0     | 0       | 0       | Final Status Report (D7)                                                       |  
