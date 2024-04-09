@@ -96,7 +96,7 @@ fun TopBar(
         IconButton(
             onClick = { onBackClicked() },
         ) {
-            Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+            Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
         }
         Spacer(modifier = Modifier.weight(1f))
         if (!isAddingNewJournalEntry) {
