@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import ca.uwaterloo.treklogue.BuildConfig
 import ca.uwaterloo.treklogue.R
 import ca.uwaterloo.treklogue.data.model.Landmark
 import ca.uwaterloo.treklogue.data.model.Response
@@ -249,8 +250,6 @@ fun GoogleMapView(
         ))
     }
 
-
-
     Box(modifier) {
         GoogleMap(
             modifier = modifier,
@@ -271,8 +270,7 @@ fun GoogleMapView(
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    //May need to change API key
-                    val apiKey = ""
+                    val apiKey = BuildConfig.MAPS_API_KEY
                     val radius = 5000 // 5km in meters
                     val type = "tourist_attraction"
                     val nearbySearchUrl =
