@@ -143,7 +143,7 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                             passwordVisible = !passwordVisible
                         }) {
                             Icon(
-                                painter = painterResource(id = drawable.view_icon),
+                                painter = painterResource(id = if (passwordVisible) drawable.view_icon else drawable.hide_view_icon),
                                 contentDescription = "View",
                                 tint = Color.Gray,
                                 modifier = Modifier.size(30.dp)
