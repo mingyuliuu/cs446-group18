@@ -12,10 +12,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ca.uwaterloo.treklogue.R
@@ -201,66 +205,55 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(60.dp))
 
                 Text(
                     text = stringResource(R.string.agreement),
                     modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
                     textAlign = TextAlign.Center,
-                    color = Blue400
+                    style = MaterialTheme.typography.labelMedium,
+                )
+                Text(
+                    text = stringResource(R.string.terms_and_conditions_click),
+                    modifier = Modifier
+                        .clickable {
+                            showPopup = true
+                        }
+                        .fillMaxWidth(USABLE_WIDTH),
+                    textDecoration = TextDecoration.Underline,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelMedium,
                 )
 
-
-                    Text(
-                        text = stringResource(R.string.terms_and_conditions_click),
-                        modifier = Modifier
-                            .clickable {
-                                showPopup = true
-                            }
-                            .fillMaxWidth(USABLE_WIDTH),
-                        textAlign = TextAlign.Center,
-                        color = Blue400
-                    )
-
-
-                Spacer(modifier = Modifier.height(90.dp))
-                // Text with clarification on Atlas Cloud account vs Device Sync account
-//                Text(
-//                    text = stringResource(R.string.account_clarification),
-//                    modifier = Modifier.fillMaxWidth(USABLE_WIDTH),
-//                    textAlign = TextAlign.Center,
-//                    fontSize = 12.sp
-//                )
-//                Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(80.dp))
             }
-            PopupBox(popupWidth = 200F,
-                popupHeight = 300F,
+
+            PopupBox(
+                widthFraction = 0.8f,
+                heightFraction = 0.8f,
                 showPopup = showPopup,
-                onClickOutside = {showPopup = false},
+                onClickOutside = { showPopup = false },
                 content = {
-                    Box(
-                        contentAlignment = Alignment.BottomCenter,
+                    Column(
                         modifier = Modifier
-                            .fillMaxHeight(0.75f)
+                            .verticalScroll(rememberScrollState())
                             .fillMaxWidth()
                     ) {
-                        Column {
-                            Text(
-                                text = stringResource(R.string.terms_and_conditions_title),
-                                textAlign = TextAlign.Center,
-                                color = Blue400,
-                            )
-                            Text(
-                                text = stringResource(R.string.terms_and_conditions),
-                                textAlign = TextAlign.Left,
-                                color = Blue400,
-                            )
-
-                        }
+                        Text(
+                            text = stringResource(R.string.terms_and_conditions_title),
+                            style = MaterialTheme.typography.titleLarge,
+                            textAlign = TextAlign.Center,
+                            color = Blue400,
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = stringResource(R.string.terms_and_conditions),
+                            style = MaterialTheme.typography.bodyMedium,
+                            textAlign = TextAlign.Left,
+                        )
                     }
-                    
-                })
-
+                }
+            )
         }
     }
 }
