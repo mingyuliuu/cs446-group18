@@ -56,6 +56,7 @@
  <tr>
   Treklogue uses Google Places APIs and Firebase. You need to setup those two apis in order for it to function.<br>
   Firebase Setup:<br>
+  You will need a google-services.json file with an API key from our database. Please ask for one when testing the app.<br>
   <img src="app/src/main/res/drawable/firebase.png" width=600 height = 300 <br>
   Google API Setup: <br>
   Please set up an API key in Google with the Maps SDK for Android and Google Places APIs enabled. Afterwards, create a local.properties in the root of the project with the lines:<br>
